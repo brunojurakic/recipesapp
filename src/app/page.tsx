@@ -43,38 +43,44 @@ const CATEGORIES = [
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950">
+    <div className="min-h-screen bg-zinc-50">
       {/* Hero Section */}
       <div className="relative h-[500px] w-full overflow-hidden">
+        {/* Background gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-zinc-50 z-10" />
+        
+        {/* Hero image with blur */}
         <Image
           src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?q=80&w=2067&auto=format&fit=crop"
           alt="Cooking background"
           fill
-          className="object-cover brightness-50"
+          className="object-cover brightness-[0.85] filter backdrop-blur-sm scale-105"
           priority
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+        
+        {/* Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-20">
           <div className="flex items-center gap-2">
-            <UtensilsCrossed className="h-8 w-8 text-white" />
-            <h1 className="text-4xl font-bold text-white">Recipe Share</h1>
+            <UtensilsCrossed className="h-8 w-8 text-white drop-shadow-md" />
+            <h1 className="text-4xl font-bold text-white drop-shadow-md">Recipe Share</h1>
           </div>
-          <p className="mt-4 max-w-xl text-lg text-zinc-200">
+          <p className="mt-4 max-w-xl text-lg text-white drop-shadow-sm font-medium">
             Discover, share, and cook amazing recipes from around the world
           </p>
-          <div className="mt-8">
+          <div className="mt-8 w-full max-w-lg px-4">
             <SearchBar />
           </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <main className="relative -mt-32 z-30 mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         {/* Categories */}
-        <div className="flex gap-2 overflow-x-auto pb-4">
+        <div className="flex gap-2 overflow-x-auto pb-4 px-1 -mx-1">
           {CATEGORIES.map((category) => (
             <button
               key={category}
-              className="rounded-full bg-white px-4 py-2 text-sm font-medium text-zinc-600 shadow-sm ring-1 ring-zinc-200 transition-colors hover:bg-zinc-50 dark:bg-zinc-900 dark:text-zinc-400 dark:ring-zinc-800 dark:hover:bg-zinc-800"
+              className="rounded-full bg-white px-4 py-2 text-sm font-medium text-zinc-600 shadow-sm ring-1 ring-zinc-200 transition-colors hover:bg-zinc-50 whitespace-nowrap"
             >
               {category}
             </button>
@@ -83,7 +89,7 @@ export default function Home() {
 
         {/* Featured Recipes */}
         <div className="mt-12">
-          <h2 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+          <h2 className="text-2xl font-semibold text-zinc-900">
             Featured Recipes
           </h2>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
