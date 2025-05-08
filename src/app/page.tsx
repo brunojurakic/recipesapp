@@ -54,7 +54,7 @@ export default function Home() {
           src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?q=80&w=2067&auto=format&fit=crop"
           alt="Cooking background"
           fill
-          className="object-cover brightness-[0.85] filter backdrop-blur-sm scale-105"
+          className="object-cover brightness-[0.85] blur-[3px] filter backdrop-blur-sm scale-105"
           priority
         />
         
