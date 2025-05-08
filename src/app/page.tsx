@@ -1,6 +1,7 @@
 import Image from "next/image";
 import SearchBar from "@/components/ui/SearchBar";
 import RecipeCard from "@/components/ui/RecipeCard";
+import Header from "@/components/ui/Header";
 import { UtensilsCrossed } from 'lucide-react';
 
 // Mock data for recipes - in a real app this would come from an API
@@ -44,8 +45,9 @@ const CATEGORIES = [
 export default function Home() {
   return (
     <div className="min-h-screen bg-zinc-50">
+      <Header />
       {/* Hero Section */}
-      <div className="relative h-[500px] w-full overflow-hidden">
+      <div className="relative h-[500px] w-full overflow-hidden mt-16">
         {/* Background gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-zinc-50 z-10" />
         
@@ -76,16 +78,7 @@ export default function Home() {
       {/* Main Content */}
       <main className="relative -mt-32 z-30 mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         {/* Categories */}
-        <div className="flex gap-2 overflow-x-auto pb-4 px-1 -mx-1">
-          {CATEGORIES.map((category) => (
-            <button
-              key={category}
-              className="rounded-full bg-white px-4 py-2 text-sm font-medium text-zinc-600 shadow-sm ring-1 ring-zinc-200 transition-colors hover:bg-zinc-50 whitespace-nowrap"
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+        
 
         {/* Featured Recipes */}
         <div className="mt-12">
