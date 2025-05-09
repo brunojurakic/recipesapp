@@ -56,7 +56,7 @@ export default function Header() {
                 </Link>
                 <button
                   onClick={handleSignOut}
-                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:cursor-pointer"
                 >
                   Log out
                 </button>
