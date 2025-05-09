@@ -1,7 +1,24 @@
+"use client"
+
 import Link from 'next/link'
 import { UtensilsCrossed } from 'lucide-react'
+import { useSession, signOut } from '@/lib/auth-client'
+import { useRouter } from 'next/navigation'
 
 export default function Header() {
+  const { data: session, isPending } = useSession();
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+        }
+      }
+    });
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -29,18 +46,37 @@ export default function Header() {
 
           {/* Auth Buttons */}
           <div className="flex items-center gap-4">
-            <Link 
-              href="/login" 
-              className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
-            >
-              Log in
-            </Link>
-            <Link
-              href="/signup"
-              className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
-            >
-              Register
-            </Link>
+            {!isPending && (session ? (
+              <>
+                <Link 
+                  href="/dashboard" 
+                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                >
+                  Log out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link 
+                  href="/login" 
+                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/signup"
+                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+                >
+                  Register
+                </Link>
+              </>
+            ))}
           </div>
         </div>
       </div>
