@@ -37,20 +37,12 @@ export const account = pgTable("account", {
   updatedAt: timestamp('updated_at').notNull()
 });
 
-export const verification = pgTable("verification", {
-  id: text('id').primaryKey(),
-  identifier: text('identifier').notNull(),
-  value: text('value').notNull(),
-  expiresAt: timestamp('expires_at').notNull(),
-  createdAt: timestamp('created_at'),
-  updatedAt: timestamp('updated_at')
-});
-
 export const recipe = pgTable("recipe", {
   id: text('id').primaryKey(),
   userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
   title: text('title').notNull(),
   description: text('description'),
+  image_path: text('image_path'),
   servings: integer('servings').notNull(), // how many people
   preparationTime: integer('preparation_time').notNull(), // in minutes
   createdAt: timestamp('created_at').notNull(),
