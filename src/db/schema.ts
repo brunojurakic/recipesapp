@@ -1,96 +1,98 @@
-import { pgTable, text, timestamp, boolean, integer} from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer } from "drizzle-orm/pg-core";
 
-export const user = pgTable("user", {
-  id: text('id').primaryKey(),
-  name: text('name').notNull(),
+export const user = pgTable("Korisnik", {
+  id: text('id_korisnika').primaryKey(),
+  name: text('ime').notNull(),
   email: text('email').notNull().unique(),
-  emailVerified: boolean('email_verified').notNull(),
-  image: text('image'),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull()
+  emailVerified: boolean('email_verificiran').notNull(),
+  image: text('profilna_slika'),
+  createdAt: timestamp('datum_kreiranja').notNull(),
+  updatedAt: timestamp('datum_azuriranja').notNull()
 });
 
-export const session = pgTable("session", {
-  id: text('id').primaryKey(),
-  expiresAt: timestamp('expires_at').notNull(),
+export const session = pgTable("Sjednica", {
+  id: text('id_sjednice').primaryKey(),
+  expiresAt: timestamp('vrijedi_do').notNull(),
   token: text('token').notNull().unique(),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull(),
-  ipAddress: text('ip_address'),
-  userAgent: text('user_agent'),
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' })
+  createdAt: timestamp('datum_kreiranja').notNull(),
+  updatedAt: timestamp('datum_azuriranja').notNull(),
+  ipAddress: text('ip_adresa'),
+  userAgent: text('korisnicki_agent'),
+  userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' })
 });
 
-export const account = pgTable("account", {
-  id: text('id').primaryKey(),
-  accountId: text('account_id').notNull(),
-  providerId: text('provider_id').notNull(),
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  accessToken: text('access_token'),
-  refreshToken: text('refresh_token'),
+export const account = pgTable("Racun", {
+  id: text('id_racuna').primaryKey(),
+  accountId: text('pruzatelj_id').notNull(),
+  providerId: text('ime_pruzatelja_autentifikacije').notNull(),
+  userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  accessToken: text('token_pristupa'),
+  refreshToken: text('token_osvjezavanja'),
   idToken: text('id_token'),
-  accessTokenExpiresAt: timestamp('access_token_expires_at'),
-  refreshTokenExpiresAt: timestamp('refresh_token_expires_at'),
+  accessTokenExpiresAt: timestamp('token_pristupa_istice'),
+  refreshTokenExpiresAt: timestamp('token_osvjezavanja_istice'),
   scope: text('scope'),
-  password: text('password'),
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull()
+  password: text('hash_lozinke'),
+  createdAt: timestamp('datum_kreiranja').notNull(),
+  updatedAt: timestamp('datum_azuriranja').notNull()
 });
 
-export const recipe = pgTable("recipe", {
-  id: text('id').primaryKey(),
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  title: text('title').notNull(),
-  description: text('description'),
-  image_path: text('image_path'),
-  servings: integer('servings').notNull(), // how many people
-  preparationTime: integer('preparation_time').notNull(), // in minutes
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull()
+export const recipe = pgTable("Recept", {
+  id: text('id_recepta').primaryKey(),
+  userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  title: text('naslov').notNull(),
+  description: text('opis'),
+  image_path: text('path_do_slike'),
+  servings: integer('porcije').notNull(),
+  preparationTime: integer('vrijeme_pripreme').notNull(),
+  createdAt: timestamp('datum_kreiranja').notNull(),
+  updatedAt: timestamp('datum_azuriranja').notNull()
 });
 
-export const category = pgTable("category", {
-  id: text('id').primaryKey(),
-  name: text('name').notNull().unique()
+export const category = pgTable("KategorijaJela", {
+  id: text('id_kategorije').primaryKey(),
+  name: text('naziv').notNull().unique()
 });
 
-export const recipeCategory = pgTable("recipe_category", {
-  recipeId: text('recipe_id').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
-  categoryId: text('category_id').notNull().references(() => category.id, { onDelete: 'cascade' })
+export const recipeCategory = pgTable("Pripada_kategoriji", {
+  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  categoryId: text('id_kategorije').notNull().references(() => category.id, { onDelete: 'cascade' })
 });
 
-export const ingredient = pgTable("ingredient", {
-  id: text('id').primaryKey(),
-  name: text('name').notNull().unique()
+export const ingredient = pgTable("Sastojak", {
+  id: text('id_sastojka').primaryKey(),
+  name: text('naziv').notNull().unique(),
+  type: text('vrsta').notNull()
 });
 
-export const recipeIngredient = pgTable("recipe_ingredient", {
-  recipeId: text('recipe_id').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
-  ingredientId: text('ingredient_id').notNull().references(() => ingredient.id, { onDelete: 'cascade' }),
-  quantity: text('quantity').notNull(),
+export const recipeIngredient = pgTable("Sadrzi_sastojak", {
+  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  ingredientId: text('id_sastojka').notNull().references(() => ingredient.id, { onDelete: 'cascade' }),
+  quantity: text('kolicina').notNull()
 });
 
-export const instruction = pgTable("instruction", {
-  id: text('id').primaryKey(),
-  recipeId: text('recipe_id').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
-  stepNumber: integer('step_number').notNull(),
-  content: text('content').notNull()
+export const instruction = pgTable("Uputa", {
+  id: text('id_upute').primaryKey(),
+  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  stepNumber: integer('korak').notNull(),
+  content: text('sadrzaj').notNull()
 });
 
-export const review = pgTable("review", {
-  id: text('id').primaryKey(),
-  recipeId: text('recipe_id').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  content: text('content'),
-  rating: integer('rating').notNull(), // 1-5
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull()
+export const review = pgTable("Recenzija", {
+  id: text('id_recenzije').primaryKey(),
+  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  content: text('sadrzaj'),
+  rating: integer('ocjena').notNull(), // 1-5
+  createdAt: timestamp('datum_kreiranja').notNull(),
+  updatedAt: timestamp('datum_azuriranja').notNull()
 });
 
-export const bookmark = pgTable("bookmark", {
-  userId: text('user_id').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  recipeId: text('recipe_id').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('created_at').notNull()
+export const bookmark = pgTable("Oznacio", {
+  userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('datum_kreiranja').notNull()
 });
+
 
 export const schema = {user, session, account}
