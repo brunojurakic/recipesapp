@@ -23,12 +23,12 @@ export const session = pgTable("Sjednica", {
 
 export const account = pgTable("Racun", {
   id: text('id_racuna').primaryKey(),
-  accountId: text('pruzatelj_id').notNull(),
+  accountId: text('racun_putem_pruzatelja').notNull(),
   providerId: text('ime_pruzatelja_autentifikacije').notNull(),
   userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
   accessToken: text('token_pristupa'),
   refreshToken: text('token_osvjezavanja'),
-  idToken: text('id_token'),
+  idToken: text('token'),
   accessTokenExpiresAt: timestamp('token_pristupa_istice'),
   refreshTokenExpiresAt: timestamp('token_osvjezavanja_istice'),
   scope: text('scope'),
