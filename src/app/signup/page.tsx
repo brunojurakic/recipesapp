@@ -36,25 +36,16 @@ export default function SignUp() {
       <div className="relative h-screen w-full flex items-center justify-center">
         {/* Background gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-zinc-50 z-10" />
-        
-        {/* Background image with blur */}
-        <Image
-          src="https://images.unsplash.com/photo-1495195134817-aeb325a55b65?q=80&w=2076&auto=format&fit=crop"
-          alt="Kitchen background"
-          fill
-          className="object-cover brightness-[0.85] blur-[3px] filter backdrop-blur-sm scale-105"
-          priority
-        />
-        
+
         {/* Signup form */}
         <div className="relative z-20 w-full max-w-xl px-6">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
             {/* Logo and title */}
             <div className="flex flex-col items-center mb-8">
-              <div className="flex items-center gap-2">
+              <Link href={'/'} className="flex items-center gap-2">
                 <UtensilsCrossed className="h-8 w-8 text-zinc-800" />
                 <h1 className="text-3xl font-bold text-zinc-800">Recipe Share</h1>
-              </div>
+              </Link>
               <p className="mt-2 text-zinc-600">Create your account to start sharing recipes</p>
             </div>
 

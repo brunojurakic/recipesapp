@@ -18,25 +18,17 @@ export default function SignIn() {
       <div className="relative h-screen w-full flex items-center justify-center">
         {/* Background gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-zinc-50 z-10" />
-        
-        {/* Background image with blur */}
-        <Image
-          src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?q=80&w=2070&auto=format&fit=crop"
-          alt="Kitchen background"
-          fill
-          className="object-cover brightness-[0.85] blur-[3px] filter backdrop-blur-sm scale-105"
-          priority
-        />
-        
+
+
         {/* Login form */}
         <div className="relative z-20 w-full max-w-md px-6">
           <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
             {/* Logo and title */}
             <div className="flex flex-col items-center mb-8">
-              <div className="flex items-center gap-2">
+              <Link href={'/'} className="flex items-center gap-2">
                 <UtensilsCrossed className="h-8 w-8 text-zinc-800" />
                 <h1 className="text-3xl font-bold text-zinc-800">Recipe Share</h1>
-              </div>
+              </Link>
               <p className="mt-2 text-zinc-600">Welcome back! Please sign in.</p>
             </div>
 
@@ -128,7 +120,7 @@ export default function SignIn() {
                 </svg>
                 Sign in with Google
               </button>
-              
+
               <div className="text-center text-sm">
                 <span className="text-zinc-600">Don&apos;t have an account?</span>
                 {' '}

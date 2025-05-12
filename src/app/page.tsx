@@ -4,7 +4,6 @@ import RecipeCard from "@/components/ui/RecipeCard";
 import Header from "@/components/ui/Header";
 import { UtensilsCrossed } from 'lucide-react';
 
-// Mock data for recipes - in a real app this would come from an API
 const FEATURED_RECIPES = [
   {
     title: "Classic Italian Spaghetti",
@@ -29,6 +28,30 @@ const FEATURED_RECIPES = [
     cookTime: "20 min",
     category: "Dessert",
     slug: "chocolate-lava-cake"
+  },
+  {
+    title: "Vegetarian Buddha Bowl",
+    description: "A nourishing bowl filled with quinoa, roasted vegetables, avocado, and tahini dressing.",
+    image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop",
+    cookTime: "35 min",
+    category: "Vegetarian",
+    slug: "vegetarian-buddha-bowl"
+  },
+  {
+    title: "Korean BBQ Tacos",
+    description: "Fusion street food combining tender Korean BBQ beef with Mexican-style tacos and kimchi slaw.",
+    image: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?q=80&w=2070&auto=format&fit=crop",
+    cookTime: "40 min",
+    category: "Fusion",
+    slug: "korean-bbq-tacos"
+  },
+  {
+    title: "Morning Acai Bowl",
+    description: "Fresh and healthy breakfast bowl with acai, mixed berries, banana, and crunchy granola.",
+    image: "https://images.unsplash.com/photo-1590301157890-4810ed352733?q=80&w=2070&auto=format&fit=crop",
+    cookTime: "15 min",
+    category: "Breakfast",
+    slug: "morning-acai-bowl"
   }
 ];
 
@@ -42,16 +65,12 @@ const CATEGORIES = [
   "Quick & Easy"
 ];
 
-export default function Home() {
+const Home = () => {
   return (
     <div className="min-h-screen bg-zinc-50">
       <Header />
-      {/* Hero Section */}
-      <div className="relative h-[500px] w-full overflow-hidden mt-16">
-        {/* Background gradient overlay */}
+      <div className="relative h-[500px] w-full overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-zinc-50 z-10" />
-        
-        {/* Hero image with blur */}
         <Image
           src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?q=80&w=2067&auto=format&fit=crop"
           alt="Cooking background"
@@ -59,8 +78,7 @@ export default function Home() {
           className="object-cover brightness-[0.85] blur-[3px] filter backdrop-blur-sm scale-105"
           priority
         />
-        
-        {/* Content */}
+
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-20">
           <div className="flex items-center gap-2">
             <UtensilsCrossed className="h-8 w-8 text-white drop-shadow-md" />
@@ -78,7 +96,7 @@ export default function Home() {
       {/* Main Content */}
       <main className="relative -mt-32 z-30 mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
         {/* Categories */}
-        
+
 
         {/* Featured Recipes */}
         <div className="mt-12">
@@ -95,3 +113,5 @@ export default function Home() {
     </div>
   );
 }
+
+export default Home

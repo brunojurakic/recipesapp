@@ -4,8 +4,9 @@ import Link from 'next/link'
 import { UtensilsCrossed } from 'lucide-react'
 import { useSession, signOut } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
+import { except } from 'drizzle-orm/gel-core'
 
-export default function Header() {
+const Header = () => {
   const { data: session, isPending } = useSession();
   const router = useRouter();
 
@@ -20,18 +21,14 @@ export default function Header() {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/60 backdrop-blur-md shadow-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Link href="/" className="flex items-center gap-2">
-              <UtensilsCrossed className="h-6 w-6 text-zinc-900" />
-              <span className="text-lg font-semibold text-zinc-900">RecipeShare</span>
-            </Link>
-          </div>
+          <Link href="/" className="flex items-center gap-2">
+            <UtensilsCrossed className="h-6 w-6 text-zinc-900" />
+            <span className="text-lg font-semibold text-zinc-900">RecipeShare</span>
+          </Link>
 
-          {/* Navigation - Centered */}
           <nav className="hidden sm:flex items-center gap-6 flex-1 justify-center">
             <Link href="/recipes" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
               Browse Recipes
@@ -44,15 +41,15 @@ export default function Header() {
             </Link>
           </nav>
 
-          {/* Auth Buttons */}
+
           <div className="flex items-center gap-4">
             {!isPending && (session ? (
               <>
-                <Link 
-                  href="/dashboard" 
+                <Link
+                  href="/profile"
                   className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
                 >
-                  Dashboard
+                  Profile
                 </Link>
                 <button
                   onClick={handleSignOut}
@@ -63,8 +60,8 @@ export default function Header() {
               </>
             ) : (
               <>
-                <Link 
-                  href="/login" 
+                <Link
+                  href="/login"
                   className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
                 >
                   Log in
@@ -83,3 +80,5 @@ export default function Header() {
     </header>
   )
 }
+
+export default Header
