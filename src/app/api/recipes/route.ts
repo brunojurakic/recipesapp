@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { db } from "@/db/drizzle";
 import { recipe, instruction, ingredient, recipeIngredient, recipeCategory } from "@/db/schema";
 import { auth } from "@/lib/auth";
@@ -82,6 +82,28 @@ export async function POST(req: Request) {
     return NextResponse.json({ id: newRecipe.id }, { status: 201 });
   } catch (error) {
     console.error("Error creating recipe:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
+
+export async function GET() {
+  try {
+    // Fetch recipes ordered by creation date (newest first)
+    const recipes = await db.select({
+      id: recipe.id,
+      title: recipe.title,
+      description: recipe.description,
+      image_path: recipe.image_path,
+      servings: recipe.servings,
+      preparationTime: recipe.preparationTime,
+      createdAt: recipe.createdAt,
+    })
+    .from(recipe)
+    .orderBy(desc(recipe.createdAt));
+
+    return NextResponse.json({ recipes });
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

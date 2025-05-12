@@ -9,61 +9,61 @@ const FEATURED_RECIPES = [
     title: "Classic Italian Spaghetti",
     description: "Traditional Italian spaghetti with homemade tomato sauce and fresh basil.",
     image: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=2070&auto=format&fit=crop",
-    cookTime: "30 min",
+    cookTime: 30,
     category: "Pasta",
-    slug: "classic-italian-spaghetti"
+    href: "/recipes/classic-italian-spaghetti"
   },
   {
     title: "Grilled Salmon",
     description: "Fresh Atlantic salmon seasoned with herbs and lemon, grilled to perfection.",
     image: "https://images.unsplash.com/photo-1485921325833-c519f76c4927?q=80&w=2064&auto=format&fit=crop",
-    cookTime: "25 min",
+    cookTime: 25,
     category: "Seafood",
-    slug: "grilled-salmon"
+    href: "/recipes/grilled-salmon"
   },
   {
     title: "Chocolate Lava Cake",
     description: "Decadent chocolate cake with a warm, gooey center. A perfect dessert for chocolate lovers.",
     image: "https://images.unsplash.com/photo-1602351447937-745cb720612f?q=80&w=2086&auto=format&fit=crop",
-    cookTime: "20 min",
+    cookTime: 20,
     category: "Dessert",
-    slug: "chocolate-lava-cake"
+    href: "/recipes/chocolate-lava-cake"
   },
   {
     title: "Vegetarian Buddha Bowl",
     description: "A nourishing bowl filled with quinoa, roasted vegetables, avocado, and tahini dressing.",
     image: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=2070&auto=format&fit=crop",
-    cookTime: "35 min",
+    cookTime: 35,
     category: "Vegetarian",
-    slug: "vegetarian-buddha-bowl"
+    href: "/recipes/vegetarian-buddha-bowl"
   },
   {
     title: "Korean BBQ Tacos",
     description: "Fusion street food combining tender Korean BBQ beef with Mexican-style tacos and kimchi slaw.",
     image: "https://images.unsplash.com/photo-1617093727343-374698b1b08d?q=80&w=2070&auto=format&fit=crop",
-    cookTime: "40 min",
+    cookTime: 40,
     category: "Fusion",
-    slug: "korean-bbq-tacos"
+    href: "/recipes/korean-bbq-tacos"
   },
   {
     title: "Morning Acai Bowl",
     description: "Fresh and healthy breakfast bowl with acai, mixed berries, banana, and crunchy granola.",
     image: "https://images.unsplash.com/photo-1590301157890-4810ed352733?q=80&w=2070&auto=format&fit=crop",
-    cookTime: "15 min",
+    cookTime: 15,
     category: "Breakfast",
-    slug: "morning-acai-bowl"
+    href: "/recipes/morning-acai-bowl"
   }
 ];
 
-const CATEGORIES = [
-  "All Recipes",
-  "Breakfast",
-  "Lunch",
-  "Dinner",
-  "Dessert",
-  "Vegetarian",
-  "Quick & Easy"
-];
+// const CATEGORIES = [
+//   "All Recipes",
+//   "Breakfast",
+//   "Lunch",
+//   "Dinner",
+//   "Dessert",
+//   "Vegetarian",
+//   "Quick & Easy"
+// ];
 
 const Home = () => {
   return (
@@ -105,7 +105,7 @@ const Home = () => {
           </h2>
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {FEATURED_RECIPES.map((recipe) => (
-              <RecipeCard key={recipe.slug} {...recipe} />
+              <RecipeCard key={recipe.href} {...recipe} />
             ))}
           </div>
         </div>
