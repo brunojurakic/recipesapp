@@ -68,7 +68,6 @@ const FEATURED_RECIPES = [
 const Home = () => {
   return (
     <div className="min-h-screen bg-zinc-50">
-      <Header />
       <div className="relative h-[500px] w-full overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-zinc-50 z-10" />
         <Image

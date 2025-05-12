@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
 import RecipeCard from "@/components/ui/RecipeCard";
+import Header from "@/components/ui/Header";
 
 interface Recipe {
   id: string;
@@ -63,7 +64,7 @@ export default function RecipesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen bg-zinc-50 pt-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-zinc-900">All Recipes</h1>
