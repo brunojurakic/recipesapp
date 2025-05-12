@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, boolean, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, uuid } from "drizzle-orm/pg-core";
 
 export const user = pgTable("Korisnik", {
   id: text('id_korisnika').primaryKey(),
@@ -38,7 +38,7 @@ export const account = pgTable("Racun", {
 });
 
 export const recipe = pgTable("Recept", {
-  id: text('id_recepta').primaryKey(),
+  id: uuid('id_recepta').defaultRandom().primaryKey(),
   userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
   title: text('naslov').notNull(),
   description: text('opis'),
@@ -50,37 +50,37 @@ export const recipe = pgTable("Recept", {
 });
 
 export const category = pgTable("KategorijaJela", {
-  id: text('id_kategorije').primaryKey(),
+  id: uuid('id_kategorije').defaultRandom().primaryKey(),
   name: text('naziv').notNull().unique()
 });
 
 export const recipeCategory = pgTable("Pripada_kategoriji", {
-  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
-  categoryId: text('id_kategorije').notNull().references(() => category.id, { onDelete: 'cascade' })
+  recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  categoryId: uuid('id_kategorije').notNull().references(() => category.id, { onDelete: 'cascade' })
 });
 
 export const ingredient = pgTable("Sastojak", {
-  id: text('id_sastojka').primaryKey(),
+  id: uuid('id_sastojka').defaultRandom().primaryKey(),
   name: text('naziv').notNull().unique(),
   type: text('vrsta').notNull()
 });
 
 export const recipeIngredient = pgTable("Sadrzi_sastojak", {
-  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
-  ingredientId: text('id_sastojka').notNull().references(() => ingredient.id, { onDelete: 'cascade' }),
+  recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  ingredientId: uuid('id_sastojka').notNull().references(() => ingredient.id, { onDelete: 'cascade' }),
   quantity: text('kolicina').notNull()
 });
 
 export const instruction = pgTable("Uputa", {
-  id: text('id_upute').primaryKey(),
-  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  id: uuid('id_upute').defaultRandom().primaryKey(),
+  recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
   stepNumber: integer('korak').notNull(),
   content: text('sadrzaj').notNull()
 });
 
 export const review = pgTable("Recenzija", {
-  id: text('id_recenzije').primaryKey(),
-  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  id: uuid('id_recenzije').defaultRandom().primaryKey(),
+  recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
   userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
   content: text('sadrzaj'),
   rating: integer('ocjena').notNull(), // 1-5
@@ -90,7 +90,7 @@ export const review = pgTable("Recenzija", {
 
 export const bookmark = pgTable("Oznacio", {
   userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  recipeId: text('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
   createdAt: timestamp('datum_kreiranja').notNull()
 });
 

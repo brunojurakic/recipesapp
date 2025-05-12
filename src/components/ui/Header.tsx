@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { UtensilsCrossed } from 'lucide-react'
 import { useSession, signOut } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
-import { except } from 'drizzle-orm/gel-core'
 
 const Header = () => {
   const { data: session, isPending } = useSession();

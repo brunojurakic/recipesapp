@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Loader2, UtensilsCrossed } from "lucide-react";
 import { signIn } from "@/lib/auth-client";
 import Link from "next/link";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 export default function SignIn() {
