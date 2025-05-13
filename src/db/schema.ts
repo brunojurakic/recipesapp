@@ -6,6 +6,7 @@ export const user = pgTable("Korisnik", {
   email: text('email').notNull().unique(),
   emailVerified: boolean('email_verificiran').notNull(),
   image: text('profilna_slika'),
+  roleId: uuid('id_uloge').references(() => role.id, { onDelete: 'set null' }),
   createdAt: timestamp('datum_kreiranja').notNull(),
   updatedAt: timestamp('datum_azuriranja').notNull()
 });
@@ -68,6 +69,7 @@ export const ingredient = pgTable("Sastojak", {
 export const recipeIngredient = pgTable("Sadrzi_sastojak", {
   recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
   ingredientId: uuid('id_sastojka').notNull().references(() => ingredient.id, { onDelete: 'cascade' }),
+  unitId: uuid('id_jedinice').notNull().references(() => unit.id, { onDelete: 'restrict' }),
   quantity: text('kolicina').notNull()
 });
 
@@ -93,6 +95,31 @@ export const bookmark = pgTable("Oznacio", {
   recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
   createdAt: timestamp('datum_kreiranja').notNull()
 });
+
+export const allergy = pgTable("Alergija", {
+  id: uuid('id_alergije').defaultRandom().primaryKey(),
+  name: text('naziv').notNull().unique()
+});
+
+export const recipeAllergy = pgTable("SadrziAlergiju", {
+  recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
+  allergyId: uuid('id_alergije').notNull().references(() => allergy.id, { onDelete: 'cascade' })
+});
+
+export const role = pgTable("Uloga", {
+  id: uuid("id_uloge").defaultRandom().primaryKey(),
+  name: text("naziv").notNull().unique(),
+  description: text("opis")
+});
+
+export const unit = pgTable("MjernaJedinica", {
+  id: uuid("id_jedinice").defaultRandom().primaryKey(),
+  name: text("naziv").notNull().unique(),        
+  abbreviation: text("kratica").notNull(),       
+  type: text("tip").notNull()                    
+});
+
+
 
 
 export const schema = {user, session, account}
