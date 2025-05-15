@@ -32,5 +32,11 @@ const recipeData = {
 export async function POST(request: NextRequest) {
   const zod = recipeZodSchema.safeParse(recipeData)
 
+  if (zod.success) {
+    console.log('sycedd');
+    
+    
+  }
+
   return NextResponse.json(zod)
 }
