@@ -8,7 +8,6 @@ export const recipeZodSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   servings: z.number().min(1, "Servings must be at least 1"),
   preparationTime: z.number().min(1, "Preparation time must be at least 1 minute"),
-  userId: z.string(),
   image: z
     .any()
     .transform((fileList) => {
