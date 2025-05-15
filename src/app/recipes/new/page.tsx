@@ -6,15 +6,22 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { recipeZodSchema } from '@/lib/validations/recipe-zod'
 import RecipeForm from '@/components/forms/RecipeForm'
 import InstructionsForm from '@/components/forms/InstructionsForm'
+import { useState } from 'react'
+import { FORM_STEPS } from '@/lib/utils/constants'
 
 const NewRecipePage = () => {
+  const [currentStep, setCurrentStep] = useState(1)
+  const totalSteps = 2
+
   const {
     control,
     register,
     handleSubmit,
+    trigger,
     formState: { errors }
   } = useForm<CreateRecipeFormData>({
-    resolver: zodResolver(recipeZodSchema)
+    resolver: zodResolver(recipeZodSchema),
+    mode: 'onChange'
   })
 
   const {
@@ -22,7 +29,8 @@ const NewRecipePage = () => {
     append: appendInstruction,
     remove: removeInstruction
   } = useFieldArray({
-    control, name: 'instructions'
+    control,
+    name: 'instructions'
   })
 
   const onValid = (data: CreateRecipeFormData) => {
@@ -33,20 +41,56 @@ const NewRecipePage = () => {
     console.log("❌ Validation errors:", errors)
   }
 
+  const handleNext = async () => {
+    const currentStepConfig = FORM_STEPS[currentStep - 1]
+    const isStepValid = await trigger(currentStepConfig.fields)
+    
+    if (isStepValid) {
+      setCurrentStep(prev => Math.min(prev + 1, totalSteps))
+    }
+  }
+
+  const handleBack = () => {
+    setCurrentStep(prev => Math.max(prev - 1, 1))
+  }
+
   return (
     <div className='max-w-4xl mx-auto p-6 pt-25'>
       <h1 className='text-2xl font-bold mb-6'>Create New Recipe</h1>
       <form onSubmit={handleSubmit(onValid, onInvalid)} className='space-y-6'>
-        <RecipeForm register={register} errors={errors} />
-        <InstructionsForm
-          register={register}
-          errors={errors}
-          instructionFields={instructionFields}
-          appendInstruction={appendInstruction}
-          removeInstruction={removeInstruction}
-        />
+        {currentStep === 1 && (
+          <RecipeForm register={register} errors={errors} />
+        )}
 
-        <button type='submit'>Create</button>
+        {currentStep === 2 && (
+          <InstructionsForm
+            register={register}
+            errors={errors}
+            instructionFields={instructionFields}
+            appendInstruction={appendInstruction}
+            removeInstruction={removeInstruction}
+          />
+        )}
+
+        <div className='flex justify-between mt-8'>
+          {currentStep > 1 && (
+            <button onClick={handleBack} className='bg-zinc-200 text-black px-4 py-2 rounded-md hover:bg-zinc-300 hover:cursor-pointer'
+            >
+              Back
+            </button>
+          )}
+
+          {currentStep < totalSteps ? (
+            <button onClick={handleNext} className='bg-zinc-200 text-black px-4 py-2 rounded-md hover:bg-zinc-300 hover:cursor-pointer ml-auto'>
+              Next
+            </button>
+          ) : (
+            <button type='submit'
+              className='px-4 py-2 bg-green-500 text-white rounded ml-auto'>
+              Create Recipe
+            </button>
+          )}
+        </div>
       </form>
     </div>
   )

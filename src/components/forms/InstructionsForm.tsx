@@ -1,6 +1,7 @@
 import { UseFormRegister, FieldErrors } from 'react-hook-form'
 import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
 import { FieldArrayWithId } from 'react-hook-form'
+import { Plus } from 'lucide-react'
 
 interface InstructionsFormProps {
   register: UseFormRegister<CreateRecipeFormData>
@@ -18,8 +19,14 @@ const InstructionsForm = ({
   removeInstruction
 }: InstructionsFormProps) => {
   return (
-    <div className="space-y-4">
-      <h2 className="text-xl font-semibold">Instructions</h2>
+    <div className="space-y-4 mb-10">
+      <div className='flex justify-between'>
+        <h2 className="text-xl font-semibold">Instructions</h2>
+        <button onClick={() => appendInstruction({ stepNumber: instructionFields.length + 1, content: '' })}
+          className="bg-zinc-200 text-black p-1 rounded-md hover:bg-zinc-300 hover:cursor-pointer">
+          <Plus />
+        </button>
+      </div>
 
       {instructionFields.map((field, index) => (
         <div key={field.id} className="flex gap-4 items-start">
@@ -41,10 +48,6 @@ const InstructionsForm = ({
         </div>
       ))}
 
-      <button onClick={() => appendInstruction({ stepNumber: instructionFields.length + 1, content: '' })}
-        className="bg-zinc-200 text-black px-4 py-2 rounded-md hover:bg-zinc-300 hover:cursor-pointer">
-        Add Instruction
-      </button>
       {errors.instructions && <p className='text-red-500'>{errors.instructions.message}</p>}
     </div>
   )
