@@ -25,8 +25,8 @@ export const recipeZodSchema = z.object({
     })
     .refine((file) => file && ACCEPTED_IMAGE_TYPES.includes(file.type), {
       message: "Only .jpg, .jpeg, .png and .webp formats are supported.",
-    }),
-
+    })
+    .pipe(z.instanceof(File)).optional(),
   instructions: z.array(z.object({
     stepNumber: z.number(),
     content: z.string().min(1, "Instruction content is required")
