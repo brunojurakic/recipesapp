@@ -33,8 +33,8 @@ export const recipeZodSchema = z.object({
   categories: z.array(z.string().uuid()).min(1, "At least one category is required"),
   ingredients: z.array(z.object({
     ingredientId: z.string().uuid(),
-    unitId: z.string().uuid(),
-    quantity: z.string().min(1, "Quantity is required")
+    quantity: z.string().min(1, "Quantity is required"),
+    unitId: z.string().uuid()
   })).min(1, "At least one ingredient is required"),
   allergies: z.array(z.string().uuid()).optional()
 });

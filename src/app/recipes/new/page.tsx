@@ -1,17 +1,18 @@
 "use client"
 
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useForm, useFieldArray, FieldErrors } from 'react-hook-form'
 import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { recipeZodSchema } from '@/lib/validations/recipe-zod'
 import RecipeForm from '@/components/forms/RecipeForm'
 import InstructionsForm from '@/components/forms/InstructionsForm'
+import IngredientsForm from '@/components/forms/IngredientsForm'
 import { useState } from 'react'
 import { FORM_STEPS } from '@/lib/utils/constants'
 
 const NewRecipePage = () => {
   const [currentStep, setCurrentStep] = useState(1)
-  const totalSteps = 2
+  const totalSteps = 3
 
   const {
     control,
@@ -33,11 +34,20 @@ const NewRecipePage = () => {
     name: 'instructions'
   })
 
+  const {
+    fields: ingredientFields,
+    append: appendIngredient,
+    remove: removeIngredient
+  } = useFieldArray({
+    control,
+    name: 'ingredients'
+  })
+
   const onValid = (data: CreateRecipeFormData) => {
     console.log("✅ Valid data:", data)
   }
 
-  const onInvalid = (errors) => {
+  const onInvalid = (errors: FieldErrors<CreateRecipeFormData>) => {
     console.log("❌ Validation errors:", errors)
   }
 
@@ -71,6 +81,17 @@ const NewRecipePage = () => {
             removeInstruction={removeInstruction}
           />
         )}
+
+        {currentStep === 3 && (
+          <IngredientsForm
+            register={register}
+            control={control}
+            errors={errors}
+            ingredientFields={ingredientFields}
+            appendIngredient={appendIngredient}
+            removeIngredient={removeIngredient}
+          />
+        )} 
 
         <div className='flex justify-between mt-8'>
           {currentStep > 1 && (
