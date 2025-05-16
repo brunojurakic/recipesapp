@@ -75,18 +75,13 @@ const IngredientsForm = ({
         </div>
       )}
 
-      {isLoading && (
-        <div className="text-center p-4">
-          <p className="text-gray-500">Loading measurement units...</p>
-        </div>
-      )}
+
 
       {ingredientFields.map((field, index) => (
         <div key={field.id} className="p-4 border rounded-md bg-gray-50">
           <div className="flex justify-between items-center mb-3">
             <h3 className="font-medium">Ingredient {index + 1}</h3>
-            <Button variant="ghost" onClick={() => removeIngredient(index)} size={'icon'}
-            >
+            <Button variant="ghost" onClick={() => removeIngredient(index)} size={'icon'}>
               <X className="text-red-500" />
             </Button>
           </div>
@@ -94,9 +89,7 @@ const IngredientsForm = ({
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor={`ingredients.${index}.name`}>Name</Label>
-              <Input
-                id={`ingredients.${index}.name`}
-                {...register(`ingredients.${index}.name`)}
+              <Input id={`ingredients.${index}.name`} {...register(`ingredients.${index}.name`)}
                 placeholder="e.g. Flour"
               />
               {errors.ingredients?.[index]?.name && (
@@ -106,9 +99,7 @@ const IngredientsForm = ({
 
             <div className="space-y-2">
               <Label htmlFor={`ingredients.${index}.quantity`}>Quantity</Label>
-              <Input
-                id={`ingredients.${index}.quantity`}
-                {...register(`ingredients.${index}.quantity`)}
+              <Input id={`ingredients.${index}.quantity`} {...register(`ingredients.${index}.quantity`)}
                 placeholder="e.g. 200"
               />
               {errors.ingredients?.[index]?.quantity && (
