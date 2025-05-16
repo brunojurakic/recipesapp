@@ -11,12 +11,12 @@ export const FORM_STEPS = [
   },
   {
     id: 3,
-    title: 'Categories',
-    fields: ['categories'] as const
+    title: 'Ingredients',
+    fields: ['ingredients'] as const
   },
   {
     id: 4,
-    title: 'Ingredients',
-    fields: ['ingredients'] as const
+    title: 'Categories and allergies',
+    fields: ['categories, allergies'] as const
   }
 ] as const;

@@ -11,10 +11,11 @@ import { useState } from 'react'
 import { FORM_STEPS } from '@/lib/utils/constants'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
+import CategoriesAllergiesForm from '@/components/forms/CategoriesAllergiesForm'
 
 const NewRecipePage = () => {
   const [currentStep, setCurrentStep] = useState(1)
-  const totalSteps = 3
+  const totalSteps = 4
 
   const {
     control,
@@ -56,7 +57,7 @@ const NewRecipePage = () => {
   const handleNext = async () => {
     const currentStepConfig = FORM_STEPS[currentStep - 1]
     const isStepValid = await trigger(currentStepConfig.fields)
-    
+
     if (isStepValid) {
       setCurrentStep(prev => Math.min(prev + 1, totalSteps))
     }
@@ -95,6 +96,14 @@ const NewRecipePage = () => {
           />
         )}
 
+        {currentStep === 4 && (
+          <CategoriesAllergiesForm
+            register={register}
+            control={control}
+            errors={errors}
+          />
+        )}
+
         <div className='flex justify-between mt-8'>
           {currentStep > 1 && (
             <Button onClick={handleBack}>
@@ -104,7 +113,7 @@ const NewRecipePage = () => {
 
           {currentStep < totalSteps ? (
             <Button onClick={handleNext} className='ml-auto'>
-              Next<ArrowRight/>
+              Next<ArrowRight />
             </Button>
           ) : (
             <Button type='submit' variant={'outline'}>

@@ -1,0 +1,139 @@
+"use client"
+
+import { FieldErrors, Control, Controller } from 'react-hook-form'
+import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
+import { useEffect, useState } from 'react'
+import { Label } from '../ui/label'
+import { Alert, AlertDescription } from '../ui/alert'
+import { MultiSelect, SelectableItem } from '../ui/multi-select'
+
+interface CategoriesAllergiesFormProps {
+  control: Control<CreateRecipeFormData>
+  errors: FieldErrors<CreateRecipeFormData>
+}
+
+const CategoriesAllergiesForm = ({
+  control,
+  errors
+}: CategoriesAllergiesFormProps) => {
+
+  const [categories, setCategories] = useState<SelectableItem[]>([])
+  const [allergies, setAllergies] = useState<SelectableItem[]>([])
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true)
+  const [isAllergiesLoading, setIsAllergiesLoading] = useState(true)
+  const [categoriesError, setCategoriesError] = useState<string | null>(null)
+  const [allergiesError, setAllergiesError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setIsCategoriesLoading(true)
+        const response = await fetch('/api/categories')
+        if (!response.ok) {
+          throw new Error('Failed to fetch categories')
+        }
+        const data = await response.json()
+        setCategories(data)
+      } catch (err) {
+        console.error('Error fetching categories:', err)
+        setCategoriesError(err instanceof Error ? err.message : 'An error occurred')
+      } finally {
+        setIsCategoriesLoading(false)
+      }
+    }
+
+    fetchCategories()
+  }, [])
+
+  useEffect(() => {
+    const fetchAllergies = async () => {
+      try {
+        setIsAllergiesLoading(true)
+        const response = await fetch('/api/allergies')
+        if (!response.ok) {
+          throw new Error('Failed to fetch allergies')
+        }
+        const data = await response.json()
+        setAllergies(data)
+      } catch (err) {
+        console.error('Error fetching allergies:', err)
+        setAllergiesError(err instanceof Error ? err.message : 'An error occurred')
+      } finally {
+        setIsAllergiesLoading(false)
+      }
+    }
+
+    fetchAllergies()
+  }, [])
+
+  return (
+    <div className="space-y-6 mb-10">
+      <h2 className="text-xl font-semibold">Categories & Allergies</h2>
+      
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="categories">Categories</Label>
+          {errors.categories && !Array.isArray(errors.categories) && (
+            <p className="text-red-500 text-sm">{errors.categories.message}</p>
+          )}
+        </div>
+        
+        <Controller
+          name="categories"
+          control={control}
+          render={({ field }) => (
+            <MultiSelect
+              items={categories}
+              selectedIds={field.value || []}
+              onChange={field.onChange}
+              isLoading={isCategoriesLoading}
+              label="Categories"
+              placeholder="Select categories"
+              searchPlaceholder="Search categories..."
+              emptyMessage="No categories found."
+              badgeVariant="secondary"
+            />
+          )}
+        />
+      </div>
+      
+      <div className="space-y-2">
+        <div className="flex items-center justify-between">
+          <Label htmlFor="allergies">Allergies (Optional)</Label>
+          {errors.allergies && !Array.isArray(errors.allergies) && (
+            <p className="text-red-500 text-sm">{errors.allergies.message}</p>
+          )}
+        </div>
+        
+        <Controller
+          name="allergies"
+          control={control}
+          render={({ field }) => (
+            <MultiSelect
+              items={allergies}
+              selectedIds={field.value || []}
+              onChange={field.onChange}
+              isLoading={isAllergiesLoading}
+              label="Allergies"
+              placeholder="Select allergies"
+              searchPlaceholder="Search allergies..."
+              emptyMessage="No allergies found."
+              badgeVariant="outline"
+            />
+          )}
+        />
+      </div>
+
+      {(categoriesError || allergiesError) && (
+        <Alert variant="destructive">
+          <AlertDescription>
+            {categoriesError && <p>{categoriesError}</p>}
+            {allergiesError && <p>{allergiesError}</p>}
+          </AlertDescription>
+        </Alert>
+      )}
+    </div>
+  )
+}
+
+export default CategoriesAllergiesForm
