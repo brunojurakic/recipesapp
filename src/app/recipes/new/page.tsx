@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { recipeZodSchema } from '@/lib/validations/recipe-zod'
 import RecipeForm from '@/components/forms/RecipeForm'
 import InstructionsForm from '@/components/forms/InstructionsForm'
-import IngredientsForm from '@/components/forms/IngredientsForm'
 import { useState } from 'react'
 import { FORM_STEPS } from '@/lib/utils/constants'
 
@@ -85,7 +84,6 @@ const NewRecipePage = () => {
         {currentStep === 3 && (
           <IngredientsForm
             register={register}
-            control={control}
             errors={errors}
             ingredientFields={ingredientFields}
             appendIngredient={appendIngredient}

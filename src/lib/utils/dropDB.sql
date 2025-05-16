@@ -1,0 +1,10 @@
+DO $$ 
+DECLARE
+    r RECORD;
+BEGIN
+    EXECUTE 'SET CONSTRAINTS ALL DEFERRED';
+    FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+        EXECUTE 'DROP TABLE IF EXISTS "' || r.tablename || '" CASCADE';
+    END LOOP;
+    EXECUTE 'SET CONSTRAINTS ALL IMMEDIATE';
+END $$;

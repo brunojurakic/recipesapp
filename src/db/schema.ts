@@ -62,15 +62,10 @@ export const recipeCategory = pgTable("Pripada_kategoriji", {
 
 export const ingredient = pgTable("Sastojak", {
   id: uuid('id_sastojka').defaultRandom().primaryKey(),
-  name: text('naziv').notNull().unique(),
-  type: text('vrsta').notNull()
-});
-
-export const recipeIngredient = pgTable("Sadrzi_sastojak", {
   recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
-  ingredientId: uuid('id_sastojka').notNull().references(() => ingredient.id, { onDelete: 'cascade' }),
+  name: text('naziv').notNull(),
+  quantity: text('kolicina').notNull(),
   unitId: uuid('id_jedinice').notNull().references(() => unit.id, { onDelete: 'restrict' }),
-  quantity: text('kolicina').notNull()
 });
 
 export const instruction = pgTable("Uputa", {
@@ -118,8 +113,5 @@ export const unit = pgTable("MjernaJedinica", {
   abbreviation: text("kratica").notNull(),       
   type: text("tip").notNull()                    
 });
-
-
-
 
 export const schema = {user, session, account}
