@@ -17,6 +17,6 @@ export const FORM_STEPS = [
   {
     id: 4,
     title: 'Categories and allergies',
-    fields: ['categories, allergies'] as const
+    fields: ['categories', 'allergies'] as const
   }
 ] as const;

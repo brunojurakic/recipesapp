@@ -1,6 +1,6 @@
 "use client"
 
-import { useForm, useFieldArray, FieldErrors } from 'react-hook-form'
+import { useForm, useFieldArray} from 'react-hook-form'
 import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { recipeZodSchema } from '@/lib/validations/recipe-zod'
@@ -46,12 +46,9 @@ const NewRecipePage = () => {
     name: 'ingredients'
   })
 
-  const onValid = (data: CreateRecipeFormData) => {
-    console.log("✅ Valid data:", data)
-  }
-
-  const onInvalid = (errors: FieldErrors<CreateRecipeFormData>) => {
-    console.log("❌ Validation errors:", errors)
+  const onSubmit = async (data: CreateRecipeFormData) => {
+    await fetch('/api/recipes', {method: "POST", body: JSON.stringify(data)})
+    
   }
 
   const handleNext = async () => {
@@ -70,7 +67,7 @@ const NewRecipePage = () => {
   return (
     <div className='max-w-4xl mx-auto p-6 pt-25'>
       <h1 className='text-2xl font-bold mb-6'>Create New Recipe</h1>
-      <form onSubmit={handleSubmit(onValid, onInvalid)} className='space-y-6'>
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
         {currentStep === 1 && (
           <RecipeForm register={register} errors={errors} />
         )}
@@ -98,7 +95,6 @@ const NewRecipePage = () => {
 
         {currentStep === 4 && (
           <CategoriesAllergiesForm
-            register={register}
             control={control}
             errors={errors}
           />

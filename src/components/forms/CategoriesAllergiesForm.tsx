@@ -91,7 +91,7 @@ const CategoriesAllergiesForm = ({
               placeholder="Select categories"
               searchPlaceholder="Search categories..."
               emptyMessage="No categories found."
-              badgeVariant="secondary"
+              badgeVariant="outline"
             />
           )}
         />
