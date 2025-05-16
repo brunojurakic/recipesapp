@@ -3,11 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSession } from "@/lib/auth-client";
-import RecipeCard from "@/components/ui/RecipeCard";
+import RecipeCard from "@/components/RecipeCard";
 
 interface Recipe {
   id: string;
-  title: string;AQ
+  title: string;
   description: string | null;
   image_path: string | null;
   servings: number;

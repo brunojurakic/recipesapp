@@ -12,7 +12,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // protected routes
-  const isProtectedRoute = ['/profile'].includes(pathname);
+  const isProtectedRoute = ['/profile', '/recipes/new'].includes(pathname);
   if (!sessionCookie && isProtectedRoute) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
@@ -24,6 +24,7 @@ export const config = {
   matcher: [
     '/profile',
     '/login',
-    '/signup'
+    '/signup',
+    '/recipes/new'
   ]
 };

@@ -1,7 +1,9 @@
 import { UseFormRegister, FieldErrors } from 'react-hook-form'
 import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
 import { FieldArrayWithId } from 'react-hook-form'
-import { Plus } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
+import { Button } from '../ui/button'
+import { Input } from '../ui/input'
 
 interface InstructionsFormProps {
   register: UseFormRegister<CreateRecipeFormData>
@@ -22,29 +24,23 @@ const InstructionsForm = ({
     <div className="space-y-4 mb-10">
       <div className='flex justify-between'>
         <h2 className="text-xl font-semibold">Instructions</h2>
-        <button onClick={() => appendInstruction({ stepNumber: instructionFields.length + 1, content: '' })}
-          className="bg-zinc-200 text-black p-1 rounded-md hover:bg-zinc-300 hover:cursor-pointer">
+        <Button variant={'outline'} onClick={() => appendInstruction({ stepNumber: instructionFields.length + 1, content: '' })}>
           <Plus />
-        </button>
+        </Button>
       </div>
 
       {instructionFields.map((field, index) => (
         <div key={field.id} className="flex gap-4 items-start">
           <div className="w-16 text-center pt-2">Step {index + 1}</div>
           <div className="flex-1">
-            <input
-              {...register(`instructions.${index}.content`)}
-              placeholder={`Step ${index + 1} instruction`}
-              className="border rounded-md p-2 w-full focus:outline-1"
-            />
+            <Input {...register(`instructions.${index}.content`)} placeholder={`Step ${index + 1} instruction`} />
             {errors.instructions?.[index]?.content && (
               <p className="text-red-500 text">{errors.instructions[index].content?.message}</p>
             )}
           </div>
-          <button onClick={() => removeInstruction(index)}
-            className="text-red-500 text-center pt-2 hover:cursor-pointer p-2 rounded-md">
-            Remove
-          </button>
+          <Button onClick={() => removeInstruction(index)} variant={'outline'}>
+            <X className='text-red-500'/>
+          </Button>
         </div>
       ))}
 

@@ -6,8 +6,11 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { recipeZodSchema } from '@/lib/validations/recipe-zod'
 import RecipeForm from '@/components/forms/RecipeForm'
 import InstructionsForm from '@/components/forms/InstructionsForm'
+import IngredientsForm from '@/components/forms/IngredientsForm'
 import { useState } from 'react'
 import { FORM_STEPS } from '@/lib/utils/constants'
+import { Button } from '@/components/ui/button'
+import { ArrowLeft, ArrowRight } from 'lucide-react'
 
 const NewRecipePage = () => {
   const [currentStep, setCurrentStep] = useState(1)
@@ -21,7 +24,7 @@ const NewRecipePage = () => {
     formState: { errors }
   } = useForm<CreateRecipeFormData>({
     resolver: zodResolver(recipeZodSchema),
-    mode: 'onChange'
+    mode: 'onBlur'
   })
 
   const {
@@ -84,30 +87,29 @@ const NewRecipePage = () => {
         {currentStep === 3 && (
           <IngredientsForm
             register={register}
+            control={control}
             errors={errors}
             ingredientFields={ingredientFields}
             appendIngredient={appendIngredient}
             removeIngredient={removeIngredient}
           />
-        )} 
+        )}
 
         <div className='flex justify-between mt-8'>
           {currentStep > 1 && (
-            <button onClick={handleBack} className='bg-zinc-200 text-black px-4 py-2 rounded-md hover:bg-zinc-300 hover:cursor-pointer'
-            >
-              Back
-            </button>
+            <Button onClick={handleBack}>
+              <ArrowLeft />Back
+            </Button>
           )}
 
           {currentStep < totalSteps ? (
-            <button onClick={handleNext} className='bg-zinc-200 text-black px-4 py-2 rounded-md hover:bg-zinc-300 hover:cursor-pointer ml-auto'>
-              Next
-            </button>
+            <Button onClick={handleNext} className='ml-auto'>
+              Next<ArrowRight/>
+            </Button>
           ) : (
-            <button type='submit'
-              className='px-4 py-2 bg-green-500 text-white rounded ml-auto'>
+            <Button type='submit' variant={'outline'}>
               Create Recipe
-            </button>
+            </Button>
           )}
         </div>
       </form>

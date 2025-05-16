@@ -1,7 +1,7 @@
 import Image from "next/image";
-import SearchBar from "@/components/ui/SearchBar";
-import RecipeCard from "@/components/ui/RecipeCard";
-import Header from "@/components/ui/Header";
+import SearchBar from "@/components/SearchBar";
+import RecipeCard from "@/components/RecipeCard";
+import Header from "@/components/Header";
 import { UtensilsCrossed } from 'lucide-react';
 
 const FEATURED_RECIPES = [
