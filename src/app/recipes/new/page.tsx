@@ -1,6 +1,6 @@
 "use client"
 
-import { useForm, useFieldArray} from 'react-hook-form'
+import { useForm, useFieldArray } from 'react-hook-form'
 import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { recipeZodSchema } from '@/lib/validations/recipe-zod'
@@ -16,6 +16,7 @@ import CategoriesAllergiesForm from '@/components/forms/CategoriesAllergiesForm'
 const NewRecipePage = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 4
+  const [image, setImage] = useState<File | null>(null)
 
   const {
     control,
@@ -47,8 +48,17 @@ const NewRecipePage = () => {
   })
 
   const onSubmit = async (data: CreateRecipeFormData) => {
-    await fetch('/api/recipes', {method: "POST", body: JSON.stringify(data)})
-    
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      if (key !== 'image') {
+        formData.append(key, typeof value === 'object' ? JSON.stringify(value) : String(value))
+      }
+    })
+    if (image) {
+      formData.append('image', image)
+    }
+    console.log(formData)
+    await fetch('/api/recipes', { method: 'POST', body: formData })
   }
 
   const handleNext = async () => {
@@ -69,7 +79,7 @@ const NewRecipePage = () => {
       <h1 className='text-2xl font-bold mb-6'>Create New Recipe</h1>
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
         {currentStep === 1 && (
-          <RecipeForm register={register} errors={errors} />
+          <RecipeForm register={register} errors={errors} image={image} setImage={setImage} />
         )}
 
         {currentStep === 2 && (
