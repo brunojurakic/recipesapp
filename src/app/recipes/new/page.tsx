@@ -12,8 +12,11 @@ import { FORM_STEPS } from '@/lib/utils/constants'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import CategoriesAllergiesForm from '@/components/forms/CategoriesAllergiesForm'
+import { useRouter } from 'next/navigation'
+import { toast } from "sonner"
 
 const NewRecipePage = () => {
+  const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 4
   const [image, setImage] = useState<File | null>(null)
@@ -64,8 +67,24 @@ const NewRecipePage = () => {
     if (image) {
       formData.append('image', image);
     }
-    console.log(formData)
-    await fetch('/api/recipes', { method: 'POST', body: formData })
+      try {
+      const response = await fetch('/api/recipes', { 
+        method: 'POST', 
+        body: formData 
+      });
+      
+      if (!response.ok) {
+        const error = await response.json();
+        toast.error(error.error || 'Failed to create recipe');
+        return;
+      }
+      
+      toast.success('Recipe created successfully!');
+      router.push('/recipes');
+    } catch (error) {
+      console.error(error)
+      toast.error('An unexpected error occurred');
+    }
   }
 
   const handleNext = async () => {
