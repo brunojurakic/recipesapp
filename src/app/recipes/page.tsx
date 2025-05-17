@@ -21,6 +21,7 @@ interface RecipeWithRelations extends Recipe {
 
 export default async function RecipesPage() {
   const response = await fetch(`${process.env.NEXT_BASE_URL}/api/recipes`)
+
   if (!response.ok) {
     throw new Error('Failed to fetch recipes')
   }
