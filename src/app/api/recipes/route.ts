@@ -5,6 +5,48 @@ import { headers } from "next/headers";
 import { recipeServerSchema } from "@/lib/validations/recipe-zod-server";
 import { db } from "@/db/drizzle";
 import { recipe, instruction, ingredient, recipeCategory, recipeAllergy } from "@/db/schema";
+import { desc } from "drizzle-orm";
+
+
+export async function GET() {
+  try {
+    const recipes = await db.query.recipe.findMany({
+      with: {
+        user: {
+          columns: {
+            name: true,
+            image: true
+          }
+        },
+        categories: {
+          with: {
+            category: true
+          }
+        },
+        ingredients: {
+          with: {
+            unit: true
+          }
+        },
+        instructions: true,
+        allergies: {
+          with: {
+            allergy: true
+          }
+        }
+      },
+      orderBy: (recipes) => [desc(recipes.createdAt)]
+    });
+
+    return NextResponse.json(recipes);
+  } catch (error) {
+    console.error('Error fetching recipes:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch recipes' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({
