@@ -17,6 +17,7 @@ const NewRecipePage = () => {
   const [currentStep, setCurrentStep] = useState(1)
   const totalSteps = 4
   const [image, setImage] = useState<File | null>(null)
+  const [imageError, setImageError] = useState<string | null>(null)
 
   const {
     control,
@@ -48,20 +49,31 @@ const NewRecipePage = () => {
   })
 
   const onSubmit = async (data: CreateRecipeFormData) => {
-    const formData = new FormData()
+    if (!image) {
+      setImageError('Image is required.');
+      setCurrentStep(1);
+      return;
+    }
+    setImageError(null);
+    const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (key !== 'image') {
-        formData.append(key, typeof value === 'object' ? JSON.stringify(value) : String(value))
+        formData.append(key, typeof value === 'object' ? JSON.stringify(value) : String(value));
       }
-    })
+    });
     if (image) {
-      formData.append('image', image)
+      formData.append('image', image);
     }
     console.log(formData)
     await fetch('/api/recipes', { method: 'POST', body: formData })
   }
 
   const handleNext = async () => {
+    if (currentStep === 1 && !image) {
+      setImageError('Image is required');
+      return;
+    }
+    setImageError(null);
     const currentStepConfig = FORM_STEPS[currentStep - 1]
     const isStepValid = await trigger(currentStepConfig.fields)
 
@@ -79,7 +91,16 @@ const NewRecipePage = () => {
       <h1 className='text-2xl font-bold mb-6'>Create New Recipe</h1>
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
         {currentStep === 1 && (
-          <RecipeForm register={register} errors={errors} image={image} setImage={setImage} />
+          <RecipeForm
+            register={register}
+            errors={errors}
+            image={image}
+            setImage={file => {
+              setImage(file);
+              if (file) setImageError(null);
+            }}
+            imageError={imageError}
+          />
         )}
 
         {currentStep === 2 && (
