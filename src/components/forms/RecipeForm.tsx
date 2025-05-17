@@ -5,6 +5,8 @@ import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
 import { Input } from '../ui/input'
 import { Textarea } from '../ui/textarea'
 import { Label } from '../ui/label'
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
 
 interface RecipeFormProps {
   register: UseFormRegister<CreateRecipeFormData>
@@ -15,6 +17,21 @@ interface RecipeFormProps {
 }
 
 const RecipeForm = ({ register, errors, image, setImage, imageError }: RecipeFormProps) => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!image) {
+      setPreviewUrl(null);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(image);
+    setPreviewUrl(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [image]);
+
   return (
     <div className="space-y-6 mb-10">
       <h2 className="text-xl font-semibold">Recipe Details</h2>
@@ -49,9 +66,7 @@ const RecipeForm = ({ register, errors, image, setImage, imageError }: RecipeFor
           />
           {errors.preparationTime && <p className="text-red-500 text-sm">{errors.preparationTime.message}</p>}
         </div>
-      </div>
-
-      <div className="space-y-2">
+      </div><div className="space-y-2">
         <Label htmlFor="image">Image</Label>
         <Input id="image" type="file" 
           accept="image/jpeg,image/jpg,image/png,image/webp" className="cursor-pointer"
@@ -60,7 +75,20 @@ const RecipeForm = ({ register, errors, image, setImage, imageError }: RecipeFor
             setImage(file);
           }}
         />
-        {image && <p className="text-green-600 text-sm">Selected: {image.name}</p>}
+        {image && previewUrl && (
+          <div className="mt-2">
+            <div className="relative w-full max-w-[300px] h-[200px] rounded-md overflow-hidden border border-gray-200">
+              <Image
+                src={previewUrl}
+                alt="Recipe preview"
+                fill
+                sizes="(max-width: 300px) 100vw, 300px"
+                className="object-cover"
+                priority
+              />
+            </div>
+          </div>
+        )}
         {imageError && <p className="text-red-500 text-sm">{imageError}</p>}
         {errors.image && <p className="text-red-500 text-sm">{errors.image.message}</p>}
       </div>
