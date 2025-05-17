@@ -5,7 +5,7 @@ import { headers } from "next/headers";
 import { recipeServerSchema } from "@/lib/validations/recipe-zod-server";
 import { db } from "@/db/drizzle";
 import { recipe, instruction, ingredient, recipeCategory, recipeAllergy } from "@/db/schema";
-import { desc } from "drizzle-orm";
+import { asc, desc } from "drizzle-orm";
 
 
 export async function GET() {
@@ -14,28 +14,41 @@ export async function GET() {
       with: {
         user: {
           columns: {
-            name: true,
-            image: true
+            name: true
           }
         },
         categories: {
           with: {
-            category: true
-          }
+            category: true,
+          },
+        },
+        allergies: {
+          with: {
+            allergy: true,
+          },
+        },
+        instructions: {
+          orderBy: (table) => [
+            asc(table.stepNumber)
+          ],
         },
         ingredients: {
           with: {
-            unit: true
-          }
+            unit: true,
+          },
         },
-        instructions: true,
-        allergies: {
+        reviews: {
           with: {
-            allergy: true
-          }
-        }
+            user: true,
+          },
+          orderBy: (table) => [
+            desc(table.createdAt)
+          ],
+        },
       },
-      orderBy: (recipes) => [desc(recipes.createdAt)]
+      orderBy: (table) => [
+        desc(table.createdAt)
+      ],
     });
 
     return NextResponse.json(recipes);

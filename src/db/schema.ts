@@ -1,4 +1,5 @@
 import { pgTable, text, timestamp, boolean, integer, uuid } from "drizzle-orm/pg-core";
+import { relations } from 'drizzle-orm';
 
 export const user = pgTable("Korisnik", {
   id: text('id_korisnika').primaryKey(),
@@ -113,5 +114,98 @@ export const unit = pgTable("MjernaJedinica", {
   abbreviation: text("kratica").notNull(),       
   type: text("tip").notNull()                    
 });
+
+export const userRelations = relations(user, ({ many }) => ({
+  recipes: many(recipe),
+  reviews: many(review),
+  bookmarks: many(bookmark),
+}));
+
+export const recipeRelations = relations(recipe, ({ one, many }) => ({
+  user: one(user, {
+    fields: [recipe.userId],
+    references: [user.id],
+  }),
+  categories: many(recipeCategory),
+  allergies: many(recipeAllergy),
+  instructions: many(instruction),
+  ingredients: many(ingredient),
+  reviews: many(review),
+  bookmarks: many(bookmark),
+}));
+
+export const categoryRelations = relations(category, ({ many }) => ({
+  recipes: many(recipeCategory),
+}));
+
+export const recipeCategoryRelations = relations(recipeCategory, ({ one }) => ({
+  recipe: one(recipe, {
+    fields: [recipeCategory.recipeId],
+    references: [recipe.id],
+  }),
+  category: one(category, {
+    fields: [recipeCategory.categoryId],
+    references: [category.id],
+  }),
+}));
+
+export const allergyRelations = relations(allergy, ({ many }) => ({
+  recipes: many(recipeAllergy),
+}));
+
+export const recipeAllergyRelations = relations(recipeAllergy, ({ one }) => ({
+  recipe: one(recipe, {
+    fields: [recipeAllergy.recipeId],
+    references: [recipe.id],
+  }),
+  allergy: one(allergy, {
+    fields: [recipeAllergy.allergyId],
+    references: [allergy.id],
+  }),
+}));
+
+export const instructionRelations = relations(instruction, ({ one }) => ({
+  recipe: one(recipe, {
+    fields: [instruction.recipeId],
+    references: [recipe.id],
+  }),
+}));
+
+export const ingredientRelations = relations(ingredient, ({ one }) => ({
+  recipe: one(recipe, {
+    fields: [ingredient.recipeId],
+    references: [recipe.id],
+  }),
+  unit: one(unit, {
+    fields: [ingredient.unitId],
+    references: [unit.id],
+  }),
+}));
+
+export const unitRelations = relations(unit, ({ many }) => ({
+  ingredients: many(ingredient),
+}));
+
+export const reviewRelations = relations(review, ({ one }) => ({
+  recipe: one(recipe, {
+    fields: [review.recipeId],
+    references: [recipe.id],
+  }),
+  user: one(user, {
+    fields: [review.userId],
+    references: [user.id],
+  }),
+}));
+
+export const bookmarkRelations = relations(bookmark, ({ one }) => ({
+  recipe: one(recipe, {
+    fields: [bookmark.recipeId],
+    references: [recipe.id],
+  }),
+  user: one(user, {
+    fields: [bookmark.userId],
+    references: [user.id],
+  }),
+}));
 
 export const schema = {user, session, account}
