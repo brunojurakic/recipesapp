@@ -1,11 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseJSON, saveImage } from "@/lib/utils/functions";
-
-
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export async function POST(request: NextRequest) {
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  
+
+  if (!session) {
+    return NextResponse.json(
+      { error: "Authentication required" },
+      { status: 401 }
+    );
+  }
   const formData = await request.formData();
-  const image = formData.get('image') as File | null;
+  const image = formData.get('image') as File;
 
   
   let imagePath: string | null = null;
