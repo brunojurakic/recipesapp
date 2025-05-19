@@ -12,6 +12,15 @@ export const user = pgTable("Korisnik", {
   updatedAt: timestamp('datum_azuriranja').notNull()
 });
 
+export const verification = pgTable("OauthVerifikacija", {
+  id: text('id_oauth').primaryKey(),
+  identifier: text('identifikator').notNull(),
+  value: text('vrijednost').notNull(),
+  expiresAt: timestamp('vrijedi_do').notNull(),
+  createdAt: timestamp('datum_kreiranja').$defaultFn(() => /* @__PURE__ */ new Date()),
+  updatedAt: timestamp('datum_azuriranja').$defaultFn(() => /* @__PURE__ */ new Date())
+});
+
 export const session = pgTable("Sjednica", {
   id: text('id_sjednice').primaryKey(),
   expiresAt: timestamp('vrijedi_do').notNull(),
@@ -110,9 +119,9 @@ export const role = pgTable("Uloga", {
 
 export const unit = pgTable("MjernaJedinica", {
   id: uuid("id_jedinice").defaultRandom().primaryKey(),
-  name: text("naziv").notNull().unique(),        
-  abbreviation: text("kratica").notNull(),       
-  type: text("tip").notNull()                    
+  name: text("naziv").notNull().unique(),
+  abbreviation: text("kratica").notNull(),
+  type: text("tip").notNull()
 });
 
 export const userRelations = relations(user, ({ many }) => ({
@@ -208,4 +217,4 @@ export const bookmarkRelations = relations(bookmark, ({ one }) => ({
   }),
 }));
 
-export const schema = {user, session, account}
+export const schema = { user, session, account, verification }

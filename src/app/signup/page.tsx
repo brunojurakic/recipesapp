@@ -7,6 +7,10 @@ import { signUp } from "@/lib/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -32,189 +36,172 @@ export default function SignUp() {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50">
-      <div className="relative h-screen w-full flex items-center justify-center">
-        {/* Background gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-zinc-50 z-10" />
-
-        {/* Signup form */}
-        <div className="relative z-20 w-full max-w-xl px-6">
-          <div className="bg-white/90 backdrop-blur-sm rounded-2xl p-8 shadow-xl">
-            {/* Logo and title */}
-            <div className="flex flex-col items-center mb-8">
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="w-full max-w-md px-4">
+        <Card className="w-full">
+          <CardHeader className="space-y-1 text-center">
+            <div className="flex flex-col items-center mb-2">
               <Link href={'/'} className="flex items-center gap-2">
-                <UtensilsCrossed className="h-8 w-8 text-zinc-800" />
-                <h1 className="text-3xl font-bold text-zinc-800">Recipe Share</h1>
+                <UtensilsCrossed className="h-8 w-8" />
+                <h1 className="text-3xl font-bold">Recipe Share</h1>
               </Link>
-              <p className="mt-2 text-zinc-600">Create your account to start sharing recipes</p>
+            </div>
+            <CardTitle className="text-2xl">Create an account</CardTitle>
+            <CardDescription>
+              Enter your details below to create your account
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="first-name">First name</Label>
+                <Input
+                  id="first-name"
+                  type="text"
+                  placeholder="John"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="last-name">Last name</Label>
+                <Input
+                  id="last-name"
+                  type="text"
+                  placeholder="Robinson"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
             </div>
 
-            <div className="space-y-6">
-              {/* Name fields */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="first-name" className="block text-sm font-medium text-zinc-700">
-                    First name
-                  </label>
-                  <input
-                    id="first-name"
-                    type="text"
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    placeholder="Max"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="last-name" className="block text-sm font-medium text-zinc-700">
-                    Last name
-                  </label>
-                  <input
-                    id="last-name"
-                    type="text"
-                    required
-                    className="mt-1 block w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                    placeholder="Robinson"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="password_confirmation">Confirm Password</Label>
+              <Input
+                id="password_confirmation"
+                type="password"
+                placeholder="••••••••"
+                value={passwordConfirmation}
+                onChange={(e) => setPasswordConfirmation(e.target.value)}
+                required
+              />
+            </div>
 
-              {/* Email field */}
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-zinc-700">
-                  Email address
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                  placeholder="m@example.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-
-              {/* Password fields */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-zinc-700">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                  placeholder="••••••••"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password_confirmation" className="block text-sm font-medium text-zinc-700">
-                  Confirm Password
-                </label>
-                <input
-                  id="password_confirmation"
-                  type="password"
-                  required
-                  className="mt-1 block w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm text-zinc-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-                  placeholder="••••••••"
-                  value={passwordConfirmation}
-                  onChange={(e) => setPasswordConfirmation(e.target.value)}
-                />
-              </div>
-
-              {/* Profile Image */}
-              <div>
-                <label htmlFor="image" className="block text-sm font-medium text-zinc-700">
-                  Profile Image (optional)
-                </label>
-                <div className="mt-1 flex items-center gap-4">
-                  {imagePreview && (
-                    <div className="relative w-16 h-16 rounded-lg overflow-hidden">
-                      <Image
-                        src={imagePreview}
-                        alt="Profile preview"
-                        layout="fill"
-                        objectFit="cover"
-                      />
-                    </div>
-                  )}
-                  <div className="flex items-center gap-2 flex-1">
-                    <input
-                      id="image"
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="block w-full text-sm text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-medium file:bg-orange-50 file:text-orange-700 hover:file:bg-orange-100"
+            <div className="space-y-2">
+              <Label htmlFor="image">Profile Image (optional)</Label>
+              <div className="flex items-center gap-4">
+                {imagePreview && (
+                  <div className="relative w-16 h-16 rounded-md overflow-hidden border">
+                    <Image
+                      src={imagePreview}
+                      alt="Profile preview"
+                      fill
+                      className="object-cover"
                     />
-                    {imagePreview && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setImage(null);
-                          setImagePreview(null);
-                        }}
-                        className="p-1 rounded-md hover:bg-zinc-100"
-                      >
-                        <X className="h-5 w-5 text-zinc-500" />
-                      </button>
-                    )}
                   </div>
+                )}
+                <div className="flex items-center gap-2 flex-1">
+                  <Input
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="cursor-pointer"
+                  />
+                  {imagePreview && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => {
+                        setImage(null);
+                        setImagePreview(null);
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
                 </div>
               </div>
-
-              {/* Submit button */}
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={loading}
-                onClick={async () => {
-                  if (password !== passwordConfirmation) {
-                    toast.error("Passwords don't match");
-                    return;
-                  }
-                  await signUp.email({
-                    email,
-                    password,
-                    name: `${firstName} ${lastName}`,
-                    image: image ? await convertImageToBase64(image) : "",
-                    callbackURL: "/",
-                    fetchOptions: {
-                      onResponse: () => setLoading(false),
-                      onRequest: () => setLoading(true),
-                      onError: (ctx) => {
-                        toast.error(ctx.error.message);
-                        setLoading(false);
-                      },
-                      onSuccess: async () => router.push("/"),
-                    },
-                  });
-                }}
-              >
-                {loading ? (
-                  <Loader2 size={16} className="animate-spin" />
-                ) : (
-                  "Create account"
-                )}
-              </button>
-
-              {/* Sign in link */}
-              <div className="text-center text-sm">
-                <span className="text-zinc-600">Already have an account?</span>
-                {' '}
-                <Link href="/login" className="font-medium text-orange-600 hover:text-orange-500">
-                  Sign in
-                </Link>
-              </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+          <CardFooter className="flex flex-col space-y-4">
+            <Button
+              className="w-full"
+              disabled={loading}
+              onClick={async () => {
+                if (!firstName.trim()) {
+                  toast.error("First name is required");
+                  return;
+                }
+                
+                if (!lastName.trim()) {
+                  toast.error("Last name is required");
+                  return;
+                }
+                
+                if (password !== passwordConfirmation) {
+                  toast.error("Passwords don't match");
+                  return;
+                }
+                await signUp.email({
+                  email,
+                  password,
+                  name: `${firstName} ${lastName}`,
+                  image: image ? await convertImageToBase64(image) : "",
+                  callbackURL: "/",
+                  fetchOptions: {
+                    onResponse: () => setLoading(false),
+                    onRequest: () => setLoading(true),
+                    onError: (ctx) => {
+                      toast.error(ctx.error.message);
+                      setLoading(false);
+                    },
+                    onSuccess: async () => router.push("/"),
+                  },
+                });
+              }}
+            >
+              {loading ? (
+                <Loader2 size={16} className="animate-spin mr-2" />
+              ) : null}
+              Create account
+            </Button>
+            <div className="text-center text-sm">
+              <span className="text-muted-foreground">Already have an account?</span>
+              {' '}
+              <Link href="/login" className="underline hover:text-primary">
+                Sign in
+              </Link>
+            </div>
+          </CardFooter>
+        </Card>
       </div>
     </div>
   );
