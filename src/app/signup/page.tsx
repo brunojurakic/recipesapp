@@ -38,7 +38,7 @@ export default function SignUp() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="w-full max-w-md px-4">
-        <Card className="w-full">
+        <Card className="w-full shadow-xl">
           <CardHeader className="space-y-1 text-center">
             <div className="flex flex-col items-center mb-2">
               <Link href={'/'} className="flex items-center gap-2">

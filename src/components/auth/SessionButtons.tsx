@@ -3,7 +3,6 @@
 import Link from 'next/link'
 import { useSession, signOut } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
-import { Skeleton } from '@/components/ui/skeleton'
 import { Loader2 } from 'lucide-react'
 
 const InteractiveHeader = () => {
