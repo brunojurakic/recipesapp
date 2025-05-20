@@ -1,6 +1,6 @@
 "use client"
 
-import { UseFormRegister, FieldErrors, Control, useWatch } from 'react-hook-form'
+import { UseFormRegister, FieldErrors, Control } from 'react-hook-form'
 import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
 import { FieldArrayWithId } from 'react-hook-form'
 import { Plus, X } from 'lucide-react'

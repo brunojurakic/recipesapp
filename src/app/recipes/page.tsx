@@ -1,31 +1,20 @@
 import Link from "next/link"
-import { recipe, category } from "@/db/schema"
-import type { InferSelectModel } from "drizzle-orm"
 import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { RecipeCard } from "@/components/RecipeCard"
 import { buttonVariants } from "@/components/ui/button"
 import { Plus } from "lucide-react"
+import { getRecipes } from "@/lib/utils/drizzle_queries"
+import { notFound } from "next/navigation"
 
-type Recipe = InferSelectModel<typeof recipe>
-type Category = InferSelectModel<typeof category>
 
-interface RecipeWithRelations extends Recipe {
-  user: {
-    name: string | null
-  }
-  categories: {
-    category: Category
-  }[]
-}
 
 export default async function RecipesPage() {
-  const response = await fetch(`${process.env.NEXT_BASE_URL}/api/recipes`)
+  const recipes = await getRecipes();
 
-  if (!response.ok) {
-    throw new Error('Failed to fetch recipes')
-  }
-  const recipes = (await response.json()) as RecipeWithRelations[]
+    if (!recipes) {
+      notFound();
+    }
 
   const session = await auth.api.getSession({
     headers: await headers()
@@ -39,7 +28,7 @@ export default async function RecipesPage() {
           <p className="text-muted-foreground">Discover and share amazing recipes</p>
         </div>
         {session && (
-          <Link href="/recipes/new" className={buttonVariants({variant: "default"})}>
+          <Link href="/recipes/new" className={buttonVariants({ variant: "default" })}>
             <Plus className="text-white" /> Create Recipe
           </Link>
         )}

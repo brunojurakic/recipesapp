@@ -5,61 +5,8 @@ import { headers } from "next/headers";
 import { recipeServerSchema } from "@/lib/validations/recipe-zod-server";
 import { db } from "@/db/drizzle";
 import { recipe, instruction, ingredient, recipeCategory, recipeAllergy } from "@/db/schema";
-import { asc, desc } from "drizzle-orm";
 
 
-export async function GET() {
-  try {
-    const recipes = await db.query.recipe.findMany({
-      with: {
-        user: {
-          columns: {
-            name: true
-          }
-        },
-        categories: {
-          with: {
-            category: true,
-          },
-        },
-        allergies: {
-          with: {
-            allergy: true,
-          },
-        },
-        instructions: {
-          orderBy: (table) => [
-            asc(table.stepNumber)
-          ],
-        },
-        ingredients: {
-          with: {
-            unit: true,
-          },
-        },
-        reviews: {
-          with: {
-            user: true,
-          },
-          orderBy: (table) => [
-            desc(table.createdAt)
-          ],
-        },
-      },
-      orderBy: (table) => [
-        desc(table.createdAt)
-      ],
-    });
-
-    return NextResponse.json(recipes);
-  } catch (error) {
-    console.error('Error fetching recipes:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch recipes' },
-      { status: 500 }
-    );
-  }
-}
 
 export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({

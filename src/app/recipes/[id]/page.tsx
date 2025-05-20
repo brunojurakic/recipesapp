@@ -12,15 +12,9 @@ import { RecipeAllergies } from '@/components/recipe_page/RecipeAllergies'
 import { RecipeReviews } from '@/components/recipe_page/RecipeReviews'
 import { RecipeAuthor } from '@/components/recipe_page/RecipeAuthor'
 
-interface RecipePageProps {
-  params: {
-    id: string
-  }
-}
-
-export default async function RecipePage({ params }: RecipePageProps) {
-  const recipeId = await params.id;
-  const recipe = await getRecipe(recipeId);
+export default async function RecipePage({ params }: { params: Promise<{ id: string }>}) {
+  const { id } = await params;
+  const recipe = await getRecipe(id);
   
   if (!recipe) {
     notFound();
