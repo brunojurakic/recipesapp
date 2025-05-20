@@ -1,6 +1,5 @@
-import { writeFile } from "fs/promises";
 import { NextResponse } from "next/server";
-import { join } from "path";
+import { put } from "@vercel/blob";
 import { auth } from "@/lib/auth";
 
 export async function POST(req: Request) {
@@ -32,22 +31,14 @@ export async function POST(req: Request) {
       }, { status: 400 });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Create unique filename
-    const uniqueFilename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
-    const uploadDir = join(process.cwd(), 'public', 'uploads');
-    const filePath = join(uploadDir, uniqueFilename);
-
-    // Ensure uploads directory exists
-    await writeFile(join(process.cwd(), 'public', 'uploads', '.gitkeep'), '');
-
-    // Write the file
-    await writeFile(filePath, buffer);
+    // Upload directly to Vercel Blob storage
+    const blob = await put(file.name, file, {
+      access: 'public',
+      addRandomSuffix: true, // This ensures unique filenames
+    });
 
     return NextResponse.json({ 
-      path: `/uploads/${uniqueFilename}` 
+      path: blob.url 
     });
   } catch (error) {
     console.error("Error uploading file:", error);
