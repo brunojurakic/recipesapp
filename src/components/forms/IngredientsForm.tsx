@@ -42,7 +42,7 @@ const IngredientsForm = ({
         setIsLoading(true)
         const response = await fetch('/api/units')
         if (!response.ok) {
-          throw new Error('Failed to fetch measurement units')
+          throw new Error('Učitavanje mjernih jedinica nije uspjelo')
         }
         const data = await response.json()
         setUnits(data)
