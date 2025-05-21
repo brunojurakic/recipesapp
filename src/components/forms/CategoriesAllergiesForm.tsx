@@ -23,6 +23,7 @@ const CategoriesAllergiesForm = ({
   const [isAllergiesLoading, setIsAllergiesLoading] = useState(true)
   const [categoriesError, setCategoriesError] = useState<string | null>(null)
   const [allergiesError, setAllergiesError] = useState<string | null>(null)
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -43,6 +44,7 @@ const CategoriesAllergiesForm = ({
 
     fetchCategories()
   }, [])
+  
   useEffect(() => {
     const fetchAllergies = async () => {
       try {
@@ -63,6 +65,7 @@ const CategoriesAllergiesForm = ({
 
     fetchAllergies()
   }, [])
+  
   return (
     <div className="space-y-6 mb-10">
       <h2 className="text-xl font-semibold">Kategorije i alergeni</h2>
@@ -70,8 +73,10 @@ const CategoriesAllergiesForm = ({
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <Label htmlFor="categories">Kategorije</Label>
-          {errors.categories && !Array.isArray(errors.categories) && (
-            <p className="text-red-500 text-sm">{errors.categories.message}</p>
+          {errors.categories && (
+            <p className="text-red-500 text-sm">
+              Potrebna je barem jedna kategorija
+            </p>
           )}
         </div>
         
