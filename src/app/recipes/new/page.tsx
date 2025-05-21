@@ -14,6 +14,7 @@ import { ArrowLeft, ArrowRight } from 'lucide-react'
 import CategoriesAllergiesForm from '@/components/forms/CategoriesAllergiesForm'
 import { useRouter } from 'next/navigation'
 import { toast } from "sonner"
+import { FormProgressTracker } from '@/components/forms/FormProgressTracker'
 
 const NewRecipePage = () => {
   const router = useRouter()
@@ -104,10 +105,18 @@ const NewRecipePage = () => {
   const handleBack = () => {
     setCurrentStep(prev => Math.max(prev - 1, 1))
   }
+  const stepTitles = FORM_STEPS.map(step => step.title)
 
   return (
     <div className='max-w-4xl mx-auto p-6 pt-25'>
       <h1 className='text-2xl font-bold mb-6'>Create New Recipe</h1>
+      
+      <FormProgressTracker 
+        currentStep={currentStep} 
+        totalSteps={totalSteps} 
+        steps={stepTitles}
+      />
+      
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
         {currentStep === 1 && (
           <RecipeForm
