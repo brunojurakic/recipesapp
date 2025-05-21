@@ -60,18 +60,18 @@ const IngredientsForm = ({
   return (
     <div className="space-y-6 mb-10">
       <div className='flex justify-between items-center'>
-        <h2 className="text-xl font-semibold">Ingredients</h2>
+        <h2 className="text-xl font-semibold">Sastojci</h2>
         <Button variant="outline" 
           onClick={() => appendIngredient({ name: '', quantity: '', unitId: '' })}
           disabled={isLoading}>
-          <Plus className="mr-2 h-4 w-4" /> Add Ingredient
+          <Plus className="mr-2 h-4 w-4" /> Dodaj sastojak
         </Button>
       </div>
 
 
       {ingredientFields.length === 0 && !isLoading && (
         <div className="text-center p-4 border border-dashed rounded-md border-gray-300">
-          <p className="text-gray-500">No ingredients added yet. Click Add Ingredient to start.</p>
+          <p className="text-gray-500">Još nema dodanih sastojaka. Kliknite Dodaj sastojak za početak.</p>
         </div>
       )}
 
@@ -80,7 +80,7 @@ const IngredientsForm = ({
       {ingredientFields.map((field, index) => (
         <div key={field.id} className="p-4 border rounded-md bg-gray-50">
           <div className="flex justify-between items-center mb-3">
-            <h3 className="font-medium">Ingredient {index + 1}</h3>
+            <h3 className="font-medium">Sastojak {index + 1}</h3>
             <Button variant="ghost" onClick={() => removeIngredient(index)} size={'icon'}>
               <X className="text-red-500" />
             </Button>
@@ -88,9 +88,9 @@ const IngredientsForm = ({
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor={`ingredients.${index}.name`}>Name</Label>
+              <Label htmlFor={`ingredients.${index}.name`}>Naziv</Label>
               <Input id={`ingredients.${index}.name`} {...register(`ingredients.${index}.name`)}
-                placeholder="e.g. Flour"
+                placeholder="npr. Brašno"
               />
               {errors.ingredients?.[index]?.name && (
                 <p className="text-red-500 text-sm">{errors.ingredients[index].name?.message}</p>
@@ -98,9 +98,9 @@ const IngredientsForm = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor={`ingredients.${index}.quantity`}>Quantity</Label>
+              <Label htmlFor={`ingredients.${index}.quantity`}>Količina</Label>
               <Input id={`ingredients.${index}.quantity`} {...register(`ingredients.${index}.quantity`)}
-                placeholder="e.g. 200"
+                placeholder="npr. 200"
               />
               {errors.ingredients?.[index]?.quantity && (
                 <p className="text-red-500 text-sm">{errors.ingredients[index].quantity?.message}</p>
@@ -108,7 +108,7 @@ const IngredientsForm = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor={`ingredients.${index}.unitId`}>Unit</Label>
+              <Label htmlFor={`ingredients.${index}.unitId`}>Mjerna jedinica</Label>
               <Select
                 onValueChange={(value) => {
                   const event = {
@@ -123,7 +123,7 @@ const IngredientsForm = ({
                 disabled={isLoading}
               >
                 <SelectTrigger id={`ingredients.${index}.unitId`}>
-                  <SelectValue placeholder="Select unit" />
+                  <SelectValue placeholder="Odaberite jedinicu" />
                 </SelectTrigger>
                 <SelectContent>
                   {units.map((unit) => (

@@ -68,11 +68,11 @@ const CategoriesAllergiesForm = ({
 
   return (
     <div className="space-y-6 mb-10">
-      <h2 className="text-xl font-semibold">Categories & Allergies</h2>
+      <h2 className="text-xl font-semibold">Kategorije i alergeni</h2>
       
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="categories">Categories</Label>
+          <Label htmlFor="categories">Kategorije</Label>
           {errors.categories && !Array.isArray(errors.categories) && (
             <p className="text-red-500 text-sm">{errors.categories.message}</p>
           )}
@@ -87,10 +87,10 @@ const CategoriesAllergiesForm = ({
               selectedIds={field.value || []}
               onChange={field.onChange}
               isLoading={isCategoriesLoading}
-              label="Categories"
-              placeholder="Select categories"
-              searchPlaceholder="Search categories..."
-              emptyMessage="No categories found."
+              label="Kategorije"
+              placeholder="Odaberite kategorije"
+              searchPlaceholder="Pretraži kategorije..."
+              emptyMessage="Nema pronađenih kategorija."
               badgeVariant="outline"
             />
           )}
@@ -99,7 +99,7 @@ const CategoriesAllergiesForm = ({
       
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="allergies">Allergies (Optional)</Label>
+          <Label htmlFor="allergies">Alergeni (neobavezno)</Label>
           {errors.allergies && !Array.isArray(errors.allergies) && (
             <p className="text-red-500 text-sm">{errors.allergies.message}</p>
           )}
@@ -114,10 +114,10 @@ const CategoriesAllergiesForm = ({
               selectedIds={field.value || []}
               onChange={field.onChange}
               isLoading={isAllergiesLoading}
-              label="Allergies"
-              placeholder="Select allergies"
-              searchPlaceholder="Search allergies..."
-              emptyMessage="No allergies found."
+              label="Alergeni"
+              placeholder="Odaberite alergene"
+              searchPlaceholder="Pretraži alergene..."
+              emptyMessage="Nema pronađenih alergena."
               badgeVariant="outline"
             />
           )}

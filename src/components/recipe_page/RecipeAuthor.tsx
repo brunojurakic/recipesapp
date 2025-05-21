@@ -14,7 +14,7 @@ export function RecipeAuthor({ user }: RecipeAuthorProps) {
   return (
     <Card className='shadow-md'>
       <CardHeader className="pb-3">
-        <CardTitle>About the chef</CardTitle>
+        <CardTitle>O autoru</CardTitle>
       </CardHeader>
       <CardContent className="flex items-center gap-4">
         <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center">
@@ -32,7 +32,7 @@ export function RecipeAuthor({ user }: RecipeAuthorProps) {
         </div>
         <div>
           <h4 className="font-medium">{user.name}</h4>
-          <p className="text-sm text-muted-foreground">Chef</p>
+          <p className="text-sm text-muted-foreground">Kuhar</p>
         </div>
       </CardContent>
     </Card>
