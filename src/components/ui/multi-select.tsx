@@ -73,9 +73,9 @@ export function MultiSelect<T extends SelectableItem>({
             )}
           >
             {isLoading
-              ? `Učitavanje ${label.toLowerCase()}...`
+              ? `Loading ${label.toLowerCase()}...`
               : selectedIds.length
-                ? `${selectedIds.length} odabrano`
+                ? `${selectedIds.length} selected`
                 : placeholder}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>

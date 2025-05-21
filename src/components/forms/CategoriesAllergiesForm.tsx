@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { Label } from '../ui/label'
 import { Alert, AlertDescription } from '../ui/alert'
 import { MultiSelect, SelectableItem } from '../ui/multi-select'
-import { FormLabel } from './FormLabel'
 
 interface CategoriesAllergiesFormProps {
   control: Control<CreateRecipeFormData>
@@ -31,13 +30,13 @@ const CategoriesAllergiesForm = ({
         setIsCategoriesLoading(true)
         const response = await fetch('/api/categories')
         if (!response.ok) {
-          throw new Error('Učitavanje kategorija nije uspjelo')
+          throw new Error('Failed to fetch categories')
         }
         const data = await response.json()
         setCategories(data)
       } catch (err) {
         console.error('Error fetching categories:', err)
-        setCategoriesError(err instanceof Error ? err.message : 'Došlo je do pogreške')
+        setCategoriesError(err instanceof Error ? err.message : 'An error occurred')
       } finally {
         setIsCategoriesLoading(false)
       }
@@ -52,13 +51,13 @@ const CategoriesAllergiesForm = ({
         setIsAllergiesLoading(true)
         const response = await fetch('/api/allergies')
         if (!response.ok) {
-          throw new Error('Učitavanje alergena nije uspjelo')
+          throw new Error('Failed to fetch allergies')
         }
         const data = await response.json()
         setAllergies(data)
       } catch (err) {
         console.error('Error fetching allergies:', err)
-        setAllergiesError(err instanceof Error ? err.message : 'Došlo je do pogreške')
+        setAllergiesError(err instanceof Error ? err.message : 'An error occurred')
       } finally {
         setIsAllergiesLoading(false)
       }
@@ -72,10 +71,12 @@ const CategoriesAllergiesForm = ({
       <h2 className="text-xl font-semibold">Kategorije i alergeni</h2>
       
       <div className="space-y-2">
-        <FormLabel htmlFor="categories" required>Kategorije</FormLabel>
-        {errors.categories && !Array.isArray(errors.categories) && (
-          <p className="text-red-500 text-sm">{errors.categories.message}</p>
-        )}
+        <div className="flex items-center justify-between">
+          <Label htmlFor="categories">Kategorije</Label>
+          {errors.categories && !Array.isArray(errors.categories) && (
+            <p className="text-red-500 text-sm">{errors.categories.message}</p>
+          )}
+        </div>
         
         <Controller
           name="categories"
@@ -97,10 +98,12 @@ const CategoriesAllergiesForm = ({
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="allergies">Alergeni (neobavezno)</Label>
-        {errors.allergies && !Array.isArray(errors.allergies) && (
-          <p className="text-red-500 text-sm">{errors.allergies.message}</p>
-        )}
+        <div className="flex items-center justify-between">
+          <Label htmlFor="allergies">Alergeni (neobavezno)</Label>
+          {errors.allergies && !Array.isArray(errors.allergies) && (
+            <p className="text-red-500 text-sm">{errors.allergies.message}</p>
+          )}
+        </div>
         
         <Controller
           name="allergies"
