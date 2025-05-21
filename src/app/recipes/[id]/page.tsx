@@ -29,7 +29,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
     <div className="container max-w-7xl mx-auto py-10 px-4 sm:px-6 pt-20">
       <Link href="/recipes" className="inline-flex items-center text-sm mb-6 text-muted-foreground hover:text-foreground">
         <ChevronLeft className="mr-1 h-4 w-4" />
-        Back to recipes
+        Natrag na recepte
       </Link>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -58,20 +58,20 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             <div className="flex flex-wrap gap-6 mt-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
-                <span>{recipe.preparationTime} minutes</span>
+                <span>{recipe.preparationTime} minuta</span>
               </div>
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
-                <span>{recipe.servings} servings</span>
+                <span>{recipe.servings} porcija</span>
               </div>
               <div className="flex items-center gap-2">
                 <UserPen className='h-4 w-4' />
-                <span>By {recipe.user.name}</span>
+                <span>{recipe.user.name}</span>
               </div>
               {averageRating > 0 && (
                 <div className="flex items-center gap-1">
                   <span>★</span>
-                  <span>{averageRating.toFixed(1)} ({recipe.reviews.length} {recipe.reviews.length === 1 ? 'review' : 'reviews'})</span>
+                  <span>{averageRating.toFixed(1)} ({recipe.reviews.length} {recipe.reviews.length === 1 ? 'recenzija' : 'recenzije'})</span>
                 </div>
               )}
             </div>
@@ -88,10 +88,10 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           <RecipeAuthor user={recipe.user} />
           <div className="space-y-4">
             <Button className="w-full" variant="default">
-              Bookmark
+              Spremi
             </Button>
             <Button className="w-full" variant="outline">
-              Rate Recipe
+              Ocijeni recept
             </Button>
           </div>
         </div>

@@ -36,7 +36,7 @@ export function MobileMenu() {
       <SheetTrigger asChild>
         <Button variant="ghost" size="icon" className="h-9 w-9 p-0">
           <Menu className="h-6 w-6" />
-          <span className="sr-only">Toggle menu</span>
+          <span className="sr-only">Otvori izbornik</span>
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="flex flex-col">
@@ -55,7 +55,7 @@ export function MobileMenu() {
               onClick={() => setOpen(false)}
             >
               <Home className="h-4 w-4" />
-              Home
+              Početna stranica
             </Link>
             <Link
               href="/recipes"
@@ -63,7 +63,7 @@ export function MobileMenu() {
               onClick={() => setOpen(false)}
             >
               <BookOpen className="h-4 w-4" />
-              Browse Recipes
+              Recepti
             </Link>
             <Link
               href="/categories"
@@ -71,7 +71,7 @@ export function MobileMenu() {
               onClick={() => setOpen(false)}
             >
               <Tag className="h-4 w-4" />
-              Categories
+              Kategorije
             </Link>
             <Link
               href="/featured"
@@ -79,7 +79,7 @@ export function MobileMenu() {
               onClick={() => setOpen(false)}
             >
               <Award className="h-4 w-4" />
-              Featured
+              Istaknuto
             </Link>
           </nav>
         </div>
@@ -100,14 +100,14 @@ export function MobileMenu() {
                 onClick={() => setOpen(false)}
               >
                 <User className="h-4 w-4" />
-                Profile
+                Profil
               </Link>
               <button
                 onClick={handleSignOut}
                 className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors text-left w-full"
               >
                 <LogOut className="h-4 w-4" />
-                Log out
+                Odjava
               </button>
             </>
           ) : (
@@ -118,7 +118,7 @@ export function MobileMenu() {
                 onClick={() => setOpen(false)}
               >
                 <LogIn className="h-4 w-4" />
-                Log in
+                Prijava
               </Link>
               <Link
                 href="/signup"
@@ -126,7 +126,7 @@ export function MobileMenu() {
                 onClick={() => setOpen(false)}
               >
                 <UserPlus className="h-4 w-4" />
-                Register
+                Registracija
               </Link>
             </>
           )}

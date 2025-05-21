@@ -12,7 +12,7 @@ export default function Loading() {
         </div>
         <Button disabled>
           <Loader2 className="animate-spin" />
-          Please wait
+          Učitavanje
         </Button>
       </div>
 

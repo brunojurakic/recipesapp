@@ -54,7 +54,7 @@ const NewRecipePage = () => {
 
   const onSubmit = async (data: CreateRecipeFormData) => {
     if (!image) {
-      setImageError('Image is required.');
+      setImageError('Slika je obavezna.');
       setCurrentStep(1);
       return;
     }
@@ -76,21 +76,21 @@ const NewRecipePage = () => {
       
       if (!response.ok) {
         const error = await response.json();
-        toast.error(error.error || 'Failed to create recipe');
+        toast.error(error.error || 'Stvaranje recepta nije uspjelo');
         return;
       }
       
-      toast.success('Recipe created successfully!');
+      toast.success('Recept je uspješno stvoren!');
       router.push('/recipes');
     } catch (error) {
       console.error(error)
-      toast.error('An unexpected error occurred');
+      toast.error('Došlo je do neočekivane pogreške');
     }
   }
 
   const handleNext = async () => {
     if (currentStep === 1 && !image) {
-      setImageError('Image is required');
+      setImageError('Slika je obavezna');
       return;
     }
     setImageError(null);
@@ -109,7 +109,7 @@ const NewRecipePage = () => {
 
   return (
     <div className='max-w-4xl mx-auto p-6 pt-25'>
-      <h1 className='text-2xl font-bold mb-6'>Create New Recipe</h1>
+      <h1 className='text-2xl font-bold mb-6'>Stvori novi recept</h1>
       
       <FormProgressTracker 
         currentStep={currentStep} 
@@ -162,17 +162,17 @@ const NewRecipePage = () => {
         <div className='flex justify-between mt-8'>
           {currentStep > 1 && (
             <Button onClick={handleBack}>
-              <ArrowLeft />Back
+              <ArrowLeft />Natrag
             </Button>
           )}
 
           {currentStep < totalSteps ? (
             <Button onClick={handleNext} className='ml-auto'>
-              Next<ArrowRight />
+              Dalje<ArrowRight />
             </Button>
           ) : (
             <Button type='submit' variant={'outline'}>
-              Create Recipe
+              Stvori recept
             </Button>
           )}
         </div>
