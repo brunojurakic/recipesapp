@@ -29,13 +29,13 @@ const InteractiveHeader = () => {
             href="/profile"
             className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
           >
-            Profile
+            Profil
           </Link>
           <button
             onClick={handleSignOut}
             className="text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:cursor-pointer"
           >
-            Log out
+            Odjava
           </button>
         </>
       ) : (
@@ -44,13 +44,13 @@ const InteractiveHeader = () => {
             href="/login"
             className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
           >
-            Log in
+            Prijava
           </Link>
           <Link
             href="/signup"
             className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
           >
-            Register
+            Registracija
           </Link>
         </>
       )}

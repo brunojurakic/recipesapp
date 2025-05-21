@@ -16,13 +16,11 @@ export async function saveImage(image: File): Promise<string | null> {
   }
   
   try {
-    // Upload directly to Vercel Blob storage
     const blob = await put(image.name, image, {
       access: 'public',
-      addRandomSuffix: true, // This ensures unique filenames
+      addRandomSuffix: true,
     });
     
-    // Return the URL from the blob
     return blob.url;
   } catch (error) {
     console.error('Error uploading to Vercel Blob:', error);

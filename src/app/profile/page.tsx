@@ -55,7 +55,8 @@ export default function ProfilePage() {
               <h1 className="text-2xl font-bold text-zinc-900">{user.name}</h1>
               <p className="text-zinc-500">{user.email}</p>
               <p className="text-sm text-zinc-400 mt-1">
-                Member since {new Date(user.createdAt || Date.now()).toLocaleDateString()}
+                Član od{" "}
+                {new Date(user.createdAt || Date.now()).toLocaleDateString()}
               </p>
             </div>
           </div>
@@ -64,15 +65,15 @@ export default function ProfilePage() {
         {/* Statistics */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 mb-8">
           <div className="bg-white shadow rounded-lg p-6">
-            <h3 className="text-sm font-medium text-zinc-500">Total Recipes</h3>
+            <h3 className="text-sm font-medium text-zinc-500">Ukupno recepata</h3>
             <p className="mt-2 text-3xl font-semibold text-zinc-900">0</p>
           </div>
           <div className="bg-white shadow rounded-lg p-6">
-            <h3 className="text-sm font-medium text-zinc-500">Total Reviews</h3>
+            <h3 className="text-sm font-medium text-zinc-500">Ukupno recenzija</h3>
             <p className="mt-2 text-3xl font-semibold text-zinc-900">0</p>
           </div>
           <div className="bg-white shadow rounded-lg p-6">
-            <h3 className="text-sm font-medium text-zinc-500">Bookmarked Recipes</h3>
+            <h3 className="text-sm font-medium text-zinc-500">Spremljeni recepti</h3>
             <p className="mt-2 text-3xl font-semibold text-zinc-900">0</p>
           </div>
         </div>
@@ -83,22 +84,24 @@ export default function ProfilePage() {
             href="/recipes/new"
             className="flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-zinc-900 hover:bg-zinc-800"
           >
-            Create New Recipe
+            Stvori novi recept
           </Link>
           <Link
             href="/profile/settings"
             className="flex items-center justify-center px-4 py-2 border border-zinc-300 rounded-md shadow-sm text-sm font-medium text-zinc-700 bg-white hover:bg-zinc-50"
           >
-            Edit Profile Settings
+            Uredi postavke profila
           </Link>
         </div>
 
         {/* Recent Activity */}
         <section>
-          <h2 className="text-xl font-semibold text-zinc-900 mb-4">Recent Activity</h2>
+          <h2 className="text-xl font-semibold text-zinc-900 mb-4">
+            Nedavne aktivnosti
+          </h2>
           <div className="bg-white shadow rounded-lg divide-y divide-zinc-200">
             <div className="p-6 text-center text-zinc-500">
-              No recent activity to show
+              Nema nedavnih aktivnosti za prikaz
             </div>
           </div>
         </section>

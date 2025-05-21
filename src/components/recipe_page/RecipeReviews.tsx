@@ -18,8 +18,8 @@ export function RecipeReviews({ reviews }: RecipeReviewsProps) {
   return (
     <Card className='shadow-md'>
       <CardHeader className="pb-3">
-        <CardTitle>Reviews</CardTitle>
-        <CardDescription>{reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</CardDescription>
+        <CardTitle>Recenzije</CardTitle>
+        <CardDescription>{reviews.length} {reviews.length === 1 ? 'recenzija' : reviews.length > 1 && reviews.length < 5 ? 'recenzije' : 'recenzija'}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">

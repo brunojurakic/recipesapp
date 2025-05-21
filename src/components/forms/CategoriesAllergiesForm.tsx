@@ -23,20 +23,20 @@ const CategoriesAllergiesForm = ({
   const [isAllergiesLoading, setIsAllergiesLoading] = useState(true)
   const [categoriesError, setCategoriesError] = useState<string | null>(null)
   const [allergiesError, setAllergiesError] = useState<string | null>(null)
-
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setIsCategoriesLoading(true)
         const response = await fetch('/api/categories')
         if (!response.ok) {
-          throw new Error('Failed to fetch categories')
+          throw new Error('Dohvaćanje kategorija nije uspjelo')
         }
         const data = await response.json()
         setCategories(data)
       } catch (err) {
-        console.error('Error fetching categories:', err)
-        setCategoriesError(err instanceof Error ? err.message : 'An error occurred')
+        console.error('Greška pri dohvaćanju kategorija:', err)
+        setCategoriesError(err instanceof Error ? err.message : 'Dogodila se greška')
       } finally {
         setIsCategoriesLoading(false)
       }
@@ -44,20 +44,20 @@ const CategoriesAllergiesForm = ({
 
     fetchCategories()
   }, [])
-
+  
   useEffect(() => {
     const fetchAllergies = async () => {
       try {
         setIsAllergiesLoading(true)
         const response = await fetch('/api/allergies')
         if (!response.ok) {
-          throw new Error('Failed to fetch allergies')
+          throw new Error('Dohvaćanje alergena nije uspjelo')
         }
         const data = await response.json()
         setAllergies(data)
       } catch (err) {
-        console.error('Error fetching allergies:', err)
-        setAllergiesError(err instanceof Error ? err.message : 'An error occurred')
+        console.error('Greška pri dohvaćanju alergena:', err)
+        setAllergiesError(err instanceof Error ? err.message : 'Dogodila se greška')
       } finally {
         setIsAllergiesLoading(false)
       }
@@ -65,16 +65,18 @@ const CategoriesAllergiesForm = ({
 
     fetchAllergies()
   }, [])
-
+  
   return (
     <div className="space-y-6 mb-10">
-      <h2 className="text-xl font-semibold">Categories & Allergies</h2>
+      <h2 className="text-xl font-semibold">Kategorije i alergeni</h2>
       
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="categories">Categories</Label>
-          {errors.categories && !Array.isArray(errors.categories) && (
-            <p className="text-red-500 text-sm">{errors.categories.message}</p>
+          <Label htmlFor="categories">Kategorije</Label>
+          {errors.categories && (
+            <p className="text-red-500 text-sm">
+              Potrebna je barem jedna kategorija
+            </p>
           )}
         </div>
         
@@ -87,10 +89,10 @@ const CategoriesAllergiesForm = ({
               selectedIds={field.value || []}
               onChange={field.onChange}
               isLoading={isCategoriesLoading}
-              label="Categories"
-              placeholder="Select categories"
-              searchPlaceholder="Search categories..."
-              emptyMessage="No categories found."
+              label="Kategorije"
+              placeholder="Odaberite kategorije"
+              searchPlaceholder="Pretraži kategorije..."
+              emptyMessage="Nema pronađenih kategorija."
               badgeVariant="outline"
             />
           )}
@@ -99,7 +101,7 @@ const CategoriesAllergiesForm = ({
       
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="allergies">Allergies (Optional)</Label>
+          <Label htmlFor="allergies">Alergeni (neobavezno)</Label>
           {errors.allergies && !Array.isArray(errors.allergies) && (
             <p className="text-red-500 text-sm">{errors.allergies.message}</p>
           )}
@@ -114,10 +116,10 @@ const CategoriesAllergiesForm = ({
               selectedIds={field.value || []}
               onChange={field.onChange}
               isLoading={isAllergiesLoading}
-              label="Allergies"
-              placeholder="Select allergies"
-              searchPlaceholder="Search allergies..."
-              emptyMessage="No allergies found."
+              label="Alergeni"
+              placeholder="Odaberite alergene"
+              searchPlaceholder="Pretraži alergene..."
+              emptyMessage="Nema pronađenih alergena."
               badgeVariant="outline"
             />
           )}

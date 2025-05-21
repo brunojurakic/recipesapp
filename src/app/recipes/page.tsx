@@ -24,12 +24,12 @@ export default async function RecipesPage() {
     <div className="max-w-7xl mx-auto p-6 pt-25">
       <div className="flex justify-between items-center mb-10">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Recipes</h1>
-          <p className="text-muted-foreground">Discover and share amazing recipes</p>
+          <h1 className="text-3xl font-bold mb-2">Recepti</h1>
+          <p className="text-muted-foreground">Otkrijte i podijelite nevjerojatne recepte</p>
         </div>
         {session && (
           <Link href="/recipes/new" className={buttonVariants({ variant: "default" })}>
-            <Plus className="text-white" /> Create Recipe
+            <Plus className="text-white" /> Stvori recept
           </Link>
         )}
       </div>

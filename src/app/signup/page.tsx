@@ -46,30 +46,30 @@ export default function SignUp() {
                 <h1 className="text-3xl font-bold">Recipe Share</h1>
               </Link>
             </div>
-            <CardTitle className="text-2xl">Create an account</CardTitle>
+            <CardTitle className="text-2xl">Otvorite račun</CardTitle>
             <CardDescription>
-              Enter your details below to create your account
+              Unesite svoje podatke kako biste otvorili račun
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="first-name">First name</Label>
+                <Label htmlFor="first-name">Ime</Label>
                 <Input
                   id="first-name"
                   type="text"
-                  placeholder="John"
+                  placeholder="Ivan"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="last-name">Last name</Label>
+                <Label htmlFor="last-name">Prezime</Label>
                 <Input
                   id="last-name"
                   type="text"
-                  placeholder="Robinson"
+                  placeholder="Horvat"
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   required
@@ -82,7 +82,7 @@ export default function SignUp() {
               <Input
                 id="email"
                 type="email"
-                placeholder="m@example.com"
+                placeholder="ime@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -90,7 +90,7 @@ export default function SignUp() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Lozinka</Label>
               <Input
                 id="password"
                 type="password"
@@ -102,7 +102,7 @@ export default function SignUp() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password_confirmation">Confirm Password</Label>
+              <Label htmlFor="password_confirmation">Potvrda lozinke</Label>
               <Input
                 id="password_confirmation"
                 type="password"
@@ -114,7 +114,7 @@ export default function SignUp() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="image">Profile Image (optional)</Label>
+              <Label htmlFor="image">Profilna slika (neobavezno)</Label>
               <div className="flex items-center gap-4">
                 {imagePreview && (
                   <div className="relative w-16 h-16 rounded-md overflow-hidden border">
@@ -157,17 +157,17 @@ export default function SignUp() {
               disabled={loading}
               onClick={async () => {
                 if (!firstName.trim()) {
-                  toast.error("First name is required");
+                  toast.error("Ime je obavezno");
                   return;
                 }
                 
                 if (!lastName.trim()) {
-                  toast.error("Last name is required");
+                  toast.error("Prezime je obavezno");
                   return;
                 }
                 
                 if (password !== passwordConfirmation) {
-                  toast.error("Passwords don't match");
+                  toast.error("Lozinke se ne podudaraju");
                   return;
                 }
                 await signUp.email({
@@ -191,13 +191,13 @@ export default function SignUp() {
               {loading ? (
                 <Loader2 size={16} className="animate-spin mr-2" />
               ) : null}
-              Create account
+              Stvori račun
             </Button>
             <div className="text-center text-sm">
-              <span className="text-muted-foreground">Already have an account?</span>
+              <span className="text-muted-foreground">Već imate račun?</span>
               {' '}
               <Link href="/login" className="underline hover:text-primary">
-                Sign in
+                Prijava
               </Link>
             </div>
           </CardFooter>

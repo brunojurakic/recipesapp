@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { UtensilsCrossed } from 'lucide-react'
 import SessionButtons from './auth/SessionButtons'
+import { MobileMenu } from './MobileMenu'
 
 const Header = async () => {
   return (
@@ -14,17 +15,23 @@ const Header = async () => {
 
           <nav className="hidden sm:flex items-center gap-6 flex-1 justify-center">
             <Link href="/recipes" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
-              Browse Recipes
+              Recepti
             </Link>
             <Link href="/categories" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
-              Categories
+              Kategorije
             </Link>
             <Link href="/featured" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
-              Featured
+              Istaknuto
             </Link>
           </nav>
 
-          <SessionButtons />
+          <div className="hidden sm:flex">
+            <SessionButtons />
+          </div>
+
+          <div className="flex sm:hidden">
+            <MobileMenu />
+          </div>
         </div>
       </div>
     </header>

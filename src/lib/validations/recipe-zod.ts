@@ -1,13 +1,13 @@
 import { z } from "zod";
 
-const MAX_FILE_SIZE = 10000000;
+const MAX_FILE_SIZE = 4000000;
 const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
 export const recipeZodSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, 'Description is required'),
-  servings: z.number().min(1, "Servings must be at least 1"),
-  preparationTime: z.number().min(1, "Preparation time must be at least 1 minute"),
+  title: z.string().min(1, "Naslov je obavezan"),
+  description: z.string().min(1, 'Opis je obavezan'),
+  servings: z.number().min(1, "Broj porcija mora biti najmanje 1"),
+  preparationTime: z.number().min(1, "Vrijeme pripreme mora biti najmanje 1 minuta"),
   image: z
     .any()
     .transform((fileList) => {
@@ -17,25 +17,25 @@ export const recipeZodSchema = z.object({
       return fileList instanceof FileList ? fileList[0] : fileList;
     })
     .refine((file): file is File => file instanceof File, {
-      message: "Image is required",
+      message: "Slika je obavezna",
     })
     .refine((file) => file && file.size <= MAX_FILE_SIZE, {
-      message: "Max file size is 10MB.",
+      message: "Maksimalna veličina datoteke je 4MB.",
     })
     .refine((file) => file && ACCEPTED_IMAGE_TYPES.includes(file.type), {
-      message: "Only .jpg, .jpeg, .png and .webp formats are supported.",
+      message: "Podržani su samo .jpg, .jpeg, .png i .webp formati.",
     })
     .pipe(z.instanceof(File)).optional(),
   instructions: z.array(z.object({
     stepNumber: z.number(),
-    content: z.string().min(1, "Instruction content is required")
-  })).min(1, "At least one instruction is required"),
-  categories: z.array(z.string().uuid()).min(1, "At least one category is required"),
+    content: z.string().min(1, "Sadržaj upute je obavezan")
+  })).min(1, "Potrebna je barem jedna uputa"),
+  categories: z.array(z.string().uuid()).min(1, "Potrebna je barem jedna kategorija"),
   ingredients: z.array(z.object({
-    name: z.string().min(1, "Ingredient name is required"),
-    quantity: z.string().min(1, "Quantity is required"),
-    unitId: z.string().min(1, "Unit is required").uuid()
-  })).min(1, "At least one ingredient is required"),
+    name: z.string().min(1, "Naziv sastojka je obavezan"),
+    quantity: z.string().min(1, "Količina je obavezna"),
+    unitId: z.string().min(1, "Mjerna jedinica je obavezna").uuid()
+  })).min(1, "Potreban je barem jedan sastojak"),
   allergies: z.array(z.string().uuid()).optional()
 });
 
