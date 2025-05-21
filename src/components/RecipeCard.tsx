@@ -26,8 +26,8 @@ interface RecipeCardProps {
 export function RecipeCard({ recipe }: RecipeCardProps) {
   return (
     <Link href={`/recipes/${recipe.id}`}
-      className="group block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-      <div className="overflow-hidden rounded-xl bg-card shadow transition-all hover:shadow-lg border">
+      className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+      <div className="overflow-hidden rounded-xl bg-card shadow transition-all hover:shadow-lg border h-full flex flex-col">
         <div className="relative h-48 w-full">
           {recipe.image_path ? (
             <Image
@@ -43,7 +43,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             </div>
           )}
         </div>
-        <div className="p-4">
+        <div className="p-4 flex flex-col flex-grow">
           <div className="flex flex-wrap gap-2 mb-2">
             {recipe.categories.map(({ category }) => (
               <Badge variant={"outline"} key={category.id}>
@@ -59,7 +59,9 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
               <User className="h-4 w-4" />
             </div>
           </div>
-          <h3 className="mt-2 font-semibold text-lg text-foreground">{recipe.title}</h3>
+          <h3 className="mt-2 font-semibold text-lg text-foreground line-clamp-2" title={recipe.title}>
+            {recipe.title}
+          </h3>
         </div>
       </div>
     </Link>
