@@ -15,8 +15,8 @@ export function RecipeIngredients({ ingredients, servings }: RecipeIngredientsPr
   return (
     <Card className='shadow-md'>
       <CardHeader className="pb-3">
-        <CardTitle>Ingredients</CardTitle>
-        <CardDescription>For {servings} servings</CardDescription>
+        <CardTitle>Sastojci</CardTitle>
+        <CardDescription>Za {servings} porcija</CardDescription>
       </CardHeader>
       <CardContent>
         <ul className="space-y-3">

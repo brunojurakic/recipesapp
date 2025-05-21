@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RecipeShare - Share and Discover Amazing Recipes",
-  description: "A modern platform for sharing and discovering delicious recipes from around the world.",
+  title: "RecipeShare - Podijelite i otkrijte nevjerojatne recepte",
+  description: "Moderna platforma za dijeljenje i otkrivanje ukusnih recepata iz cijelog svijeta.",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="hr">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

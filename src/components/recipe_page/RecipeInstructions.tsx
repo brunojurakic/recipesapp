@@ -12,8 +12,8 @@ export function RecipeInstructions({ instructions }: RecipeInstructionsProps) {
   return (
     <Card className='shadow-md'>
       <CardHeader className="pb-3">
-        <CardTitle>Instructions</CardTitle>
-        <CardDescription>Step by step guide</CardDescription>
+        <CardTitle>Upute</CardTitle>
+        <CardDescription>Korak po korak vodič</CardDescription>
       </CardHeader>
       <CardContent>
         <ol className="space-y-6">

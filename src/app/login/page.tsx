@@ -19,12 +19,12 @@ export default function SignIn() {
 
   const handleSignIn = async () => {
     if (!email.trim()) {
-      toast.error("Email is required");
+      toast.error("Email je obavezan");
       return;
     }
 
     if (!password) {
-      toast.error("Password is required");
+      toast.error("Lozinka je obavezna");
       return;
     }
 
@@ -37,7 +37,7 @@ export default function SignIn() {
         },
         onError: (ctx) => {
           setLoading(false);
-          toast.error(ctx.error.message || "Failed to sign in");
+          toast.error(ctx.error.message || "Prijava nije uspjela");
         },
       },
     );
@@ -54,9 +54,9 @@ export default function SignIn() {
                 <h1 className="text-3xl font-bold">Recipe Share</h1>
               </Link>
             </div>
-            <CardTitle className="text-2xl">Sign in</CardTitle>
+            <CardTitle className="text-2xl">Prijava</CardTitle>
             <CardDescription>
-              Enter your credentials to access your account
+              Unesite svoje podatke za pristup računu
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -73,7 +73,7 @@ export default function SignIn() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Lozinka</Label>
               <Input
                 id="password"
                 type="password"
@@ -93,7 +93,7 @@ export default function SignIn() {
               {loading ? (
                 <Loader2 size={16} className="animate-spin mr-2" />
               ) : null}
-              Sign in
+              Prijava
             </Button>
 
             <div className="relative">
@@ -101,7 +101,7 @@ export default function SignIn() {
                 <div className="w-full border-t border-muted" />
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-card text-muted-foreground">Or continue with</span>
+                <span className="px-2 bg-card text-muted-foreground">Ili nastavite s</span>
               </div>
             </div>
 
@@ -128,14 +128,14 @@ export default function SignIn() {
                 <path fill="#FBBC05" d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82c0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602z"></path>
                 <path fill="#EB4335" d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"></path>
               </svg>
-              Sign in with Google
+              Prijava putem Google-a
             </Button>
 
             <div className="text-center text-sm">
-              <span className="text-muted-foreground">Don&apos;t have an account?</span>
+              <span className="text-muted-foreground">Nemate račun?</span>
               {' '}
               <Link href="/signup" className="underline hover:text-primary">
-                Sign up
+                Registracija
               </Link>
             </div>
           </CardFooter>

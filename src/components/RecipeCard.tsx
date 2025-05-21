@@ -39,7 +39,7 @@ export function RecipeCard({ recipe }: RecipeCardProps) {
             />
           ) : (
             <div className="h-full w-full bg-muted flex items-center justify-center">
-              <span className="text-muted-foreground">No image</span>
+              <span className="text-muted-foreground">Nema slike</span>
             </div>
           )}
         </div>

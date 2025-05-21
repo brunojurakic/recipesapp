@@ -23,7 +23,7 @@ const Home = () => {
             <h1 className="text-4xl font-bold text-white drop-shadow-md">Recipe Share</h1>
           </div>
           <p className="mt-4 max-w-xl text-lg text-white drop-shadow-sm font-medium">
-            Discover, share, and cook amazing recipes from around the world
+            Otkrijte, dijelite i kuhajte nevjerojatne recepte iz cijelog svijeta
           </p>
           <div className="mt-8 w-full max-w-lg px-4">
             <SearchBar />
@@ -39,7 +39,7 @@ const Home = () => {
         {/* Featured Recipes */}
         <div className="mt-12">
           <h2 className="text-2xl font-semibold text-zinc-900">
-            Featured Recipes
+            Istaknuti recepti
           </h2>
 
         </div>
