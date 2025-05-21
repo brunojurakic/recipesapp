@@ -23,20 +23,19 @@ const CategoriesAllergiesForm = ({
   const [isAllergiesLoading, setIsAllergiesLoading] = useState(true)
   const [categoriesError, setCategoriesError] = useState<string | null>(null)
   const [allergiesError, setAllergiesError] = useState<string | null>(null)
-
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         setIsCategoriesLoading(true)
         const response = await fetch('/api/categories')
         if (!response.ok) {
-          throw new Error('Failed to fetch categories')
+          throw new Error('Dohvaćanje kategorija nije uspjelo')
         }
         const data = await response.json()
         setCategories(data)
       } catch (err) {
-        console.error('Error fetching categories:', err)
-        setCategoriesError(err instanceof Error ? err.message : 'An error occurred')
+        console.error('Greška pri dohvaćanju kategorija:', err)
+        setCategoriesError(err instanceof Error ? err.message : 'Dogodila se greška')
       } finally {
         setIsCategoriesLoading(false)
       }
@@ -44,20 +43,19 @@ const CategoriesAllergiesForm = ({
 
     fetchCategories()
   }, [])
-
   useEffect(() => {
     const fetchAllergies = async () => {
       try {
         setIsAllergiesLoading(true)
         const response = await fetch('/api/allergies')
         if (!response.ok) {
-          throw new Error('Failed to fetch allergies')
+          throw new Error('Dohvaćanje alergena nije uspjelo')
         }
         const data = await response.json()
         setAllergies(data)
       } catch (err) {
-        console.error('Error fetching allergies:', err)
-        setAllergiesError(err instanceof Error ? err.message : 'An error occurred')
+        console.error('Greška pri dohvaćanju alergena:', err)
+        setAllergiesError(err instanceof Error ? err.message : 'Dogodila se greška')
       } finally {
         setIsAllergiesLoading(false)
       }
@@ -65,7 +63,6 @@ const CategoriesAllergiesForm = ({
 
     fetchAllergies()
   }, [])
-
   return (
     <div className="space-y-6 mb-10">
       <h2 className="text-xl font-semibold">Kategorije i alergeni</h2>

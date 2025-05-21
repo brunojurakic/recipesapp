@@ -42,12 +42,12 @@ const IngredientsForm = ({
         setIsLoading(true)
         const response = await fetch('/api/units')
         if (!response.ok) {
-          throw new Error('Failed to fetch measurement units')
+          throw new Error('Dohvaćanje mjernih jedinica nije uspjelo')
         }
         const data = await response.json()
         setUnits(data)
       } catch (err) {
-        console.error('Error fetching units:', err)
+        console.error('Greška pri dohvaćanju mjernih jedinica:', err)
       } finally {
         setIsLoading(false)
       }
@@ -61,7 +61,7 @@ const IngredientsForm = ({
     <div className="space-y-6 mb-10">
       <div className='flex justify-between items-center'>
         <h2 className="text-xl font-semibold">Sastojci</h2>
-        <Button variant="outline" 
+        <Button variant="outline"
           onClick={() => appendIngredient({ name: '', quantity: '', unitId: '' })}
           disabled={isLoading}>
           <Plus className="mr-2 h-4 w-4" /> Dodaj sastojak
