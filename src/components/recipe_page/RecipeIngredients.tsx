@@ -13,7 +13,7 @@ interface RecipeIngredientsProps {
 
 export function RecipeIngredients({ ingredients, servings }: RecipeIngredientsProps) {
   return (
-    <Card className='shadow-md'>
+    <Card className='shadow-xl'>
       <CardHeader className="pb-3">
         <CardTitle>Sastojci</CardTitle>
         <CardDescription>Za {servings} porcija</CardDescription>

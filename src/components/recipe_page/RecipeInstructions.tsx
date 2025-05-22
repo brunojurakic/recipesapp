@@ -10,7 +10,7 @@ interface RecipeInstructionsProps {
 
 export function RecipeInstructions({ instructions }: RecipeInstructionsProps) {
   return (
-    <Card className='shadow-md'>
+    <Card className='shadow-xl'>
       <CardHeader className="pb-3">
         <CardTitle>Upute</CardTitle>
         <CardDescription>Korak po korak vodič</CardDescription>

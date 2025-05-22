@@ -12,7 +12,7 @@ interface RecipeAuthorProps {
 
 export function RecipeAuthor({ user }: RecipeAuthorProps) {
   return (
-    <Card className='shadow-md'>
+    <Card className='shadow-xl'>
       <CardHeader className="pb-3">
         <CardTitle>O autoru</CardTitle>
       </CardHeader>

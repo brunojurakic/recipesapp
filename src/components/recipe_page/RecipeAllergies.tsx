@@ -16,7 +16,7 @@ export function RecipeAllergies({ allergies }: RecipeAllergiesProps) {
   if (allergies.length === 0) return null;
   
   return (
-    <Card className='shadow-md'>
+    <Card className='shadow-xl'>
       <CardHeader>
         <div className='flex items-center gap-1'>
           <CardTitle>Informacije o alergenima</CardTitle>
