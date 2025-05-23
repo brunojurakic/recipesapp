@@ -11,6 +11,8 @@ import { RecipeInstructions } from '@/components/recipe_page/RecipeInstructions'
 import { RecipeAllergies } from '@/components/recipe_page/RecipeAllergies'
 import { RecipeReviews } from '@/components/recipe_page/RecipeReviews'
 import { RecipeAuthor } from '@/components/recipe_page/RecipeAuthor'
+import { BookmarkButton } from '@/components/recipe_page/BookmarkButton'
+import { Suspense } from 'react'
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }>}) {
   const { id } = await params;
@@ -87,9 +89,9 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
           <RecipeIngredients ingredients={recipe.ingredients} servings={recipe.servings} />
           <RecipeAuthor user={recipe.user} />
           <div className="space-y-4">
-            <Button className="w-full" variant="default">
-              Spremi
-            </Button>
+            <Suspense fallback={<BookmarkButton recipeId="" isInitialLoading />}>
+              <BookmarkButton recipeId={recipe.id} />
+            </Suspense>
             <Button className="w-full" variant="outline">
               Ocijeni recept
             </Button>
