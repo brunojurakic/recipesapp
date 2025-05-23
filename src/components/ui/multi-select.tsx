@@ -3,7 +3,7 @@
 import { useCallback } from "react"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Check, ChevronsUpDown, X } from "lucide-react"
+import { Check, ChevronsUpDown, X, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   Command,
@@ -71,12 +71,16 @@ export function MultiSelect<T extends SelectableItem>({
               "w-full justify-between",
               !selectedIds.length && "text-muted-foreground"
             )}
-          >
-            {isLoading
-              ? `Loading ${label.toLowerCase()}...`
-              : selectedIds.length
-                ? `${selectedIds.length} selected`
-                : placeholder}
+          >            {isLoading ? (
+              <div className="flex items-center gap-2">
+                <span>Učitavanje {label.toLowerCase()}...</span>
+                <span className="ml-auto opacity-50">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                </span>
+              </div>
+            ) : selectedIds.length ? (
+              `${selectedIds.length} odabrano`
+            ) : placeholder}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -84,22 +88,31 @@ export function MultiSelect<T extends SelectableItem>({
           <Command>
             <CommandInput placeholder={searchPlaceholder}/>
             <CommandList>
-              <CommandEmpty>{emptyMessage}</CommandEmpty>
-              <CommandGroup>
-                {items.map((item) => {
-                  const isSelected = selectedIds.includes(item.id);
-                  return (
-                    <CommandItem
-                      key={item.id}
-                      value={item.name}
-                      onSelect={() => handleSelect(item.id)}
-                    >
-                      <Check className={cn("mr-2 h-4 w-4", isSelected ? "opacity-100" : "opacity-0")}/>
-                      {item.name}
-                    </CommandItem>
-                  );
-                })}
-              </CommandGroup>
+              {isLoading ? (
+                <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <span>Učitavanje...</span>
+                </div>
+              ) : (
+                <>
+                  <CommandEmpty>{emptyMessage}</CommandEmpty>
+                  <CommandGroup>
+                    {items.map((item) => {
+                      const isSelected = selectedIds.includes(item.id);
+                      return (
+                        <CommandItem
+                          key={item.id}
+                          value={item.name}
+                          onSelect={() => handleSelect(item.id)}
+                        >
+                          <Check className={cn("mr-2 h-4 w-4", isSelected ? "opacity-100" : "opacity-0")}/>
+                          {item.name}
+                        </CommandItem>
+                      );
+                    })}
+                  </CommandGroup>
+                </>
+              )}
             </CommandList>
           </Command>
         </PopoverContent>
