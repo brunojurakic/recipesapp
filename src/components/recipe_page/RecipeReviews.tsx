@@ -16,7 +16,7 @@ export function RecipeReviews({ reviews }: RecipeReviewsProps) {
   if (reviews.length === 0) return null;
   
   return (
-    <Card className='shadow-md'>
+    <Card className='shadow-xl'>
       <CardHeader className="pb-3">
         <CardTitle>Recenzije</CardTitle>
         <CardDescription>{reviews.length} {reviews.length === 1 ? 'recenzija' : reviews.length > 1 && reviews.length < 5 ? 'recenzije' : 'recenzija'}</CardDescription>

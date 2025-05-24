@@ -10,7 +10,7 @@ import IngredientsForm from '@/components/forms/IngredientsForm'
 import { useState } from 'react'
 import { FORM_STEPS } from '@/lib/utils/constants'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Loader2 } from 'lucide-react'
 import CategoriesAllergiesForm from '@/components/forms/CategoriesAllergiesForm'
 import { useRouter } from 'next/navigation'
 import { toast } from "sonner"
@@ -19,6 +19,7 @@ import { FormProgressTracker } from '@/components/forms/FormProgressTracker'
 const NewRecipePage = () => {
   const router = useRouter()
   const [currentStep, setCurrentStep] = useState(1)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const totalSteps = 4
   const [image, setImage] = useState<File | null>(null)
   const [imageError, setImageError] = useState<string | null>(null)
@@ -59,6 +60,7 @@ const NewRecipePage = () => {
       return;
     }
     setImageError(null);
+    setIsSubmitting(true);
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       if (key !== 'image') {
@@ -85,6 +87,8 @@ const NewRecipePage = () => {
     } catch (error) {
       console.error(error)
       toast.error('Došlo je do neočekivane pogreške');
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -169,10 +173,16 @@ const NewRecipePage = () => {
           {currentStep < totalSteps ? (
             <Button onClick={handleNext} className='ml-auto'>
               Dalje<ArrowRight />
-            </Button>
-          ) : (
-            <Button type='submit' variant={'outline'}>
-              Stvori recept
+            </Button>) : (
+            <Button type='submit' variant={'outline'} disabled={isSubmitting}>
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Stvaranje...
+                </>
+              ) : (
+                'Stvori recept'
+              )}
             </Button>
           )}
         </div>

@@ -3,7 +3,7 @@
 import { UseFormRegister, FieldErrors, Control, useWatch } from 'react-hook-form'
 import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
 import { FieldArrayWithId } from 'react-hook-form'
-import { Plus, X } from 'lucide-react'
+import { Plus, X, Loader2 } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
@@ -74,7 +74,12 @@ const IngredientsForm = ({
         <Button variant="outline"
           onClick={() => appendIngredient({ name: '', quantity: '', unitId: '' })}
           disabled={isLoading}>
-          <Plus className="mr-2 h-4 w-4" /> Dodaj sastojak
+          {isLoading ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Plus className="mr-2 h-4 w-4" />
+          )}
+          Dodaj sastojak
         </Button>
       </div>
 
@@ -134,7 +139,16 @@ const IngredientsForm = ({
                 >
                   <SelectTrigger id={`ingredients.${index}.unitId`}>
                     <SelectValue placeholder="Odaberite jedinicu">
-                      {currentUnitId ? getUnitDisplayName(currentUnitId) : "Odaberite jedinicu"}
+                      {isLoading ? (
+                        <div className="flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          <span>Učitavanje...</span>
+                        </div>
+                      ) : currentUnitId ? (
+                        getUnitDisplayName(currentUnitId)
+                      ) : (
+                        "Odaberite jedinicu"
+                      )}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>

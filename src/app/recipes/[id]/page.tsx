@@ -4,13 +4,15 @@ import Link from "next/link"
 import { notFound } from 'next/navigation'
 import { Clock, Users, ChevronLeft, UserPen } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { getRecipe } from '@/lib/utils/drizzle_queries'
 import { RecipeIngredients } from '@/components/recipe_page/RecipeIngredients'
 import { RecipeInstructions } from '@/components/recipe_page/RecipeInstructions'
 import { RecipeAllergies } from '@/components/recipe_page/RecipeAllergies'
 import { RecipeReviews } from '@/components/recipe_page/RecipeReviews'
 import { RecipeAuthor } from '@/components/recipe_page/RecipeAuthor'
+import { BookmarkButton } from '@/components/recipe_page/BookmarkButton'
+import { ReviewDialog } from '@/components/recipe_page/ReviewDialog'
+import { Suspense } from 'react'
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }>}) {
   const { id } = await params;
@@ -74,25 +76,29 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                   <span>{averageRating.toFixed(1)} ({recipe.reviews.length} {recipe.reviews.length === 1 ? 'recenzija' : 'recenzije'})</span>
                 </div>
               )}
-            </div>
-
+            </div>            
             <p className="mt-6 text-muted-foreground">{recipe.description}</p>
           </div>
+          
+          <div className="lg:hidden">
+            <RecipeIngredients ingredients={recipe.ingredients} servings={recipe.servings} />
+          </div>
+          
           <RecipeAllergies allergies={recipe.allergies} />
           <RecipeInstructions instructions={recipe.instructions} />
           <RecipeReviews reviews={recipe.reviews} />
         </div>
         
         <div className="space-y-8">
-          <RecipeIngredients ingredients={recipe.ingredients} servings={recipe.servings} />
+          <div className="hidden lg:block">
+            <RecipeIngredients ingredients={recipe.ingredients} servings={recipe.servings} />
+          </div>
           <RecipeAuthor user={recipe.user} />
           <div className="space-y-4">
-            <Button className="w-full" variant="default">
-              Spremi
-            </Button>
-            <Button className="w-full" variant="outline">
-              Ocijeni recept
-            </Button>
+            <Suspense fallback={<BookmarkButton recipeId="" isInitialLoading />}>
+              <BookmarkButton recipeId={recipe.id} />
+            </Suspense>
+            <ReviewDialog recipeId={recipe.id} />
           </div>
         </div>
       </div>

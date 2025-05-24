@@ -28,9 +28,9 @@ const InstructionsForm = ({
       <div className='flex justify-between items-center'>
         <h2 className="text-xl font-semibold">Upute</h2>
         <Button variant="outline" 
-          onClick={() => appendInstruction({ stepNumber: instructionFields.length + 1, content: '' })}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Dodaj korak
+          onClick={() => appendInstruction({ stepNumber: instructionFields.length + 1, content: '' })}>
+          <Plus className="mr-2 h-4 w-4" />
+          Dodaj korak
         </Button>
       </div>
 
