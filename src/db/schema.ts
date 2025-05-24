@@ -111,6 +111,12 @@ export const recipeAllergy = pgTable("SadrziAlergiju", {
   allergyId: uuid('id_alergije').notNull().references(() => allergy.id, { onDelete: 'cascade' })
 });
 
+export const userAllergy = pgTable("KorisnikAlergija", {
+  userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  allergyId: uuid('id_alergije').notNull().references(() => allergy.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('datum_kreiranja').notNull()
+});
+
 export const role = pgTable("Uloga", {
   id: uuid("id_uloge").defaultRandom().primaryKey(),
   name: text("naziv").notNull().unique(),
@@ -128,6 +134,7 @@ export const userRelations = relations(user, ({ many }) => ({
   recipes: many(recipe),
   reviews: many(review),
   bookmarks: many(bookmark),
+  allergies: many(userAllergy),
 }));
 
 export const recipeRelations = relations(recipe, ({ one, many }) => ({
@@ -160,6 +167,7 @@ export const recipeCategoryRelations = relations(recipeCategory, ({ one }) => ({
 
 export const allergyRelations = relations(allergy, ({ many }) => ({
   recipes: many(recipeAllergy),
+  users: many(userAllergy),
 }));
 
 export const recipeAllergyRelations = relations(recipeAllergy, ({ one }) => ({
@@ -214,6 +222,17 @@ export const bookmarkRelations = relations(bookmark, ({ one }) => ({
   user: one(user, {
     fields: [bookmark.userId],
     references: [user.id],
+  }),
+}));
+
+export const userAllergyRelations = relations(userAllergy, ({ one }) => ({
+  user: one(user, {
+    fields: [userAllergy.userId],
+    references: [user.id],
+  }),
+  allergy: one(allergy, {
+    fields: [userAllergy.allergyId],
+    references: [allergy.id],
   }),
 }));
 
