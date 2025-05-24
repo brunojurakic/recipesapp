@@ -4,7 +4,7 @@ import Link from "next/link"
 import { notFound } from 'next/navigation'
 import { Clock, Users, ChevronLeft, UserPen } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
-import { getRecipe } from '@/lib/utils/drizzle_queries'
+import { getRecipe } from '@/db/queries'
 import { RecipeIngredients } from '@/components/recipe_page/RecipeIngredients'
 import { RecipeInstructions } from '@/components/recipe_page/RecipeInstructions'
 import { RecipeAllergies } from '@/components/recipe_page/RecipeAllergies'

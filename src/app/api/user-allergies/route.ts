@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { getAllAllergies, getUserAllergies, updateUserAllergies } from "@/lib/utils/drizzle_queries";
+import { getAllAllergies, getUserAllergies, updateUserAllergies } from "@/db/queries";
 
 export async function GET() {
   try {
