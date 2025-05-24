@@ -1,10 +1,8 @@
-// Recipe queries
 export {
   getRecipe,
   getRecipes
 } from './recipe-queries';
 
-// Bookmark queries
 export {
   getBookmark,
   isRecipeBookmarked,
@@ -13,12 +11,10 @@ export {
   toggleBookmark
 } from './bookmark-queries';
 
-// Review queries
 export {
   addReview
 } from './review-queries';
 
-// Allergy queries
 export {
   getAllAllergies,
   getUserAllergies,
@@ -26,3 +22,10 @@ export {
   removeUserAllergy,
   updateUserAllergies
 } from './allergy-queries';
+
+export {
+  getUserById,
+  getUserRecipes,
+  getUserBookmarks,
+  updateUserProfile
+} from './user-queries';
