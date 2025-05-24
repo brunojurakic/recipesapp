@@ -4,7 +4,7 @@ import { headers } from "next/headers"
 import { RecipeCard } from "@/components/RecipeCard"
 import { buttonVariants } from "@/components/ui/button"
 import { Plus } from "lucide-react"
-import { getRecipes } from "@/lib/utils/drizzle_queries"
+import { getRecipes } from "@/db/queries"
 import { notFound } from "next/navigation"
 
 

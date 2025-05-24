@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { addReview } from "@/lib/utils/drizzle_queries";
+import { addReview } from "@/db/queries";
 import { reviewSchema } from "@/lib/validations/review-schema";
 
 export async function POST(req: NextRequest) {
