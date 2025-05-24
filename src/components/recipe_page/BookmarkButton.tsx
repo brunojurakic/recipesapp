@@ -5,13 +5,7 @@ import { useRouter } from "next/navigation";
 import { Loader2, Bookmark } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from 'sonner';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { LoginDialog } from "@/components/common/LoginDialog";
 
 
 interface BookmarkButtonProps {
@@ -113,24 +107,11 @@ export function BookmarkButton({ recipeId, onToggle, isInitialLoading }: Bookmar
         )}
       </Button>
 
-      <Dialog open={showLoginDialog} onOpenChange={setShowLoginDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Prijava potrebna</DialogTitle>
-            <DialogDescription>
-              Za spremanje recepta potrebno je prijaviti se. Želite li se prijaviti?
-            </DialogDescription>
-          </DialogHeader>
-          <div className="flex justify-end gap-3 mt-4">
-            <Button variant="outline" onClick={() => setShowLoginDialog(false)}>
-              Odustani
-            </Button>
-            <Button onClick={() => router.push('/login')}>
-              Prijava
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <LoginDialog
+        isOpen={showLoginDialog}
+        onOpenChange={setShowLoginDialog}
+        description="Za spremanje recepta potrebno je prijaviti se. Želite li se prijaviti?"
+      />
     </>
   );
 }

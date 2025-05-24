@@ -1,5 +1,5 @@
 import { db } from "@/db/drizzle";
-import { bookmark, recipe } from "@/db/schema";
+import { bookmark, recipe, review } from "@/db/schema";
 import { and, asc, desc, eq } from "drizzle-orm";
 
 export async function getRecipe(id: string) {
@@ -149,4 +149,15 @@ export async function toggleBookmark(recipeId: string, userId: string) {
     await createBookmark(recipeId, userId);
     return true;
   }
+}
+
+export async function addReview(recipeId: string, userId: string, content: string | null, rating: number) {
+  await db.insert(review).values({
+    recipeId,
+    userId,
+    content,
+    rating,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
 }

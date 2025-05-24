@@ -4,7 +4,6 @@ import Link from "next/link"
 import { notFound } from 'next/navigation'
 import { Clock, Users, ChevronLeft, UserPen } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { getRecipe } from '@/lib/utils/drizzle_queries'
 import { RecipeIngredients } from '@/components/recipe_page/RecipeIngredients'
 import { RecipeInstructions } from '@/components/recipe_page/RecipeInstructions'
@@ -12,6 +11,7 @@ import { RecipeAllergies } from '@/components/recipe_page/RecipeAllergies'
 import { RecipeReviews } from '@/components/recipe_page/RecipeReviews'
 import { RecipeAuthor } from '@/components/recipe_page/RecipeAuthor'
 import { BookmarkButton } from '@/components/recipe_page/BookmarkButton'
+import { ReviewDialog } from '@/components/recipe_page/ReviewDialog'
 import { Suspense } from 'react'
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }>}) {
@@ -92,9 +92,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             <Suspense fallback={<BookmarkButton recipeId="" isInitialLoading />}>
               <BookmarkButton recipeId={recipe.id} />
             </Suspense>
-            <Button className="w-full" variant="outline">
-              Ocijeni recept
-            </Button>
+            <ReviewDialog recipeId={recipe.id} />
           </div>
         </div>
       </div>
