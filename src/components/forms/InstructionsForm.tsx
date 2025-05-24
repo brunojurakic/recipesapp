@@ -3,11 +3,10 @@
 import { UseFormRegister, FieldErrors } from 'react-hook-form'
 import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
 import { FieldArrayWithId } from 'react-hook-form'
-import { Plus, X, Loader2 } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 import { Button } from '../ui/button'
 import { Input } from '../ui/input'
 import { Label } from '../ui/label'
-import { useState } from 'react'
 
 interface InstructionsFormProps {
   register: UseFormRegister<CreateRecipeFormData>
@@ -24,20 +23,13 @@ const InstructionsForm = ({
   appendInstruction,
   removeInstruction
 }: InstructionsFormProps) => {
-  const [isLoading, setIsLoading] = useState(false)
-
   return (
     <div className="space-y-6 mb-10">
       <div className='flex justify-between items-center'>
         <h2 className="text-xl font-semibold">Upute</h2>
         <Button variant="outline" 
-          onClick={() => appendInstruction({ stepNumber: instructionFields.length + 1, content: '' })}
-          disabled={isLoading}>
-          {isLoading ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <Plus className="mr-2 h-4 w-4" />
-          )}
+          onClick={() => appendInstruction({ stepNumber: instructionFields.length + 1, content: '' })}>
+          <Plus className="mr-2 h-4 w-4" />
           Dodaj korak
         </Button>
       </div>
