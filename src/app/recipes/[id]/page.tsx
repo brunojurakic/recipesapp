@@ -76,17 +76,23 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                   <span>{averageRating.toFixed(1)} ({recipe.reviews.length} {recipe.reviews.length === 1 ? 'recenzija' : 'recenzije'})</span>
                 </div>
               )}
-            </div>
-
+            </div>            
             <p className="mt-6 text-muted-foreground">{recipe.description}</p>
           </div>
+          
+          <div className="lg:hidden">
+            <RecipeIngredients ingredients={recipe.ingredients} servings={recipe.servings} />
+          </div>
+          
           <RecipeAllergies allergies={recipe.allergies} />
           <RecipeInstructions instructions={recipe.instructions} />
           <RecipeReviews reviews={recipe.reviews} />
         </div>
         
         <div className="space-y-8">
-          <RecipeIngredients ingredients={recipe.ingredients} servings={recipe.servings} />
+          <div className="hidden lg:block">
+            <RecipeIngredients ingredients={recipe.ingredients} servings={recipe.servings} />
+          </div>
           <RecipeAuthor user={recipe.user} />
           <div className="space-y-4">
             <Suspense fallback={<BookmarkButton recipeId="" isInitialLoading />}>
