@@ -113,8 +113,7 @@ export const recipeAllergy = pgTable("SadrziAlergiju", {
 
 export const userAllergy = pgTable("KorisnikAlergija", {
   userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  allergyId: uuid('id_alergije').notNull().references(() => allergy.id, { onDelete: 'cascade' }),
-  createdAt: timestamp('datum_kreiranja').notNull()
+  allergyId: uuid('id_alergije').notNull().references(() => allergy.id, { onDelete: 'cascade' })
 });
 
 export const role = pgTable("Uloga", {
