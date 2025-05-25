@@ -100,3 +100,13 @@ export async function getRecipes() {
     return null
   }
 }
+
+export async function deleteRecipe(id: string) {
+  try {
+    await db.delete(recipe).where(eq(recipe.id, id));
+    return true;
+  } catch (error) {
+    console.error('Error deleting recipe:', error);
+    return false;
+  }
+}

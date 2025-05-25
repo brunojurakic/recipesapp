@@ -1,6 +1,7 @@
 export {
   getRecipe,
-  getRecipes
+  getRecipes,
+  deleteRecipe
 } from './recipe-queries';
 
 export {
