@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, ChefHat, Bookmark, BarChart3, Shield } from 'lucide-react';
+import { User, ChefHat, BookmarkIcon, BarChart3, Shield } from 'lucide-react';
 
 import { ProfileInfo } from './ProfileInfo';
 import { UserRecipes } from './UserRecipes';
@@ -31,7 +31,7 @@ export function ProfilePage() {
             <span className="hidden sm:inline">Moji recepti</span>
           </TabsTrigger>
           <TabsTrigger value="bookmarks" className="flex items-center gap-2 cursor-pointer">
-            <Bookmark className="h-4 w-4" />
+            <BookmarkIcon className="h-4 w-4" />
             <span className="hidden sm:inline">Spremljeno</span>
           </TabsTrigger>
           <TabsTrigger value="allergies" className="flex items-center gap-2 cursor-pointer">

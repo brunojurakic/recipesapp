@@ -6,34 +6,10 @@ import { RecipeCard } from "@/components/RecipeCard";
 import { toast } from "sonner";
 import { Loader2, BookOpen } from "lucide-react";
 import Link from "next/link";
+import type { RecipeWithUserAndCategories, ClassNameProps } from "@/lib/types";
 
-interface Recipe {
-  id: string;
-  userId: string;
-  title: string;
-  description: string;
-  image_path: string;
-  servings: number;
-  preparationTime: number;
-  createdAt: Date;
-  updatedAt: Date;
-  user: {
-    name: string | null;
-  };
-  categories: Array<{
-    category: {
-      id: string;
-      name: string;
-    };
-  }>;
-}
-
-interface UserRecipesProps {
-  className?: string;
-}
-
-export function UserRecipes({ className }: UserRecipesProps) {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+export function UserRecipes({ className }: ClassNameProps) {
+  const [recipes, setRecipes] = useState<RecipeWithUserAndCategories[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

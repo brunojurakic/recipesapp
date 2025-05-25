@@ -4,41 +4,12 @@ import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { RecipeCard } from "@/components/RecipeCard";
 import { toast } from "sonner";
-import { Loader2, Bookmark } from "lucide-react";
+import { Loader2, BookmarkIcon } from "lucide-react";
 import Link from "next/link";
+import type { BookmarkWithRecipe, ClassNameProps } from "@/lib/types";
 
-interface Recipe {
-  id: string;
-  userId: string;
-  title: string;
-  description: string;
-  image_path: string;
-  servings: number;
-  preparationTime: number;
-  createdAt: Date;
-  updatedAt: Date;
-  user: {
-    name: string | null;
-  };
-  categories: Array<{
-    category: {
-      id: string;
-      name: string;
-    };
-  }>;
-}
-
-interface Bookmark {
-  recipe: Recipe;
-  createdAt: string;
-}
-
-interface UserBookmarksProps {
-  className?: string;
-}
-
-export function UserBookmarks({ className }: UserBookmarksProps) {
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+export function UserBookmarks({ className }: ClassNameProps) {
+  const [bookmarks, setBookmarks] = useState<BookmarkWithRecipe[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -90,12 +61,11 @@ export function UserBookmarks({ className }: UserBookmarksProps) {
       </Card>
     );
   }
-
   return (
     <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Bookmark className="h-5 w-5" />
+          <BookmarkIcon className="h-5 w-5" />
           Spremljeni recepti
         </CardTitle>
         <CardDescription>
@@ -108,7 +78,7 @@ export function UserBookmarks({ className }: UserBookmarksProps) {
       <CardContent>
         {bookmarks.length === 0 ? (
           <div className="text-center py-8">
-            <Bookmark className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <BookmarkIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <p className="text-muted-foreground mb-4">
               Još niste spremili nijedan recept.
             </p>
