@@ -15,7 +15,6 @@ export function UserRecipes({ className }: ClassNameProps) {
   useEffect(() => {
     fetchUserRecipes();
   }, []);
-
   const fetchUserRecipes = async () => {
     try {
       setIsLoading(true);
@@ -44,6 +43,10 @@ export function UserRecipes({ className }: ClassNameProps) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRecipeDelete = (recipeId: string) => {
+    setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
   };
 
   if (isLoading) {
@@ -87,7 +90,12 @@ export function UserRecipes({ className }: ClassNameProps) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <RecipeCard 
+                key={recipe.id} 
+                recipe={recipe} 
+                showDeleteButton={true}
+                onDelete={handleRecipeDelete}
+              />
             ))}
           </div>
         )}
