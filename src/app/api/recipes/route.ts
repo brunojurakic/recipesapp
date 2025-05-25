@@ -5,8 +5,7 @@ import { headers } from "next/headers";
 import { recipeServerSchema } from "@/lib/validations/recipe-zod-server";
 import { db } from "@/db/drizzle";
 import { recipe, instruction, ingredient, recipeCategory, recipeAllergy } from "@/db/schema";
-
-
+import { getRecipes } from "@/db/queries";
 
 export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({
@@ -111,5 +110,15 @@ export async function POST(request: NextRequest) {
       { error: 'Failed to save recipe to database' },
       { status: 500 }
     );
+  }
+}
+
+export async function GET() {
+  try {
+    const recipes = await getRecipes();
+    return NextResponse.json(recipes);
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    return NextResponse.json({ message: "Failed to fetch recipes" }, { status: 500 });
   }
 }
