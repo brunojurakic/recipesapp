@@ -3,7 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { schema } from "@/db/schema";
-import { getOrCreateKorisnikRole, assignRoleToUser, getDefaultUserRole } from "@/db/queries";
+import { assignRoleToUser, getDefaultUserRole } from "@/db/queries";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
