@@ -12,12 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Loader2, Camera, User } from "lucide-react";
-
-const profileFormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Ime mora imati najmanje 2 znakova.",
-  }),
-});
+import { profileFormSchema } from "@/lib/validations/profile-schema";
 
 interface User {
   id: string;
