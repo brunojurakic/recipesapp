@@ -122,7 +122,11 @@ export function UserStats({ className }: ClassNameProps) {
           <div className="text-center p-4 bg-muted rounded-lg">
             <Calendar className="h-6 w-6 mx-auto mb-2 text-primary" />
             <div className="text-2xl font-bold">
-              {new Date(stats.memberSince).getFullYear()}
+                {new Date(stats.memberSince).toLocaleDateString("hr-HR", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                })}
             </div>
             <div className="text-sm text-muted-foreground">Član od</div>
           </div>

@@ -114,6 +114,7 @@ export function ReviewDialog({ recipeId }: ReviewDialogProps) {
         variant="outline"
         onClick={handleButtonClick}
       >
+        <Star/>
         Ocijeni recept
       </Button>
 
