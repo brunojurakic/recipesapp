@@ -30,3 +30,8 @@ export {
   getUserBookmarks,
   updateUserProfile
 } from './user-queries';
+
+export {
+  getDefaultUserRole,
+  assignRoleToUser
+} from './role-queries';
