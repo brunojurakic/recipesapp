@@ -2,9 +2,11 @@ import React from 'react'
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from 'next/navigation'
+import { headers } from "next/headers"
 import { Clock, Users, ChevronLeft, UserPen } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
 import { getRecipe } from '@/db/queries'
+import { auth } from "@/lib/auth"
 import { RecipeIngredients } from '@/components/recipe_page/RecipeIngredients'
 import { RecipeInstructions } from '@/components/recipe_page/RecipeInstructions'
 import { RecipeAllergies } from '@/components/recipe_page/RecipeAllergies'
@@ -12,6 +14,7 @@ import { RecipeReviews } from '@/components/recipe_page/RecipeReviews'
 import { RecipeAuthor } from '@/components/recipe_page/RecipeAuthor'
 import { BookmarkButton } from '@/components/recipe_page/BookmarkButton'
 import { ReviewDialog } from '@/components/recipe_page/ReviewDialog'
+import { DeleteRecipeButton } from '@/components/recipe_page/DeleteRecipeButton'
 import { Suspense } from 'react'
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }>}) {
@@ -21,6 +24,12 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
   if (!recipe) {
     notFound();
   }
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+
+  const isAuthor = session?.user?.id === recipe.userId;
 
   const averageRating = recipe.reviews.length > 0 
     ? recipe.reviews.reduce((sum, review) => sum + review.rating, 0) / recipe.reviews.length 
@@ -99,6 +108,9 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
               <BookmarkButton recipeId={recipe.id} />
             </Suspense>
             <ReviewDialog recipeId={recipe.id} />
+            {isAuthor && (
+              <DeleteRecipeButton recipeId={recipe.id} />
+            )}
           </div>
         </div>
       </div>

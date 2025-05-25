@@ -53,11 +53,11 @@ export async function PUT(request: NextRequest) {
     }
 
     const updateData: { name?: string; image?: string | null } = {};
-    
+
     if (name) {
       updateData.name = name;
     }
-    
+
     if (imagePath !== null) {
       updateData.image = imagePath;
     }

@@ -6,40 +6,15 @@ import { RecipeCard } from "@/components/RecipeCard";
 import { toast } from "sonner";
 import { Loader2, BookOpen } from "lucide-react";
 import Link from "next/link";
+import type { RecipeWithUserAndCategories, ClassNameProps } from "@/lib/types";
 
-interface Recipe {
-  id: string;
-  userId: string;
-  title: string;
-  description: string;
-  image_path: string;
-  servings: number;
-  preparationTime: number;
-  createdAt: Date;
-  updatedAt: Date;
-  user: {
-    name: string | null;
-  };
-  categories: Array<{
-    category: {
-      id: string;
-      name: string;
-    };
-  }>;
-}
-
-interface UserRecipesProps {
-  className?: string;
-}
-
-export function UserRecipes({ className }: UserRecipesProps) {
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+export function UserRecipes({ className }: ClassNameProps) {
+  const [recipes, setRecipes] = useState<RecipeWithUserAndCategories[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetchUserRecipes();
   }, []);
-
   const fetchUserRecipes = async () => {
     try {
       setIsLoading(true);
@@ -68,6 +43,10 @@ export function UserRecipes({ className }: UserRecipesProps) {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleRecipeDelete = (recipeId: string) => {
+    setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
   };
 
   if (isLoading) {
@@ -111,7 +90,12 @@ export function UserRecipes({ className }: UserRecipesProps) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {recipes.map((recipe) => (
-              <RecipeCard key={recipe.id} recipe={recipe} />
+              <RecipeCard 
+                key={recipe.id} 
+                recipe={recipe} 
+                showDeleteButton={true}
+                onDelete={handleRecipeDelete}
+              />
             ))}
           </div>
         )}

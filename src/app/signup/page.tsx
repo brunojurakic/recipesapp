@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCroatianErrorMessage, translateCommonErrors } from "@/lib/error-messages";
 
 export default function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -178,9 +179,11 @@ export default function SignUp() {
                   callbackURL: "/",
                   fetchOptions: {
                     onResponse: () => setLoading(false),
-                    onRequest: () => setLoading(true),
-                    onError: (ctx) => {
-                      toast.error(ctx.error.message);
+                    onRequest: () => setLoading(true),                    onError: (ctx) => {
+                      const croatianMessage = ctx.error.code 
+                        ? getCroatianErrorMessage(ctx.error.code, ctx.error.message)
+                        : translateCommonErrors(ctx.error.message);
+                      toast.error(croatianMessage);
                       setLoading(false);
                     },
                     onSuccess: async () => router.push("/"),

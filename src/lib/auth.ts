@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@/db/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { schema } from "@/db/schema";
+import { assignRoleToUser, getDefaultUserRole } from "@/db/queries";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -17,6 +18,22 @@ export const auth = betterAuth({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!
     }
-  },
-  plugins: [nextCookies()]
+  },  plugins: [nextCookies()],
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          try {
+            const korisnikRole = await getDefaultUserRole();
+            
+            await assignRoleToUser(user.id, korisnikRole.id);
+            
+            console.log(`Assigned "Korisnik" role (${korisnikRole.id}) to user ${user.id}`);
+          } catch (error) {
+            console.error("Failed to assign role to user:", error);
+          }
+        }
+      }
+    }
+  }
 });

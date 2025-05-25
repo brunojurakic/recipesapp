@@ -1,5 +1,5 @@
-import { pgTable, text, timestamp, boolean, integer, uuid } from "drizzle-orm/pg-core";
-import { relations } from 'drizzle-orm';
+import { pgTable, text, timestamp, boolean, integer, uuid, check, real } from "drizzle-orm/pg-core";
+import { relations, sql } from 'drizzle-orm';
 
 export const user = pgTable("Korisnik", {
   id: text('id_korisnika').primaryKey(),
@@ -10,7 +10,11 @@ export const user = pgTable("Korisnik", {
   roleId: uuid('id_uloge').references(() => role.id, { onDelete: 'set null' }),
   createdAt: timestamp('datum_kreiranja').notNull(),
   updatedAt: timestamp('datum_azuriranja').notNull()
-});
+}, (table) => [
+  check('name_length', sql`length(${table.name}) >= 2 AND length(${table.name}) <= 50`),
+  check('email_format', sql`${table.email} ~* '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$'`),
+  check('created_before_updated', sql`${table.createdAt} <= ${table.updatedAt}`)
+]);
 
 export const verification = pgTable("OauthVerifikacija", {
   id: text('id_oauth').primaryKey(),
@@ -30,7 +34,10 @@ export const session = pgTable("Sjednica", {
   ipAddress: text('ip_adresa'),
   userAgent: text('korisnicki_agent'),
   userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' })
-});
+}, (table) => [
+  check('expires_in_future', sql`${table.expiresAt} > ${table.createdAt}`),
+  check('created_before_updated', sql`${table.createdAt} <= ${table.updatedAt}`)
+]);
 
 export const account = pgTable("Racun", {
   id: text('id_racuna').primaryKey(),
@@ -58,12 +65,20 @@ export const recipe = pgTable("Recept", {
   preparationTime: integer('vrijeme_pripreme').notNull(),
   createdAt: timestamp('datum_kreiranja').notNull(),
   updatedAt: timestamp('datum_azuriranja').notNull()
-});
+}, (table) => [
+  check('servings_positive', sql`${table.servings} > 0`),
+  check('preparation_time_positive', sql`${table.preparationTime} > 0`),
+  check('title_length', sql`length(${table.title}) >= 3 AND length(${table.title}) <= 100`),
+  check('description_length', sql`length(${table.description}) >= 10`),
+  check('created_before_updated', sql`${table.createdAt} <= ${table.updatedAt}`)
+]);
 
 export const category = pgTable("KategorijaJela", {
   id: uuid('id_kategorije').defaultRandom().primaryKey(),
   name: text('naziv').notNull().unique()
-});
+}, (table) => [
+  check('name_length', sql`length(${table.name}) >= 2 AND length(${table.name}) <= 30`)
+]);
 
 export const recipeCategory = pgTable("Pripada_kategoriji", {
   recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
@@ -74,26 +89,36 @@ export const ingredient = pgTable("Sastojak", {
   id: uuid('id_sastojka').defaultRandom().primaryKey(),
   recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
   name: text('naziv').notNull(),
-  quantity: text('kolicina').notNull(),
+  quantity: real('kolicina').notNull(),
   unitId: uuid('id_jedinice').notNull().references(() => unit.id, { onDelete: 'restrict' }),
-});
+}, (table) => [
+  check('name_length', sql`length(${table.name}) >= 2 AND length(${table.name}) <= 50`),
+  check('quantity_positive', sql`${table.quantity} > 0`)
+]);
 
 export const instruction = pgTable("Uputa", {
   id: uuid('id_upute').defaultRandom().primaryKey(),
   recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
   stepNumber: integer('korak').notNull(),
   content: text('sadrzaj').notNull()
-});
+}, (table) => [
+  check('step_number_positive', sql`${table.stepNumber} > 0`),
+  check('content_length', sql`length(${table.content}) >= 5`)
+]);
 
 export const review = pgTable("Recenzija", {
   id: uuid('id_recenzije').defaultRandom().primaryKey(),
   recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
   userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
-  content: text('sadrzaj'),
-  rating: integer('ocjena').notNull(), // 1-5
+  content: text('sadrzaj').notNull(),
+  rating: integer('ocjena').notNull(),
   createdAt: timestamp('datum_kreiranja').notNull(),
   updatedAt: timestamp('datum_azuriranja').notNull()
-});
+}, (table) => [
+  check('rating_range', sql`${table.rating} >= 1 AND ${table.rating} <= 5`),
+  check('content_length', sql`length(${table.content}) >= 10`),
+  check('created_before_updated', sql`${table.createdAt} <= ${table.updatedAt}`)
+]);
 
 export const bookmark = pgTable("Oznacio", {
   userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
@@ -104,7 +129,9 @@ export const bookmark = pgTable("Oznacio", {
 export const allergy = pgTable("Alergija", {
   id: uuid('id_alergije').defaultRandom().primaryKey(),
   name: text('naziv').notNull().unique()
-});
+}, (table) => [
+  check('name_length', sql`length(${table.name}) >= 2 AND length(${table.name}) <= 30`)
+]);
 
 export const recipeAllergy = pgTable("SadrziAlergiju", {
   recipeId: uuid('id_recepta').notNull().references(() => recipe.id, { onDelete: 'cascade' }),
@@ -120,14 +147,21 @@ export const role = pgTable("Uloga", {
   id: uuid("id_uloge").defaultRandom().primaryKey(),
   name: text("naziv").notNull().unique(),
   description: text("opis")
-});
+}, (table) => [
+  check('name_length', sql`length(${table.name}) >= 2 AND length(${table.name}) <= 20`),
+  check('description_length', sql`${table.description} IS NULL OR length(${table.description}) >= 5`)
+]);
 
 export const unit = pgTable("MjernaJedinica", {
   id: uuid("id_jedinice").defaultRandom().primaryKey(),
   name: text("naziv").notNull().unique(),
   abbreviation: text("kratica").notNull(),
   type: text("tip").notNull()
-});
+}, (table) => [
+  check('name_length', sql`length(${table.name}) >= 2 AND length(${table.name}) <= 30`),
+  check('abbreviation_length', sql`length(${table.abbreviation}) >= 1 AND length(${table.abbreviation}) <= 10`),
+  check('type_length', sql`length(${table.type}) >= 2 AND length(${table.type}) <= 20`)
+]);
 
 export const userRelations = relations(user, ({ many }) => ({
   recipes: many(recipe),

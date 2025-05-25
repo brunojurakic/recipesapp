@@ -1,6 +1,7 @@
 export {
   getRecipe,
-  getRecipes
+  getRecipes,
+  deleteRecipe
 } from './recipe-queries';
 
 export {
@@ -29,3 +30,8 @@ export {
   getUserBookmarks,
   updateUserProfile
 } from './user-queries';
+
+export {
+  getDefaultUserRole,
+  assignRoleToUser
+} from './role-queries';

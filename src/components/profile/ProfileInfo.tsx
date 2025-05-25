@@ -11,28 +11,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { toast } from "sonner";
-import { Loader2, Camera, User } from "lucide-react";
+import { Loader2, Camera } from "lucide-react";
+import { profileFormSchema } from "@/lib/validations/profile-schema";
+import type { User, ClassNameProps } from "@/lib/types";
 
-const profileFormSchema = z.object({
-  name: z.string().min(2, {
-    message: "Ime mora imati najmanje 2 znakova.",
-  }),
-});
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  image: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
-interface ProfileInfoProps {
-  className?: string;
-}
-
-export function ProfileInfo({ className }: ProfileInfoProps) {
+export function ProfileInfo({ className }: ClassNameProps) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);

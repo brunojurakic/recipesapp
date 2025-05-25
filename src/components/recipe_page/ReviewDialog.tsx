@@ -55,13 +55,19 @@ export function ReviewDialog({ recipeId }: ReviewDialogProps) {
       return;
     }
 
+    const trimmedContent = content.trim();
+    if (trimmedContent.length < 10) {
+      toast.error("Sadržaj recenzije mora imati najmanje 10 znakova");
+      return;
+    }
+
     try {
       setIsLoading(true);
 
       const formData: ReviewFormData = {
         recipeId,
         rating,
-        content: content.trim() || undefined
+        content: trimmedContent
       };
 
       reviewSchema.parse(formData);
@@ -108,6 +114,7 @@ export function ReviewDialog({ recipeId }: ReviewDialogProps) {
         variant="outline"
         onClick={handleButtonClick}
       >
+        <Star/>
         Ocijeni recept
       </Button>
 
@@ -135,8 +142,7 @@ export function ReviewDialog({ recipeId }: ReviewDialogProps) {
                   />
                 ))}
               </div>
-            </div>
-
+            </div>            
             <div>
               <label className="text-sm font-medium">Komentar</label>
               <Textarea
@@ -144,6 +150,7 @@ export function ReviewDialog({ recipeId }: ReviewDialogProps) {
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="mt-1"
+                required
               />
             </div>
           </div>

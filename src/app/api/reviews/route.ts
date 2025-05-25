@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
     await addReview(
       validatedData.recipeId, 
       session.user.id, 
-      validatedData.content || null, 
+      validatedData.content, 
       validatedData.rating
     );
     

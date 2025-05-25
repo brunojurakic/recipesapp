@@ -22,7 +22,7 @@ interface IngredientsFormProps {
   control: Control<CreateRecipeFormData>
   errors: FieldErrors<CreateRecipeFormData>
   ingredientFields: FieldArrayWithId<CreateRecipeFormData, 'ingredients', 'id'>[]
-  appendIngredient: (value: { name: string; quantity: string; unitId: string }) => void
+  appendIngredient: (value: { name: string; quantity: number; unitId: string }) => void
   removeIngredient: (index: number) => void
 }
 
@@ -36,7 +36,7 @@ const IngredientsForm = ({
 }: IngredientsFormProps) => {
   const [units, setUnits] = useState<Unit[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  
+
   const ingredientValues = useWatch({
     control,
     name: 'ingredients'
@@ -72,7 +72,7 @@ const IngredientsForm = ({
       <div className='flex justify-between items-center'>
         <h2 className="text-xl font-semibold">Sastojci</h2>
         <Button variant="outline"
-          onClick={() => appendIngredient({ name: '', quantity: '', unitId: '' })}
+          onClick={() => appendIngredient({ name: '', quantity: 0, unitId: '' })}
           disabled={isLoading}>
           {isLoading ? (
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -91,7 +91,7 @@ const IngredientsForm = ({
 
       {ingredientFields.map((field, index) => {
         const currentUnitId = ingredientValues?.[index]?.unitId || field.unitId || '';
-        
+
         return (
           <div key={field.id} className="p-4 border rounded-md bg-gray-50">
             <div className="flex justify-between items-center mb-3">
@@ -111,10 +111,12 @@ const IngredientsForm = ({
                   <p className="text-red-500 text-sm">{errors.ingredients[index].name?.message}</p>
                 )}
               </div>
-
               <div className="space-y-2">
                 <Label htmlFor={`ingredients.${index}.quantity`}>Količina</Label>
-                <Input id={`ingredients.${index}.quantity`} {...register(`ingredients.${index}.quantity`)}
+                <Input id={`ingredients.${index}.quantity`} {...register(`ingredients.${index}.quantity`, { valueAsNumber: true })}
+                  type="number"
+                  step="0.01"
+                  min="0"
                   placeholder="npr. 200"
                 />
                 {errors.ingredients?.[index]?.quantity && (

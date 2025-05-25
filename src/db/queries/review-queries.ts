@@ -1,7 +1,7 @@
 import { db } from "@/db/drizzle";
 import { review } from "@/db/schema";
 
-export async function addReview(recipeId: string, userId: string, content: string | null, rating: number) {
+export async function addReview(recipeId: string, userId: string, content: string, rating: number) {
   await db.insert(review).values({
     recipeId,
     userId,

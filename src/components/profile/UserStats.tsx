@@ -3,29 +3,26 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Loader2, BookOpen, Bookmark, Star, Calendar } from "lucide-react";
+import { Loader2, BookOpen, BookmarkIcon, Star, Calendar } from "lucide-react";
+import type { ClassNameProps } from "@/lib/types";
 
-interface Review {
+type Review = {
   rating: number;
-}
+};
 
-interface Recipe {
+type Recipe = {
   reviews: Review[];
-}
+};
 
-interface UserStats {
+type UserStats = {
   recipesCount: number;
   bookmarksCount: number;
   averageRating: number;
   totalReviews: number;
   memberSince: string;
-}
+};
 
-interface UserStatsProps {
-  className?: string;
-}
-
-export function UserStats({ className }: UserStatsProps) {
+export function UserStats({ className }: ClassNameProps) {
   const [stats, setStats] = useState<UserStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -36,7 +33,7 @@ export function UserStats({ className }: UserStatsProps) {
   const fetchUserStats = async () => {
     try {
       setIsLoading(true);
-      
+
       const [profileResponse, recipesResponse, bookmarksResponse] = await Promise.all([
         fetch("/api/profile"),
         fetch("/api/profile/recipes"),
@@ -108,9 +105,8 @@ export function UserStats({ className }: UserStatsProps) {
               {stats.recipesCount === 1 ? 'Recept' : 'Recepta'}
             </div>
           </div>
-
           <div className="text-center p-4 bg-muted rounded-lg">
-            <Bookmark className="h-6 w-6 mx-auto mb-2 text-primary" />
+            <BookmarkIcon className="h-6 w-6 mx-auto mb-2 text-primary" />
             <div className="text-2xl font-bold">{stats.bookmarksCount}</div>
             <div className="text-sm text-muted-foreground">Spremljeno</div>
           </div>
@@ -126,7 +122,11 @@ export function UserStats({ className }: UserStatsProps) {
           <div className="text-center p-4 bg-muted rounded-lg">
             <Calendar className="h-6 w-6 mx-auto mb-2 text-primary" />
             <div className="text-2xl font-bold">
-              {new Date(stats.memberSince).getFullYear()}
+                {new Date(stats.memberSince).toLocaleDateString("hr-HR", {
+                day: "2-digit",
+                month: "short",
+                year: "numeric",
+                })}
             </div>
             <div className="text-sm text-muted-foreground">Član od</div>
           </div>

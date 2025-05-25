@@ -6,19 +6,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { MultiSelect, SelectableItem } from "@/components/ui/multi-select";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import type { ClassNameProps } from "@/lib/types";
 
-interface Allergy extends SelectableItem {
+interface AllergyItem extends SelectableItem {
   id: string;
   name: string;
 }
 
-interface UserAllergiesManagerProps {
-  className?: string;
-}
-
-export function UserAllergiesManager({ className }: UserAllergiesManagerProps) {
-  const [allAllergies, setAllAllergies] = useState<Allergy[]>([]);
-  const [userAllergies, setUserAllergies] = useState<Allergy[]>([]);
+export function UserAllergiesManager({ className }: ClassNameProps) {
+  const [allAllergies, setAllAllergies] = useState<AllergyItem[]>([]);
+  const [userAllergies, setUserAllergies] = useState<AllergyItem[]>([]);
   const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -39,7 +36,7 @@ export function UserAllergiesManager({ className }: UserAllergiesManagerProps) {
       const data = await response.json();
       setAllAllergies(data.allAllergies);
       setUserAllergies(data.userAllergies);
-      setSelectedAllergies(data.userAllergies.map((allergy: Allergy) => allergy.id));
+      setSelectedAllergies(data.userAllergies.map((allergy: AllergyItem) => allergy.id));
     } catch (error) {
       console.error("Error fetching allergies:", error);
       toast.error("Došlo je do greške pri dohvaćanju alergija.");
