@@ -140,6 +140,7 @@ export type UserWithAllergies = User & {
 export type ReviewWithUser = Review & {
   user: {
     name: string | null;
+    image?: string | null;
   };
 };
 

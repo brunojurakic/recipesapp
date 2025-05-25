@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChefHat } from "lucide-react";
 import type { InferSelectModel } from "drizzle-orm"
 import { user } from "@/db/schema"
@@ -17,22 +17,20 @@ export function RecipeAuthor({ user }: RecipeAuthorProps) {
         <CardTitle>O autoru</CardTitle>
       </CardHeader>
       <CardContent className="flex items-center gap-4">
-        <div className="h-14 w-14 rounded-full bg-muted flex items-center justify-center">
+        <Avatar className="h-14 w-14">
           {user.image ? (
-            <Image 
+            <AvatarImage 
               src={user.image} 
-              alt={user.name || ''}
-              width={56}
-              height={56}
-              className="rounded-full" 
+              alt={user.name}
             />
-          ) : (
+          ) : null}
+          <AvatarFallback className="bg-muted">
             <ChefHat className="h-8 w-8 text-muted-foreground" />
-          )}
-        </div>
+          </AvatarFallback>
+        </Avatar>
         <div>
           <h4 className="font-medium">{user.name}</h4>
-          <p className="text-sm text-muted-foreground">Kuhar</p>
+          <p className="text-sm text-muted-foreground">Autor</p>
         </div>
       </CardContent>
     </Card>

@@ -1,16 +1,11 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import Image from "next/image";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, User2 } from "lucide-react";
-import type { InferSelectModel } from "drizzle-orm"
-import { review, user } from "@/db/schema"
+import type { ReviewWithUser } from "@/lib/types";
 
-type Review = InferSelectModel<typeof review> & {
-  user: Pick<InferSelectModel<typeof user>, 'name' | 'image'>
-}
-
-interface RecipeReviewsProps {
-  reviews: Review[];
-}
+type RecipeReviewsProps = {
+  reviews: ReviewWithUser[];
+};
 
 export function RecipeReviews({ reviews }: RecipeReviewsProps) {
   if (reviews.length === 0) return null;
@@ -27,24 +22,22 @@ export function RecipeReviews({ reviews }: RecipeReviewsProps) {
             <div key={review.id} className="border-b pb-4 last:border-0 last:pb-0">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-muted text-muted-foreground">
+                  <Avatar className="h-8 w-8">
                     {review.user.image ? (
-                      <Image 
+                      <AvatarImage 
                         src={review.user.image} 
-                        alt={review.user.name || ''}
-                        width={32}
-                        height={32}
-                        className="rounded-full" 
+                        alt={review.user.name || ''} 
                       />
-                    ) : (
-                      <User2 className="h-4 w-4" />
-                    )}
-                  </div>
+                    ) : null}
+                    <AvatarFallback className="text-xs">
+                      {review.user.name ? review.user.name.charAt(0).toUpperCase() : <User2 className="h-4 w-4" />}
+                    </AvatarFallback>
+                  </Avatar>
                   <span className="font-medium">{review.user.name}</span>
                 </div>
                 <div className="flex">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star strokeWidth={1.5} key={i} className= {i < review.rating ? 'text-zinc-500 fill-yellow-500' : 'text-zinc-400'}/>
+                    <Star strokeWidth={1.5} key={i} className={i < review.rating ? 'text-zinc-500 fill-yellow-500' : 'text-zinc-400'}/>
                   ))}
                 </div>
               </div>
