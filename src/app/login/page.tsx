@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import { getTranslatedError } from "@/lib/error-messages";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -34,10 +35,10 @@ export default function SignIn() {
         onRequest: () => setLoading(true),
         onSuccess: () => {
           router.push("/");
-        },
-        onError: (ctx) => {
+        }, onError: (ctx) => {
           setLoading(false);
-          toast.error(ctx.error.message || "Prijava nije uspjela");
+          const croatianMessage = getTranslatedError(ctx.error.code, ctx.error.message);
+          toast.error(croatianMessage);
         },
       },
     );
@@ -71,7 +72,7 @@ export default function SignIn() {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Lozinka</Label>
               <Input
@@ -85,7 +86,7 @@ export default function SignIn() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button 
+            <Button
               className="w-full"
               disabled={loading}
               onClick={handleSignIn}
@@ -105,8 +106,8 @@ export default function SignIn() {
               </div>
             </div>
 
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               className="w-full"
               disabled={loading}
               onClick={async () => {
