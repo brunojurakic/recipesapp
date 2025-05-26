@@ -11,14 +11,15 @@ import { RecipeFilters } from "@/components/recipes/RecipeFilters";
 import { RecipeListDisplay } from "@/components/recipes/RecipeListDisplay";
 import type { SelectableItem } from "@/components/ui/multi-select";
 import type { Category, Allergy, RecipeClient } from "@/lib/types/database";
+import { useDebouncedCallback } from "use-debounce";
 
 export default function RecipesPage() {
   const { data: sessionData, isPending: isSessionLoading } = useSession();
   const session = sessionData?.session;
-
-  const [allRecipes, setAllRecipes] = useState<RecipeClient[]>([]);
   const [filteredRecipes, setFilteredRecipes] = useState<RecipeClient[]>([]);
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(true);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [isFiltering, setIsFiltering] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
@@ -30,29 +31,74 @@ export default function RecipesPage() {
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [allAllergies, setAllAllergies] = useState<SelectableItem[]>([]);
   const [isLoadingAllergies, setIsLoadingAllergies] = useState(true);
+  const debouncedFetchRecipes = useDebouncedCallback(async (
+    search: string,
+    categoryIds: string[],
+    allergyIds: string[],
+    maxPrepTime: string,
+    minServings: string
+  ) => {
+    try {
+      if (isInitialLoad) {
+        setIsLoadingRecipes(true);
+      } else {
+        setIsFiltering(true);
+      }
+
+      const params = new URLSearchParams();
+
+      if (search.trim()) {
+        params.append('search', search.trim());
+      }
+      if (categoryIds.length > 0) {
+        params.append('categoryIds', categoryIds.join(','));
+      }
+      if (allergyIds.length > 0) {
+        params.append('allergyIds', allergyIds.join(','));
+      }
+      if (maxPrepTime && parseInt(maxPrepTime, 10) > 0) {
+        params.append('maxPrepTime', maxPrepTime);
+      }
+      if (minServings && parseInt(minServings, 10) > 0) {
+        params.append('minServings', minServings);
+      }
+
+      const url = `/api/recipes${params.toString() ? `?${params.toString()}` : ''}`;
+      const res = await fetch(url);
+      if (!res.ok) {
+        throw new Error("Failed to fetch recipes");
+      }
+      const data: RecipeClient[] = await res.json();
+      setFilteredRecipes(data);
+
+      if (isInitialLoad) {
+        setIsInitialLoad(false);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Greška pri dohvaćanju recepata.");
+    } finally {
+      setIsLoadingRecipes(false);
+      setIsFiltering(false);
+    }
+  }, 500);
 
   useEffect(() => {
-    const fetchRecipes = async () => {
-      try {
-        setIsLoadingRecipes(true);
-        const res = await fetch("/api/recipes");
-        if (!res.ok) throw new Error("Failed to fetch recipes");
-        const data: RecipeClient[] = await res.json();
-        setAllRecipes(data);
-        setFilteredRecipes(data);
-      } catch (error) {
-        console.error(error);
-        toast.error("Greška pri dohvaćanju recepata.");
-      } finally {
-        setIsLoadingRecipes(false);
-      }
-    };
+    debouncedFetchRecipes("", [], [], "", "");
+  }, [debouncedFetchRecipes]);
 
+  useEffect(() => {
+    debouncedFetchRecipes(searchTerm, selectedCategoryIds, selectedAllergyIds, maxPrepTime, minServings);
+  }, [searchTerm, selectedCategoryIds, selectedAllergyIds, maxPrepTime, minServings, debouncedFetchRecipes]);
+
+  useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
         setIsLoadingCategories(true);
         const catRes = await fetch("/api/categories");
-        if (!catRes.ok) throw new Error("Failed to fetch categories");
+        if (!catRes.ok) {
+          throw new Error("Failed to fetch categories");
+        }
         const categoriesData = await catRes.json();
         setAllCategories(categoriesData.map((c: Category) => ({ id: c.id, name: c.name })));
       } catch (error) {
@@ -65,7 +111,9 @@ export default function RecipesPage() {
       try {
         setIsLoadingAllergies(true);
         const algRes = await fetch("/api/allergies");
-        if (!algRes.ok) throw new Error("Failed to fetch allergies");
+        if (!algRes.ok) {
+          throw new Error("Failed to fetch allergies");
+        }
         const allergiesData = await algRes.json();
         setAllAllergies(allergiesData.map((a: Allergy) => ({ id: a.id, name: a.name })));
       } catch (error) {
@@ -76,53 +124,8 @@ export default function RecipesPage() {
       }
     };
 
-    fetchRecipes();
     fetchFilterOptions();
   }, []);
-
-  useEffect(() => {
-    let tempRecipes = [...allRecipes];
-
-    if (searchTerm) {
-      tempRecipes = tempRecipes.filter(recipe =>
-        recipe.title.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (selectedCategoryIds.length > 0) {
-      tempRecipes = tempRecipes.filter(recipe =>
-        selectedCategoryIds.some(catId =>
-          recipe.categories.some(rc => rc.category.id === catId)
-        )
-      );
-    }
-
-    if (selectedAllergyIds.length > 0) {
-      tempRecipes = tempRecipes.filter(recipe =>
-        !selectedAllergyIds.some(allergyId =>
-          recipe.allergies.some(ra => ra.allergy.id === allergyId)
-        )
-      );
-    }
-
-    if (maxPrepTime) {
-      const prepTimeNum = parseInt(maxPrepTime, 10);
-      if (!isNaN(prepTimeNum) && prepTimeNum > 0) {
-        tempRecipes = tempRecipes.filter(
-          recipe => recipe.preparationTime <= prepTimeNum
-        );
-      }
-    }
-
-    if (minServings) {
-      const servingsNum = parseInt(minServings, 10);
-      if (!isNaN(servingsNum) && servingsNum > 0) {
-        tempRecipes = tempRecipes.filter(recipe => recipe.servings >= servingsNum);
-      }
-    }
-
-    setFilteredRecipes(tempRecipes);
-  }, [searchTerm, selectedCategoryIds, selectedAllergyIds, maxPrepTime, minServings, allRecipes]);
 
   const clearFilters = () => {
     setSearchTerm("");
@@ -169,8 +172,8 @@ export default function RecipesPage() {
         onMinServingsChange={setMinServings}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearFilters}
+        isFiltering={isFiltering}
       />
-
       <RecipeListDisplay
         isLoadingRecipes={isLoadingRecipes}
         filteredRecipes={filteredRecipes}

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { MultiSelect, SelectableItem } from "@/components/ui/multi-select";
 import { Button } from "@/components/ui/button";
-import { Search, XCircle } from "lucide-react";
+import { Search, XCircle, Loader2 } from "lucide-react";
 
 interface RecipeFiltersProps {
   searchTerm: string;
@@ -23,6 +23,7 @@ interface RecipeFiltersProps {
   onMinServingsChange: (servings: string) => void;
   hasActiveFilters: boolean;
   onClearFilters: () => void;
+  isFiltering?: boolean;
 }
 
 export function RecipeFilters({
@@ -42,6 +43,7 @@ export function RecipeFilters({
   onMinServingsChange,
   hasActiveFilters,
   onClearFilters,
+  isFiltering = false,
 }: RecipeFiltersProps) {
   return (
     <div className="mb-10 p-4 md:p-6 border rounded-lg shadow-sm bg-card">
@@ -49,7 +51,11 @@ export function RecipeFilters({
         <div className="space-y-2">
           <Label htmlFor="searchName">Pretraži po nazivu</Label>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            {isFiltering ? (
+              <Loader2 className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground animate-spin" />
+            ) : (
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            )}
             <Input
               id="searchName"
               type="text"
