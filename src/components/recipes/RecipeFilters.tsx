@@ -89,7 +89,7 @@ export function RecipeFilters({
             selectedIds={selectedAllergyIds}
             onChange={onSelectedAllergyIdsChange}
             isLoading={isLoadingAllergies}
-            label="Alergen"
+            label="Alergena"
             placeholder="Odaberite alergene za izbjegavanje"
             searchPlaceholder="Pretraži alergene..."
             emptyMessage="Nema alergena."

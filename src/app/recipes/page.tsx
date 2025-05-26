@@ -122,10 +122,23 @@ export default function RecipesPage() {
       } finally {
         setIsLoadingAllergies(false);
       }
+
+      if (session) {
+        try {
+          const userAllergiesRes = await fetch("/api/user-allergies");
+          if (userAllergiesRes.ok) {
+            const userAllergiesData = await userAllergiesRes.json();
+            const userAllergyIds = userAllergiesData.userAllergies.map((a: Allergy) => a.id);
+            setSelectedAllergyIds(userAllergyIds);
+          }
+        } catch (error) {
+          console.error("Error fetching user allergies:", error);
+        }
+      }
     };
 
     fetchFilterOptions();
-  }, []);
+  }, [session]);
 
   const clearFilters = () => {
     setSearchTerm("");
