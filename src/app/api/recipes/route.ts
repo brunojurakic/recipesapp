@@ -5,8 +5,7 @@ import { headers } from "next/headers";
 import { recipeServerSchema } from "@/lib/validations/recipe-zod-server";
 import { db } from "@/db/drizzle";
 import { recipe, instruction, ingredient, recipeCategory, recipeAllergy } from "@/db/schema";
-
-
+import { getRecipes, getFilteredRecipes } from "@/db/queries";
 
 export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({
@@ -111,5 +110,37 @@ export async function POST(request: NextRequest) {
       { error: 'Failed to save recipe to database' },
       { status: 500 }
     );
+  }
+}
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+
+    const search = searchParams.get('search') || undefined;
+    const categoryIds = searchParams.get('categoryIds')?.split(',').filter(Boolean) || undefined;
+    const allergyIds = searchParams.get('allergyIds')?.split(',').filter(Boolean) || undefined;
+    const maxPrepTime = searchParams.get('maxPrepTime') ? parseInt(searchParams.get('maxPrepTime')!, 10) : undefined;
+    const minServings = searchParams.get('minServings') ? parseInt(searchParams.get('minServings')!, 10) : undefined;
+
+    const hasFilters = search || categoryIds || allergyIds || maxPrepTime || minServings;
+
+    let recipes;
+    if (hasFilters) {
+      recipes = await getFilteredRecipes({
+        search,
+        categoryIds,
+        allergyIds,
+        maxPrepTime: maxPrepTime && maxPrepTime > 0 ? maxPrepTime : undefined,
+        minServings: minServings && minServings > 0 ? minServings : undefined,
+      });
+    } else {
+      recipes = await getRecipes();
+    }
+
+    return NextResponse.json(recipes);
+  } catch (error) {
+    console.error("Error fetching recipes:", error);
+    return NextResponse.json({ message: "Failed to fetch recipes" }, { status: 500 });
   }
 }

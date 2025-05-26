@@ -2,8 +2,7 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import { recipe, category } from "@/db/schema"
-import type { InferSelectModel } from "drizzle-orm"
+import type { Recipe, Category } from "@/lib/types/database"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 import { User, Trash2, Loader2 } from "lucide-react"
@@ -18,9 +17,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-
-type Recipe = InferSelectModel<typeof recipe>
-type Category = InferSelectModel<typeof category>
 
 interface RecipeWithRelations extends Recipe {
   user: {

@@ -1,13 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ChefHat } from "lucide-react";
-import type { InferSelectModel } from "drizzle-orm"
-import { user } from "@/db/schema"
-
-type User = Pick<InferSelectModel<typeof user>, 'name' | 'image'>
+import type { UserBasic } from "@/lib/types/database";
 
 interface RecipeAuthorProps {
-  user: User;
+  user: UserBasic;
 }
 
 export function RecipeAuthor({ user }: RecipeAuthorProps) {

@@ -1,8 +1,5 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import type { InferSelectModel } from "drizzle-orm"
-import { instruction } from "@/db/schema"
-
-type Instruction = InferSelectModel<typeof instruction>
+import type { Instruction } from "@/lib/types/database";
 
 interface RecipeInstructionsProps {
   instructions: Instruction[];

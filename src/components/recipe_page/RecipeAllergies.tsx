@@ -1,11 +1,10 @@
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { CircleAlert } from "lucide-react";
-import type { InferSelectModel } from "drizzle-orm"
-import { allergy } from "@/db/schema"
+import type { Allergy } from "@/lib/types/database";
 
 interface RecipeAllergyInfo {
-  allergy: InferSelectModel<typeof allergy>
+  allergy: Allergy;
 }
 
 interface RecipeAllergiesProps {
