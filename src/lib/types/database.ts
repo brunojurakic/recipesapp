@@ -79,6 +79,12 @@ export type RecipeWithUserAndCategories = Recipe & {
   }>;
 };
 
+export type RecipeClient = Recipe & {
+  user: { name: string | null };
+  categories: Array<{ category: Category }>;
+  allergies: Array<{ allergy: Allergy }>;
+};
+
 export type RecipeWithAllergies = Recipe & {
   allergies: Array<{
     allergy: {
@@ -147,6 +153,8 @@ export type ReviewWithUser = Review & {
 export type IngredientWithUnit = Ingredient & {
   unit: Unit;
 };
+
+export type UserBasic = Pick<User, 'name' | 'image'>;
 
 export type CreateRecipeData = Omit<InsertRecipe, 'id' | 'createdAt' | 'updatedAt'>;
 export type UpdateRecipeData = Partial<Omit<InsertRecipe, 'id' | 'userId' | 'createdAt'>>;

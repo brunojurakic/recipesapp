@@ -72,6 +72,7 @@ export function RecipeFilters({
             placeholder="Odaberite kategorije"
             searchPlaceholder="Pretraži kategorije..."
             emptyMessage="Nema kategorija."
+            badgeVariant="outline"
           />
         </div>
 
@@ -86,6 +87,7 @@ export function RecipeFilters({
             placeholder="Odaberite alergene za izbjegavanje"
             searchPlaceholder="Pretraži alergene..."
             emptyMessage="Nema alergena."
+            badgeVariant="outline"
           />
         </div>
 
@@ -115,7 +117,7 @@ export function RecipeFilters({
 
         <div className="sm:col-start-2 lg:col-start-3 flex items-end">
           {hasActiveFilters && (
-            <Button variant="outline" onClick={onClearFilters} className="w-full">
+            <Button onClick={onClearFilters} className="w-full">
               <XCircle className="mr-2 h-4 w-4" />
               Očisti filtere
             </Button>

@@ -3,7 +3,7 @@
 import { RecipeCard } from "@/components/RecipeCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
-import type { RecipeClient } from "@/app/recipes/page";
+import type { RecipeClient } from "@/lib/types/database";
 
 interface RecipeListDisplayProps {
   isLoadingRecipes: boolean;

@@ -1,13 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import type { InferSelectModel } from "drizzle-orm"
-import { ingredient, unit } from "@/db/schema"
-
-type Ingredient = InferSelectModel<typeof ingredient> & {
-  unit: InferSelectModel<typeof unit>
-}
+import type { IngredientWithUnit } from "@/lib/types/database";
 
 interface RecipeIngredientsProps {
-  ingredients: Ingredient[];
+  ingredients: IngredientWithUnit[];
   servings: number;
 }
 

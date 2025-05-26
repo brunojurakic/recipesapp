@@ -10,21 +10,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { RecipeFilters } from "@/components/recipes/RecipeFilters";
 import { RecipeListDisplay } from "@/components/recipes/RecipeListDisplay";
 import type { SelectableItem } from "@/components/ui/multi-select";
-
-import type { recipe as DbRecipeType, category as DbCategoryType, allergy as DbAllergyType } from "@/db/schema";
-import type { InferSelectModel } from "drizzle-orm";
-
-
-type FullDbRecipe = InferSelectModel<typeof DbRecipeType>;
-type FullDbCategory = InferSelectModel<typeof DbCategoryType>;
-type FullDbAllergy = InferSelectModel<typeof DbAllergyType>;
-
-
-export interface RecipeClient extends FullDbRecipe {
-  user: { name: string | null };
-  categories: Array<{ category: FullDbCategory }>;
-  allergies: Array<{ allergy: FullDbAllergy }>;
-}
+import type { Category, Allergy, RecipeClient } from "@/lib/types/database";
 
 export default function RecipesPage() {
   const { data: sessionData, isPending: isSessionLoading } = useSession();
@@ -68,7 +54,7 @@ export default function RecipesPage() {
         const catRes = await fetch("/api/categories");
         if (!catRes.ok) throw new Error("Failed to fetch categories");
         const categoriesData = await catRes.json();
-        setAllCategories(categoriesData.map((c: FullDbCategory) => ({ id: c.id, name: c.name })));
+        setAllCategories(categoriesData.map((c: Category) => ({ id: c.id, name: c.name })));
       } catch (error) {
         console.error(error);
         toast.error("Greška pri dohvaćanju kategorija.");
@@ -81,7 +67,7 @@ export default function RecipesPage() {
         const algRes = await fetch("/api/allergies");
         if (!algRes.ok) throw new Error("Failed to fetch allergies");
         const allergiesData = await algRes.json();
-        setAllAllergies(allergiesData.map((a: FullDbAllergy) => ({ id: a.id, name: a.name })));
+        setAllAllergies(allergiesData.map((a: Allergy) => ({ id: a.id, name: a.name })));
       } catch (error) {
         console.error(error);
         toast.error("Greška pri dohvaćanju alergena.");
