@@ -111,7 +111,25 @@ export function AdminUsersTable() {
     },
     {
       accessorKey: "role",
-      header: "Uloga",
+      header: ({ column }) => {
+        const sortState = column.getIsSorted();
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="h-auto p-0"
+          >
+            Uloga
+            {sortState === "asc" ? (
+              <ChevronUp className="ml-2 h-4 w-4" />
+            ) : sortState === "desc" ? (
+              <ChevronDown className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        );
+      },
       cell: ({ row }) => {
         const role = row.getValue("role") as { name: string } | null;
         const roleName = role?.name || "Korisnik";
@@ -121,10 +139,33 @@ export function AdminUsersTable() {
           </Badge>
         );
       },
+      sortingFn: (rowA, rowB) => {
+        const roleA = (rowA.getValue("role") as { name: string } | null)?.name || "Korisnik";
+        const roleB = (rowB.getValue("role") as { name: string } | null)?.name || "Korisnik";
+        return roleA.localeCompare(roleB, 'hr-HR');
+      },
     },
     {
       accessorKey: "emailVerified",
-      header: "Verificiran",
+      header: ({ column }) => {
+        const sortState = column.getIsSorted();
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="h-auto p-0"
+          >
+            Verificiran
+            {sortState === "asc" ? (
+              <ChevronUp className="ml-2 h-4 w-4" />
+            ) : sortState === "desc" ? (
+              <ChevronDown className="ml-2 h-4 w-4" />
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        );
+      },
       cell: ({ row }) => {
         const verified = row.getValue("emailVerified") as boolean;
         return (
@@ -132,6 +173,11 @@ export function AdminUsersTable() {
             {verified ? "Da" : "Ne"}
           </Badge>
         );
+      },
+      sortingFn: (rowA, rowB) => {
+        const verifiedA = rowA.getValue("emailVerified") as boolean;
+        const verifiedB = rowB.getValue("emailVerified") as boolean;
+        return verifiedA === verifiedB ? 0 : verifiedA ? -1 : 1;
       },
     },
     {
