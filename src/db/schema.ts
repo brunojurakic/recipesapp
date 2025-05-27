@@ -163,11 +163,15 @@ export const unit = pgTable("MjernaJedinica", {
   check('type_length', sql`length(${table.type}) >= 2 AND length(${table.type}) <= 20`)
 ]);
 
-export const userRelations = relations(user, ({ many }) => ({
+export const userRelations = relations(user, ({ one, many }) => ({
   recipes: many(recipe),
   reviews: many(review),
   bookmarks: many(bookmark),
   allergies: many(userAllergy),
+  role: one(role, {
+    fields: [user.roleId],
+    references: [role.id],
+  }),
 }));
 
 export const recipeRelations = relations(recipe, ({ one, many }) => ({
@@ -267,6 +271,10 @@ export const userAllergyRelations = relations(userAllergy, ({ one }) => ({
     fields: [userAllergy.allergyId],
     references: [allergy.id],
   }),
+}));
+
+export const roleRelations = relations(role, ({ many }) => ({
+  users: many(user),
 }));
 
 export const schema = { user, session, account, verification }

@@ -1,10 +1,10 @@
 "use client"
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useSession, signOut } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
-import { UtensilsCrossed, Menu, User, LogOut, LogIn, UserPlus, BookOpen, Home, Tag, Award } from 'lucide-react'
+import { UtensilsCrossed, Menu, User, LogOut, LogIn, UserPlus, BookOpen, Home, Tag, Award, Shield } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
@@ -19,6 +19,28 @@ export function MobileMenu() {
   const { data: session, isPending } = useSession()
   const router = useRouter()
   const [open, setOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const checkedSessionRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    const checkAdminAccess = async () => {
+      if (session?.user?.id && checkedSessionRef.current !== session.user.id) {
+        checkedSessionRef.current = session.user.id
+        try {
+          const res = await fetch('/api/admin/check')
+          const data = await res.json()
+          setIsAdmin(Boolean(data.hasAdminAccess))
+        } catch {
+          setIsAdmin(false)
+        }
+      } else if (!session) {
+        setIsAdmin(false)
+        checkedSessionRef.current = null
+      }
+    }
+
+    checkAdminAccess()
+  }, [session])
 
   const handleSignOut = async () => {
     setOpen(false)
@@ -81,6 +103,16 @@ export function MobileMenu() {
               <Award className="h-4 w-4" />
               Istaknuto
             </Link>
+            {session && isAdmin && (
+              <Link
+                href="/admin"
+                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                <Shield className="h-4 w-4" />
+                Admin
+              </Link>
+            )}
           </nav>
         </div>
 

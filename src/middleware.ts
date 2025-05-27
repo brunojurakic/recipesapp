@@ -17,6 +17,14 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
 
+  // admin routes
+  const isAdminRoute = pathname.startsWith('/admin');
+  if (isAdminRoute) {
+    if (!sessionCookie) {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+  }
+
   return NextResponse.next();
 }
 
@@ -25,6 +33,7 @@ export const config = {
     '/profile',
     '/login',
     '/signup',
-    '/recipes/new'
+    '/recipes/new',
+    '/admin/:path*'
   ]
 };

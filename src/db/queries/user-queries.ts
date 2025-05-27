@@ -1,6 +1,30 @@
 import { db } from "@/db/drizzle";
 import { user, recipe, bookmark } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+
+export async function getCurrentUser() {
+  try {
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
+
+    if (!session) {
+      return null;
+    }
+
+    return await db.query.user.findFirst({
+      where: eq(user.id, session.user.id),
+      with: {
+        role: true,
+      },
+    });
+  } catch (error) {
+    console.error("Error getting current user:", error);
+    return null;
+  }
+}
 
 export async function getUserById(userId: string) {
   return await db.query.user.findFirst({
@@ -111,4 +135,43 @@ export async function updateUserProfile(userId: string, data: {
     });
 
   return updatedUser;
+}
+
+export async function getAllUsersForAdmin() {
+  try {
+    return await db.query.user.findMany({
+      columns: {
+        id: true,
+        name: true,
+        email: true,
+        emailVerified: true,
+        image: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+      with: {
+        role: {
+          columns: {
+            name: true,
+          },
+        },
+      },
+      orderBy: (table) => [
+        desc(table.createdAt)
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching admin users:', error);
+    return [];
+  }
+}
+
+export async function deleteUserById(userId: string) {
+  try {
+    await db.delete(user).where(eq(user.id, userId));
+    return true;
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    return false;
+  }
 }

@@ -2,7 +2,8 @@ export {
   getRecipe,
   getRecipes,
   getFilteredRecipes,
-  deleteRecipe
+  deleteRecipe,
+  getAllRecipesForAdmin
 } from './recipe-queries';
 
 export {
@@ -14,7 +15,9 @@ export {
 } from './bookmark-queries';
 
 export {
-  addReview
+  addReview,
+  getAllReviewsForAdmin,
+  deleteReviewById
 } from './review-queries';
 
 export {
@@ -29,10 +32,16 @@ export {
   getUserById,
   getUserRecipes,
   getUserBookmarks,
-  updateUserProfile
+  updateUserProfile,
+  getAllUsersForAdmin,
+  deleteUserById
 } from './user-queries';
 
 export {
   getDefaultUserRole,
   assignRoleToUser
 } from './role-queries';
+
+export {
+  getAdminStats
+} from './stats-queries';
