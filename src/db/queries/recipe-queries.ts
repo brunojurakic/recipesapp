@@ -238,3 +238,32 @@ export async function getFilteredRecipes(filters: {
     return null;
   }
 }
+
+export async function getAllRecipesForAdmin() {
+  try {
+    return await db.query.recipe.findMany({
+      columns: {
+        id: true,
+        title: true,
+        description: true,
+        servings: true,
+        preparationTime: true,
+        createdAt: true,
+      },
+      with: {
+        user: {
+          columns: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: (table) => [
+        desc(table.createdAt)
+      ],
+    });
+  } catch (error) {
+    console.error('Error fetching admin recipes:', error);
+    return [];
+  }
+}

@@ -31,8 +31,8 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
   const isAuthor = session?.user?.id === recipe.userId;
 
-  const averageRating = recipe.reviews.length > 0 
-    ? recipe.reviews.reduce((sum, review) => sum + review.rating, 0) / recipe.reviews.length 
+  const averageRating = recipe.reviews.length > 0
+    ? recipe.reviews.reduce((sum, review) => sum + review.rating, 0) / recipe.reviews.length
     : 0;
 
 
@@ -42,12 +42,12 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
         <ChevronLeft className="mr-1 h-4 w-4" />
         Natrag na recepte
       </Link>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-8">
           <div>
-            <div className="relative h-[400px] w-full rounded-lg overflow-hidden mb-6">
-              <Image 
+            <div className="relative h-[400px] w-full rounded-lg overflow-hidden mb-6 border border-border shadow-lg">
+              <Image
                 src={recipe.image_path}
                 alt={recipe.title}
                 fill
@@ -55,9 +55,9 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                 priority
               />
             </div>
-            
+
             <h1 className="text-3xl font-bold">{recipe.title}</h1>
-            
+
             <div className="flex flex-wrap gap-2 mt-3">
               {recipe.categories.map(({ category }) => (
                 <Badge key={category.id} variant="outline">
@@ -65,7 +65,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                 </Badge>
               ))}
             </div>
-            
+
             <div className="flex flex-wrap gap-6 mt-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
@@ -85,19 +85,19 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
                   <span>{averageRating.toFixed(1)} ({recipe.reviews.length} {recipe.reviews.length === 1 ? 'recenzija' : 'recenzije'})</span>
                 </div>
               )}
-            </div>            
+            </div>
             <p className="mt-6 text-muted-foreground">{recipe.description}</p>
           </div>
-          
+
           <div className="lg:hidden">
             <RecipeIngredients ingredients={recipe.ingredients} servings={recipe.servings} />
           </div>
-          
+
           <RecipeAllergies allergies={recipe.allergies} />
           <RecipeInstructions instructions={recipe.instructions} />
           <RecipeReviews reviews={recipe.reviews} />
         </div>
-        
+
         <div className="space-y-8">
           <div className="hidden lg:block">
             <RecipeIngredients ingredients={recipe.ingredients} servings={recipe.servings} />
