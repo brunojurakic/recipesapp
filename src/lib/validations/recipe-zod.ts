@@ -6,8 +6,14 @@ const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/web
 export const recipeZodSchema = z.object({
   title: z.string().min(3, "Naslov mora imati najmanje 3 znaka").max(100, "Naslov može imati najviše 100 znakova"),
   description: z.string().min(10, "Opis mora imati najmanje 10 znakova"),
-  servings: z.number().min(1, "Broj porcija mora biti najmanje 1"),
-  preparationTime: z.number().min(1, "Vrijeme pripreme mora biti najmanje 1 minuta"),
+  servings: z.number({
+    required_error: "Broj porcija je obavezan",
+    invalid_type_error: "Broj porcija mora biti brojčana vrijednost",
+  }).min(1, "Broj porcija mora biti najmanje 1"),
+  preparationTime: z.number({
+    required_error: "Vrijeme pripreme je obavezno",
+    invalid_type_error: "Vrijeme pripreme mora biti brojčana vrijednost",
+  }).min(1, "Vrijeme pripreme mora biti najmanje 1 minuta"),
   image: z
     .any()
     .transform((fileList) => {
@@ -27,13 +33,19 @@ export const recipeZodSchema = z.object({
     })
     .pipe(z.instanceof(File)).optional(),
   instructions: z.array(z.object({
-    stepNumber: z.number().min(1, "Broj koraka mora biti pozitivan"),
+    stepNumber: z.number({
+      required_error: "Broj koraka je obavezan",
+      invalid_type_error: "Broj koraka mora biti brojčana vrijednost",
+    }).min(1, "Broj koraka mora biti pozitivan"),
     content: z.string().min(5, "Sadržaj upute mora imati najmanje 5 znakova")
   })).min(1, "Potrebna je barem jedna uputa"),
   categories: z.array(z.string().uuid()).min(1, "Potrebna je barem jedna kategorija"),
   ingredients: z.array(z.object({
     name: z.string().min(2, "Naziv sastojka mora imati najmanje 2 znaka").max(50, "Naziv sastojka može imati najviše 50 znakova"),
-    quantity: z.number().positive("Količina mora biti pozitivna"),
+    quantity: z.number({
+      required_error: "Količina je obavezna",
+      invalid_type_error: "Količina mora biti brojčana vrijednost",
+    }).positive("Količina mora biti pozitivna"),
     unitId: z.string().min(1, "Mjerna jedinica je obavezna").uuid()
   })).min(1, "Potreban je barem jedan sastojak"),
   allergies: z.array(z.string().uuid()).optional()
@@ -42,8 +54,14 @@ export const recipeZodSchema = z.object({
 export const editRecipeZodSchema = z.object({
   title: z.string().min(3, "Naslov mora imati najmanje 3 znaka").max(100, "Naslov može imati najviše 100 znakova"),
   description: z.string().min(10, "Opis mora imati najmanje 10 znakova"),
-  servings: z.number().min(1, "Broj porcija mora biti najmanje 1"),
-  preparationTime: z.number().min(1, "Vrijeme pripreme mora biti najmanje 1 minuta"),
+  servings: z.number({
+    required_error: "Broj porcija je obavezan",
+    invalid_type_error: "Broj porcija mora biti brojčana vrijednost",
+  }).min(1, "Broj porcija mora biti najmanje 1"),
+  preparationTime: z.number({
+    required_error: "Vrijeme pripreme je obavezno",
+    invalid_type_error: "Vrijeme pripreme mora biti brojčana vrijednost",
+  }).min(1, "Vrijeme pripreme mora biti najmanje 1 minuta"),
   image: z
     .any()
     .transform((fileList) => {
@@ -72,13 +90,19 @@ export const editRecipeZodSchema = z.object({
     })
     .optional(),
   instructions: z.array(z.object({
-    stepNumber: z.number().min(1, "Broj koraka mora biti pozitivan"),
+    stepNumber: z.number({
+      required_error: "Broj koraka je obavezan",
+      invalid_type_error: "Broj koraka mora biti brojčana vrijednost",
+    }).min(1, "Broj koraka mora biti pozitivan"),
     content: z.string().min(5, "Sadržaj upute mora imati najmanje 5 znakova")
   })).min(1, "Potrebna je barem jedna uputa"),
   categories: z.array(z.string().uuid()).min(1, "Potrebna je barem jedna kategorija"),
   ingredients: z.array(z.object({
     name: z.string().min(2, "Naziv sastojka mora imati najmanje 2 znaka").max(50, "Naziv sastojka može imati najviše 50 znakova"),
-    quantity: z.number().positive("Količina mora biti pozitivna"),
+    quantity: z.number({
+      required_error: "Količina je obavezna",
+      invalid_type_error: "Količina mora biti brojčana vrijednost",
+    }).positive("Količina mora biti pozitivna"),
     unitId: z.string().min(1, "Mjerna jedinica je obavezna").uuid()
   })).min(1, "Potreban je barem jedan sastojak"),
   allergies: z.array(z.string().uuid()).optional()
