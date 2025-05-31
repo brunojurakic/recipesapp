@@ -5,10 +5,12 @@ import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Users, ChefHat, MessageSquare, Bookmark, Star } from "lucide-react";
+import { Loader2, Users, ChefHat, MessageSquare, Bookmark, Star, AlertTriangle, Tags } from "lucide-react";
 import { AdminUsersTable } from "@/components/admin/AdminUsersTable";
 import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable";
 import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable";
+import { AdminAllergiesTable } from "@/components/admin/AdminAllergiesTable";
+import { AdminCategoriesTable } from "@/components/admin/AdminCategoriesTable";
 
 interface DashboardStats {
   totalUsers: number;
@@ -89,7 +91,7 @@ export default function AdminDashboard() {
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Admin Panel</h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Upravljanje korisnicima, receptima i recenzijama
+            Upravljanje korisnicima, receptima, recenzijama, alergijama i kategorijama
           </p>
         </div>
 
@@ -164,6 +166,14 @@ export default function AdminDashboard() {
               <MessageSquare className="h-4 w-4" />
               Recenzije
             </TabsTrigger>
+            <TabsTrigger value="allergies" className="flex items-center gap-2 cursor-pointer">
+              <AlertTriangle className="h-4 w-4" />
+              Alergije
+            </TabsTrigger>
+            <TabsTrigger value="categories" className="flex items-center gap-2 cursor-pointer">
+              <Tags className="h-4 w-4" />
+              Kategorije
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="users">
@@ -204,6 +214,34 @@ export default function AdminDashboard() {
               </CardHeader>
               <CardContent>
                 <AdminReviewsTable />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="allergies">
+            <Card>
+              <CardHeader>
+                <CardTitle>Upravljanje alergijama</CardTitle>
+                <CardDescription>
+                  Dodajte, uredite ili uklonite alergije koje se koriste u receptima
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AdminAllergiesTable />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="categories">
+            <Card>
+              <CardHeader>
+                <CardTitle>Upravljanje kategorijama jela</CardTitle>
+                <CardDescription>
+                  Dodajte, uredite ili uklonite kategorije jela za organizaciju recepata
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AdminCategoriesTable />
               </CardContent>
             </Card>
           </TabsContent>
