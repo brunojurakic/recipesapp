@@ -50,6 +50,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { ChevronDown, ChevronUp, Trash2, ArrowUpDown, Search, Loader2, Plus, PencilIcon } from "lucide-react";
 import { toast } from "sonner";
+import { createAllergySchema, updateAllergySchema } from '@/lib/schemas/admin';
 
 interface Allergy {
   id: string;
@@ -257,8 +258,11 @@ export function AdminAllergiesTable() {
   };
 
   const addAllergy = async () => {
-    if (!newAllergyName.trim()) {
-      toast.error("Naziv alergije ne smije biti prazan");
+    const validationResult = createAllergySchema.safeParse({ name: newAllergyName });
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
+      toast.error(errorMessage);
       return;
     }
 
@@ -269,7 +273,7 @@ export function AdminAllergiesTable() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: newAllergyName }),
+        body: JSON.stringify(validationResult.data),
       });
 
       if (!response.ok) {
@@ -290,8 +294,13 @@ export function AdminAllergiesTable() {
   };
 
   const updateAllergy = async () => {
-    if (!editingAllergy || !newAllergyName.trim()) {
-      toast.error("Naziv alergije ne smije biti prazan");
+    if (!editingAllergy) return;
+
+    const validationResult = updateAllergySchema.safeParse({ name: newAllergyName });
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
+      toast.error(errorMessage);
       return;
     }
 
@@ -302,7 +311,7 @@ export function AdminAllergiesTable() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: newAllergyName }),
+        body: JSON.stringify(validationResult.data),
       });
 
       if (!response.ok) {

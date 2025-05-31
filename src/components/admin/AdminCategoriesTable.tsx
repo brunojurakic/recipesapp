@@ -50,6 +50,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { ChevronDown, ChevronUp, Trash2, ArrowUpDown, Search, Loader2, Plus, PencilIcon } from "lucide-react";
 import { toast } from "sonner";
+import { createCategorySchema, updateCategorySchema } from '@/lib/schemas/admin';
 
 interface Category {
   id: string;
@@ -230,8 +231,11 @@ export function AdminCategoriesTable() {
   };
 
   const addCategory = async () => {
-    if (!newCategoryName.trim()) {
-      toast.error("Naziv kategorije ne smije biti prazan");
+    const validationResult = createCategorySchema.safeParse({ name: newCategoryName });
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
+      toast.error(errorMessage);
       return;
     }
 
@@ -242,7 +246,7 @@ export function AdminCategoriesTable() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: newCategoryName }),
+        body: JSON.stringify(validationResult.data),
       });
 
       if (!response.ok) {
@@ -263,8 +267,13 @@ export function AdminCategoriesTable() {
   };
 
   const updateCategory = async () => {
-    if (!editingCategory || !newCategoryName.trim()) {
-      toast.error("Naziv kategorije ne smije biti prazan");
+    if (!editingCategory) return;
+
+    const validationResult = updateCategorySchema.safeParse({ name: newCategoryName });
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
+      toast.error(errorMessage);
       return;
     }
 
@@ -275,7 +284,7 @@ export function AdminCategoriesTable() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: newCategoryName }),
+        body: JSON.stringify(validationResult.data),
       });
 
       if (!response.ok) {

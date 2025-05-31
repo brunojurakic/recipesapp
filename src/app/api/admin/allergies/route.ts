@@ -3,12 +3,13 @@ import { db } from "@/db/drizzle";
 import { desc, eq } from "drizzle-orm";
 import { allergy } from "@/db/schema";
 import { getCurrentUser } from "@/db/queries/user-queries";
+import { createAllergySchema, updateAllergySchema } from '@/lib/schemas/admin';
 
 export async function GET() {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser || currentUser.role?.name !== "Admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      return NextResponse.json({ error: "Zabranjeno" }, { status: 403 });
     }
 
     const allergies = await db.query.allergy.findMany({
@@ -31,7 +32,7 @@ export async function GET() {
   } catch (error) {
     console.error("Error fetching allergies:", error);
     return NextResponse.json(
-      { error: "Error fetching allergies" },
+      { error: "Greška prilikom dohvaćanja alergija" },
       { status: 500 }
     );
   }
@@ -41,17 +42,22 @@ export async function POST(req: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser || currentUser.role?.name !== "Admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      return NextResponse.json({ error: "Zabranjeno" }, { status: 403 });
     }
 
-    const { name } = await req.json();
+    const body = await req.json();
     
-    if (!name || name.length < 2 || name.length > 30) {
+    const validationResult = createAllergySchema.safeParse(body);
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
       return NextResponse.json(
-        { error: "Allergy name must be between 2 and 30 characters" },
+        { error: errorMessage },
         { status: 400 }
       );
     }
+
+    const { name } = validationResult.data;
 
     const existingAllergy = await db.query.allergy.findFirst({
       where: eq(allergy.name, name),
@@ -59,7 +65,7 @@ export async function POST(req: NextRequest) {
 
     if (existingAllergy) {
       return NextResponse.json(
-        { error: "Allergy with this name already exists" },
+        { error: "Alergija s ovim nazivom već postoji" },
         { status: 400 }
       );
     }
@@ -73,7 +79,7 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error("Error creating allergy:", error);
     return NextResponse.json(
-      { error: "Error creating allergy" },
+      { error: "Greška prilikom stvaranja alergije" },
       { status: 500 }
     );
   }
@@ -83,23 +89,35 @@ export async function PUT(req: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser || currentUser.role?.name !== "Admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      return NextResponse.json({ error: "Zabranjeno" }, { status: 403 });
     }
 
     const { searchParams } = new URL(req.url);
     const allergyId = searchParams.get("allergyId");
-    const { name } = await req.json();
+    const body = await req.json();
 
     if (!allergyId) {
       return NextResponse.json(
-        { error: "Allergy ID is required" },
+        { error: "ID alergije je obavezan" },
         { status: 400 }
       );
     }
 
-    if (!name || name.length < 2 || name.length > 30) {
+    const validationResult = updateAllergySchema.safeParse(body);
+    
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
       return NextResponse.json(
-        { error: "Allergy name must be between 2 and 30 characters" },
+        { error: errorMessage },
+        { status: 400 }
+      );
+    }
+
+    const { name } = validationResult.data;
+
+    if (!name) {
+      return NextResponse.json(
+        { error: "Naziv je obavezan" },
         { status: 400 }
       );
     }
@@ -110,7 +128,7 @@ export async function PUT(req: NextRequest) {
 
     if (existingAllergy && existingAllergy.id !== allergyId) {
       return NextResponse.json(
-        { error: "Allergy with this name already exists" },
+        { error: "Alergija s ovim nazivom već postoji" },
         { status: 400 }
       );
     }
@@ -123,7 +141,7 @@ export async function PUT(req: NextRequest) {
 
     if (!updatedAllergy.length) {
       return NextResponse.json(
-        { error: "Allergy not found" },
+        { error: "Alergija nije pronađena" },
         { status: 404 }
       );
     }
@@ -132,7 +150,7 @@ export async function PUT(req: NextRequest) {
   } catch (error) {
     console.error("Error updating allergy:", error);
     return NextResponse.json(
-      { error: "Error updating allergy" },
+      { error: "Greška prilikom ažuriranja alergije" },
       { status: 500 }
     );
   }
@@ -142,7 +160,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
     if (!currentUser || currentUser.role?.name !== "Admin") {
-      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      return NextResponse.json({ error: "Zabranjeno" }, { status: 403 });
     }
 
     const { searchParams } = new URL(req.url);
@@ -150,7 +168,7 @@ export async function DELETE(req: NextRequest) {
 
     if (!allergyId) {
       return NextResponse.json(
-        { error: "Allergy ID is required" },
+        { error: "ID alergije je obavezan" },
         { status: 400 }
       );
     }
@@ -162,7 +180,7 @@ export async function DELETE(req: NextRequest) {
 
     if (!deletedAllergy.length) {
       return NextResponse.json(
-        { error: "Allergy not found" },
+        { error: "Alergija nije pronađena" },
         { status: 404 }
       );
     }
@@ -171,7 +189,7 @@ export async function DELETE(req: NextRequest) {
   } catch (error) {
     console.error("Error deleting allergy:", error);
     return NextResponse.json(
-      { error: "Error deleting allergy" },
+      { error: "Greška prilikom brisanja alergije" },
       { status: 500 }
     );
   }

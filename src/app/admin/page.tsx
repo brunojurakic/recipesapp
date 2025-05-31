@@ -151,9 +151,8 @@ export default function AdminDashboard() {
             </Card>
           </div>
         )}
-
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="users" className="flex items-center gap-2 cursor-pointer">
               <Users className="h-4 w-4" />
               Korisnici
