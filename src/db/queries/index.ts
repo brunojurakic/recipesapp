@@ -18,7 +18,9 @@ export {
 export {
   addReview,
   getAllReviewsForAdmin,
-  deleteReviewById
+  deleteReviewById,
+  deleteReview,
+  updateReview
 } from './review-queries';
 
 export {
