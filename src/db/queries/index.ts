@@ -28,8 +28,22 @@ export {
   getUserAllergies,
   addUserAllergy,
   removeUserAllergy,
-  updateUserAllergies
+  updateUserAllergies,
+  getAllAllergiesWithCounts,
+  createAllergy,
+  findAllergyByName,
+  updateAllergy,
+  deleteAllergy
 } from './allergy-queries';
+
+export {
+  getAllCategories,
+  getAllCategoriesWithCounts,
+  createCategory,
+  findCategoryByName,
+  updateCategory,
+  deleteCategory
+} from './category-queries';
 
 export {
   getUserById,

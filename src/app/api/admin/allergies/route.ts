@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db/drizzle";
-import { desc, eq } from "drizzle-orm";
-import { allergy } from "@/db/schema";
 import { getCurrentUser } from "@/db/queries/user-queries";
 import { createAllergySchema, updateAllergySchema } from '@/lib/schemas/admin';
+import { 
+  getAllAllergiesWithCounts, 
+  createAllergy, 
+  findAllergyByName, 
+  updateAllergy, 
+  deleteAllergy 
+} from "@/db/queries/allergy-queries";
 
 export async function GET() {
   try {
@@ -12,21 +16,7 @@ export async function GET() {
       return NextResponse.json({ error: "Zabranjeno" }, { status: 403 });
     }
 
-    const allergies = await db.query.allergy.findMany({
-      orderBy: [desc(allergy.name)],
-      with: {
-        users: true,
-        recipes: true,
-      },
-    });
-
-    // Transform data to include counts
-    const allergiesWithCounts = allergies.map(allergyItem => ({
-      id: allergyItem.id,
-      name: allergyItem.name,
-      userCount: allergyItem.users.length,
-      recipeCount: allergyItem.recipes.length,
-    }));
+    const allergiesWithCounts = await getAllAllergiesWithCounts();
 
     return NextResponse.json({ allergies: allergiesWithCounts });
   } catch (error) {
@@ -59,9 +49,7 @@ export async function POST(req: NextRequest) {
 
     const { name } = validationResult.data;
 
-    const existingAllergy = await db.query.allergy.findFirst({
-      where: eq(allergy.name, name),
-    });
+    const existingAllergy = await findAllergyByName(name);
 
     if (existingAllergy) {
       return NextResponse.json(
@@ -70,12 +58,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newAllergy = await db
-      .insert(allergy)
-      .values({ name })
-      .returning();
+    const newAllergy = await createAllergy(name);
 
-    return NextResponse.json({ allergy: newAllergy[0] });
+    return NextResponse.json({ allergy: newAllergy });
   } catch (error) {
     console.error("Error creating allergy:", error);
     return NextResponse.json(
@@ -122,9 +107,7 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const existingAllergy = await db.query.allergy.findFirst({
-      where: eq(allergy.name, name),
-    });
+    const existingAllergy = await findAllergyByName(name);
 
     if (existingAllergy && existingAllergy.id !== allergyId) {
       return NextResponse.json(
@@ -133,20 +116,16 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const updatedAllergy = await db
-      .update(allergy)
-      .set({ name })
-      .where(eq(allergy.id, allergyId))
-      .returning();
+    const updatedAllergy = await updateAllergy(allergyId, name);
 
-    if (!updatedAllergy.length) {
+    if (!updatedAllergy) {
       return NextResponse.json(
         { error: "Alergija nije pronađena" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ allergy: updatedAllergy[0] });
+    return NextResponse.json({ allergy: updatedAllergy });
   } catch (error) {
     console.error("Error updating allergy:", error);
     return NextResponse.json(
@@ -173,19 +152,16 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const deletedAllergy = await db
-      .delete(allergy)
-      .where(eq(allergy.id, allergyId))
-      .returning();
+    const deletedAllergy = await deleteAllergy(allergyId);
 
-    if (!deletedAllergy.length) {
+    if (!deletedAllergy) {
       return NextResponse.json(
         { error: "Alergija nije pronađena" },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ allergy: deletedAllergy[0] });
+    return NextResponse.json({ allergy: deletedAllergy });
   } catch (error) {
     console.error("Error deleting allergy:", error);
     return NextResponse.json(

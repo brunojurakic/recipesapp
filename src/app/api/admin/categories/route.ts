@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db/drizzle";
-import { desc, eq } from "drizzle-orm";
-import { category } from "@/db/schema";
 import { getCurrentUser } from "@/db/queries/user-queries";
 import { createCategorySchema, updateCategorySchema } from '@/lib/schemas/admin';
+import { 
+  getAllCategoriesWithCounts, 
+  createCategory, 
+  findCategoryByName, 
+  updateCategory, 
+  deleteCategory 
+} from "@/db/queries/category-queries";
 
 export async function GET() {
   try {
@@ -12,18 +16,7 @@ export async function GET() {
       return NextResponse.json({ error: "Zabranjeno" }, { status: 403 });
     }
 
-    const categories = await db.query.category.findMany({
-      orderBy: [desc(category.name)],
-      with: {
-        recipes: true,
-      },
-    });
-
-    const categoriesWithCounts = categories.map(categoryItem => ({
-      id: categoryItem.id,
-      name: categoryItem.name,
-      recipeCount: categoryItem.recipes.length,
-    }));
+    const categoriesWithCounts = await getAllCategoriesWithCounts();
 
     return NextResponse.json({ categories: categoriesWithCounts });
   } catch (error) {
@@ -52,11 +45,9 @@ export async function POST(req: NextRequest) {
         { error: errorMessage },
         { status: 400 }
       );
-    }
+    }    const { name } = validationResult.data;
 
-    const { name } = validationResult.data;    const existingCategory = await db.query.category.findFirst({
-      where: eq(category.name, name),
-    });
+    const existingCategory = await findCategoryByName(name);
 
     if (existingCategory) {
       return NextResponse.json(
@@ -65,12 +56,9 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const newCategory = await db
-      .insert(category)
-      .values({ name })
-      .returning();
+    const newCategory = await createCategory(name);
 
-    return NextResponse.json({ category: newCategory[0] });
+    return NextResponse.json({ category: newCategory });
   } catch (error) {
     console.error("Error creating category:", error);
     return NextResponse.json(
@@ -115,11 +103,7 @@ export async function PUT(req: NextRequest) {
         { error: "Naziv je obavezan" },
         { status: 400 }
       );
-    }
-
-    const existingCategory = await db.query.category.findFirst({
-      where: eq(category.name, name),
-    });
+    }    const existingCategory = await findCategoryByName(name);
 
     if (existingCategory && existingCategory.id !== categoryId) {
       return NextResponse.json(
@@ -128,18 +112,14 @@ export async function PUT(req: NextRequest) {
       );
     }
 
-    const updatedCategory = await db
-      .update(category)
-      .set({ name })
-      .where(eq(category.id, categoryId))
-      .returning();
+    const updatedCategory = await updateCategory(categoryId, name);
 
-    if (!updatedCategory.length) {
+    if (!updatedCategory) {
       return NextResponse.json(
         { error: "Kategorija nije pronađena" },
         { status: 404 }
       );
-    }    return NextResponse.json({ category: updatedCategory[0] });
+    }    return NextResponse.json({ category: updatedCategory });
   } catch (error) {
     console.error("Error updating category:", error);
     return NextResponse.json(
@@ -164,19 +144,16 @@ export async function DELETE(req: NextRequest) {
         { error: "ID kategorije je obavezan" },
         { status: 400 }
       );
-    }
+    }    const deletedCategory = await deleteCategory(categoryId);
 
-    const deletedCategory = await db
-      .delete(category)
-      .where(eq(category.id, categoryId))
-      .returning();
-
-    if (!deletedCategory.length) {
+    if (!deletedCategory) {
       return NextResponse.json(
         { error: "Kategorija nije pronađena" },
         { status: 404 }
       );
-    }    return NextResponse.json({ category: deletedCategory[0] });
+    }
+
+    return NextResponse.json({ category: deletedCategory });
   } catch (error) {
     console.error("Error deleting category:", error);
     return NextResponse.json(
