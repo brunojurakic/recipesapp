@@ -6,7 +6,7 @@ export async function GET() {
   try {
     const currentUser = await getCurrentUser();
     
-    if (!currentUser || currentUser.role?.name !== "Admin") {
+    if (!currentUser || (currentUser.role?.name !== "Admin" && currentUser.role?.name !== "Moderator")) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -23,7 +23,7 @@ export async function DELETE(request: NextRequest) {
   try {
     const currentUser = await getCurrentUser();
     
-    if (!currentUser || currentUser.role?.name !== "Admin") {
+    if (!currentUser || (currentUser.role?.name !== "Admin" && currentUser.role?.name !== "Moderator")) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

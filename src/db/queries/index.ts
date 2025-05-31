@@ -18,7 +18,9 @@ export {
 export {
   addReview,
   getAllReviewsForAdmin,
-  deleteReviewById
+  deleteReviewById,
+  deleteReview,
+  updateReview
 } from './review-queries';
 
 export {
@@ -26,8 +28,22 @@ export {
   getUserAllergies,
   addUserAllergy,
   removeUserAllergy,
-  updateUserAllergies
+  updateUserAllergies,
+  getAllAllergiesWithCounts,
+  createAllergy,
+  findAllergyByName,
+  updateAllergy,
+  deleteAllergy
 } from './allergy-queries';
+
+export {
+  getAllCategories,
+  getAllCategoriesWithCounts,
+  createCategory,
+  findCategoryByName,
+  updateCategory,
+  deleteCategory
+} from './category-queries';
 
 export {
   getUserById,
@@ -40,6 +56,7 @@ export {
 
 export {
   getDefaultUserRole,
+  getModeratorRole,
   assignRoleToUser
 } from './role-queries';
 

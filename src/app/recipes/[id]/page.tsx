@@ -96,7 +96,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
 
           <RecipeAllergies allergies={recipe.allergies} />
           <RecipeInstructions instructions={recipe.instructions} />
-          <RecipeReviews reviews={recipe.reviews} />
+          <RecipeReviews reviews={recipe.reviews} currentUserId={session?.user?.id} />
         </div>
 
         <div className="space-y-8">

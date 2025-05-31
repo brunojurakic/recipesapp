@@ -12,7 +12,6 @@ export async function getDefaultUserRole() {
     return korisnikRole;
   }
 
-  // ako ne postoji role
   const [newRole] = await db
     .insert(role)
     .values({
@@ -30,4 +29,25 @@ export async function assignRoleToUser(userId: string, roleId: string) {
     .update(user)
     .set({ roleId })
     .where(eq(user.id, userId));
+}
+
+
+export async function getModeratorRole() {
+  const moderatorRole = await db.query.role.findFirst({
+    where: (role, { eq }) => eq(role.name, "Moderator")
+  });
+
+  if (moderatorRole) {
+    return moderatorRole;
+  }
+
+  const [newRole] = await db
+    .insert(role)
+    .values({
+      name: "Moderator",
+      description: "Moderatorska uloga za upravljanje sadržajem"
+    })
+    .returning();
+
+  return newRole;
 }

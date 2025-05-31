@@ -39,7 +39,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ChevronDown, ChevronUp, Trash2, ArrowUpDown, Search, Loader2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Trash2, ArrowUpDown, Search, Loader2, UserCheck } from "lucide-react";
 import { toast } from "sonner";
 
 interface User {
@@ -63,6 +63,7 @@ export function AdminUsersTable() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [promoting, setPromoting] = useState<string | null>(null);
 
   const columns: ColumnDef<User>[] = [
     {
@@ -133,8 +134,20 @@ export function AdminUsersTable() {
       cell: ({ row }) => {
         const role = row.getValue("role") as { name: string } | null;
         const roleName = role?.name || "Korisnik";
+        
+        const getBadgeVariant = (role: string) => {
+          switch (role) {
+            case "Admin":
+              return "destructive";
+            case "Moderator":
+              return "default";
+            default:
+              return "outline";
+          }
+        };
+        
         return (
-          <Badge variant={roleName === "Admin" ? "destructive" : "secondary"}>
+          <Badge variant={getBadgeVariant(roleName)}>
             {roleName}
           </Badge>
         );
@@ -211,6 +224,8 @@ export function AdminUsersTable() {
       cell: ({ row }) => {
         const user = row.original;
         const isAdmin = user.role?.name === "Admin";
+        const isModerator = user.role?.name === "Moderator";
+        const isPromoting = promoting === user.id;
 
         return (
           <DropdownMenu>
@@ -227,6 +242,20 @@ export function AdminUsersTable() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
+              {!isAdmin && !isModerator && (
+                <DropdownMenuItem
+                  onClick={() => promoteToModerator(user.id)}
+                  className="cursor-pointer"
+                  disabled={isPromoting}
+                >
+                  {isPromoting ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <UserCheck className="mr-2 h-4 w-4" />
+                  )}
+                  {isPromoting ? "Promoviram..." : "Promoviraj u moderatora"}
+                </DropdownMenuItem>
+              )}
               <DropdownMenuItem
                 onClick={() => {
                   setUserToDelete(user);
@@ -274,7 +303,6 @@ export function AdminUsersTable() {
       setLoading(false);
     }
   };
-
   const deleteUser = async () => {
     if (!userToDelete) return;
 
@@ -298,6 +326,32 @@ export function AdminUsersTable() {
       toast.error(error instanceof Error ? error.message : "Greška pri brisanju korisnika");
     } finally {
       setDeleting(false);
+    }
+  };
+
+  const promoteToModerator = async (userId: string) => {
+    try {
+      setPromoting(userId);
+      const response = await fetch("/api/admin/users/promote", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to promote user");
+      }
+
+      toast.success("Korisnik je uspješno promoviran u moderatora");
+      loadUsers();
+    } catch (error) {
+      console.error("Error promoting user:", error);
+      toast.error(error instanceof Error ? error.message : "Greška pri promoviranju korisnika");
+    } finally {
+      setPromoting(null);
     }
   };
 

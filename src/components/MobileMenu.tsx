@@ -20,26 +20,36 @@ export function MobileMenu() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [isModerator, setIsModerator] = useState(false)
   const checkedSessionRef = useRef<string | null>(null)
-
   useEffect(() => {
-    const checkAdminAccess = async () => {
+    const checkAccess = async () => {
       if (session?.user?.id && checkedSessionRef.current !== session.user.id) {
         checkedSessionRef.current = session.user.id
         try {
-          const res = await fetch('/api/admin/check')
-          const data = await res.json()
-          setIsAdmin(Boolean(data.hasAdminAccess))
+          const adminRes = await fetch('/api/admin/check')
+          const adminData = await adminRes.json()
+          setIsAdmin(Boolean(adminData.hasAdminAccess))
+
+          if (!adminData.hasAdminAccess) {
+            const modRes = await fetch('/api/moderator/check')
+            const modData = await modRes.json()
+            setIsModerator(modRes.ok && Boolean(modData.user))
+          } else {
+            setIsModerator(false)
+          }
         } catch {
           setIsAdmin(false)
+          setIsModerator(false)
         }
       } else if (!session) {
         setIsAdmin(false)
+        setIsModerator(false)
         checkedSessionRef.current = null
       }
     }
 
-    checkAdminAccess()
+    checkAccess()
   }, [session])
 
   const handleSignOut = async () => {
@@ -111,6 +121,16 @@ export function MobileMenu() {
               >
                 <Shield className="h-4 w-4" />
                 Admin
+              </Link>
+            )}
+            {session && isModerator && !isAdmin && (
+              <Link
+                href="/moderator"
+                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+                onClick={() => setOpen(false)}
+              >
+                <Shield className="h-4 w-4 text-black" />
+                Moderator
               </Link>
             )}
           </nav>
