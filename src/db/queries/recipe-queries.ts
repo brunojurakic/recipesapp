@@ -54,6 +54,21 @@ export async function getRecipe(id: string) {
   }
 }
 
+export async function getRecipeAuthorId(recipeId: string): Promise<string | null> {
+  try {
+    const result = await db.query.recipe.findFirst({
+      where: eq(recipe.id, recipeId),
+      columns: {
+        userId: true,
+      }
+    });
+    return result?.userId || null;
+  } catch (error) {
+    console.error('Error fetching recipe author:', error);
+    return null;
+  }
+}
+
 export async function getRecipes() {
   try {
     const recipes = await db.query.recipe.findMany({

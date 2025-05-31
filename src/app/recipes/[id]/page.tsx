@@ -108,7 +108,7 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             <Suspense fallback={<BookmarkButton recipeId="" isInitialLoading />}>
               <BookmarkButton recipeId={recipe.id} />
             </Suspense>
-            <ReviewDialog recipeId={recipe.id} />
+            <ReviewDialog recipeId={recipe.id} isAuthor={isAuthor} />
             {isAuthor && (
               <>
                 <EditRecipeButton recipeId={recipe.id} />
