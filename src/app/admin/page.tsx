@@ -155,23 +155,23 @@ export default function AdminDashboard() {
           <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="users" className="flex items-center gap-2 cursor-pointer">
               <Users className="h-4 w-4" />
-              Korisnici
+              <span className="hidden sm:inline">Korisnici</span>
             </TabsTrigger>
             <TabsTrigger value="recipes" className="flex items-center gap-2 cursor-pointer">
               <ChefHat className="h-4 w-4" />
-              Recepti
+              <span className="hidden sm:inline">Recepti</span>
             </TabsTrigger>
             <TabsTrigger value="reviews" className="flex items-center gap-2 cursor-pointer">
               <MessageSquare className="h-4 w-4" />
-              Recenzije
+              <span className="hidden sm:inline">Recenzije</span>
             </TabsTrigger>
             <TabsTrigger value="allergies" className="flex items-center gap-2 cursor-pointer">
               <AlertTriangle className="h-4 w-4" />
-              Alergije
+              <span className="hidden sm:inline">Alergije</span>
             </TabsTrigger>
             <TabsTrigger value="categories" className="flex items-center gap-2 cursor-pointer">
               <Tags className="h-4 w-4" />
-              Kategorije
+              <span className="hidden sm:inline">Kategorije</span>
             </TabsTrigger>
           </TabsList>
 

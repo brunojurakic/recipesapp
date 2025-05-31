@@ -330,10 +330,10 @@ export function AdminCategoriesTable() {
             }
             className="pl-10"
           />
-        </div>
+        </div>        
         <Button onClick={() => setIsAddDialogOpen(true)} variant="default">
-          <Plus className="mr-2 h-4 w-4" />
-          Nova kategorija
+          <Plus className="h-4 w-4 sm:mr-2" />
+          <span className="hidden sm:inline">Nova kategorija</span>
         </Button>
         <Button onClick={loadCategories} variant="outline">
           Osvježi
