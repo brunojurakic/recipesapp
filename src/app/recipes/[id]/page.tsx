@@ -15,6 +15,7 @@ import { RecipeAuthor } from '@/components/recipe_page/RecipeAuthor'
 import { BookmarkButton } from '@/components/recipe_page/BookmarkButton'
 import { ReviewDialog } from '@/components/recipe_page/ReviewDialog'
 import { DeleteRecipeButton } from '@/components/recipe_page/DeleteRecipeButton'
+import { EditRecipeButton } from '@/components/recipe_page/EditRecipeButton'
 import { Suspense } from 'react'
 
 export default async function RecipePage({ params }: { params: Promise<{ id: string }>}) {
@@ -109,7 +110,10 @@ export default async function RecipePage({ params }: { params: Promise<{ id: str
             </Suspense>
             <ReviewDialog recipeId={recipe.id} />
             {isAuthor && (
-              <DeleteRecipeButton recipeId={recipe.id} />
+              <>
+                <EditRecipeButton recipeId={recipe.id} />
+                <DeleteRecipeButton recipeId={recipe.id} />
+              </>
             )}
           </div>
         </div>

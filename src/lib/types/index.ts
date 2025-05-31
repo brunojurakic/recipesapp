@@ -33,3 +33,16 @@ export type AuthState = {
   user: import('./database').User | null;
   isLoading: boolean;
 };
+
+export interface RecipeEditData {
+  id: string;
+  title: string;
+  description: string;
+  servings: number;
+  preparationTime: number;
+  image_path: string;
+  categories: { category: { id: string; name: string } }[];
+  allergies: { allergy: { id: string; name: string } }[];
+  instructions: { stepNumber: number; content: string }[];
+  ingredients: { name: string; quantity: number; unitId: string }[];
+}
