@@ -13,9 +13,10 @@ import { LoginDialog } from "@/components/common/LoginDialog";
 
 interface ReviewDialogProps {
   recipeId: string;
+  isAuthor?: boolean;
 }
 
-export function ReviewDialog({ recipeId }: ReviewDialogProps) {
+export function ReviewDialog({ recipeId, isAuthor = false }: ReviewDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [rating, setRating] = useState(0);
   const [content, setContent] = useState("");
@@ -23,8 +24,6 @@ export function ReviewDialog({ recipeId }: ReviewDialogProps) {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
   const [showLoginDialog, setShowLoginDialog] = useState(false);
   const router = useRouter();
-
-
 
   const handleButtonClick = async () => {
     if (isLoggedIn === null) {
@@ -106,6 +105,10 @@ export function ReviewDialog({ recipeId }: ReviewDialogProps) {
   const handleStarClick = (starRating: number) => {
     setRating(starRating);
   };
+
+  if (isAuthor) {
+    return null;
+  }
 
   return (
     <>

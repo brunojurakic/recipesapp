@@ -1,5 +1,6 @@
 export {
   getRecipe,
+  getRecipeAuthorId,
   getRecipes,
   getFilteredRecipes,
   deleteRecipe,

@@ -2,6 +2,8 @@ import { db } from "@/db/drizzle";
 import { recipe } from "@/db/schema";
 import { asc, desc, eq, and, like, lte, gte, inArray } from "drizzle-orm";
 import { recipeCategory, recipeAllergy } from "@/db/schema";
+import { ingredient, instruction } from "@/db/schema";
+import { CreateRecipeServerData } from "@/lib/validations/recipe-zod-server";
 
 export async function getRecipe(id: string) {
   try {
@@ -48,6 +50,21 @@ export async function getRecipe(id: string) {
     return recipeData;
   } catch (error) {
     console.error('Error fetching recipe:', error);
+    return null;
+  }
+}
+
+export async function getRecipeAuthorId(recipeId: string): Promise<string | null> {
+  try {
+    const result = await db.query.recipe.findFirst({
+      where: eq(recipe.id, recipeId),
+      columns: {
+        userId: true,
+      }
+    });
+    return result?.userId || null;
+  } catch (error) {
+    console.error('Error fetching recipe author:', error);
     return null;
   }
 }
@@ -265,5 +282,69 @@ export async function getAllRecipesForAdmin() {
   } catch (error) {
     console.error('Error fetching admin recipes:', error);
     return [];
+  }
+}
+
+export async function updateRecipe(id: string, data: CreateRecipeServerData) {
+  try {
+    await db.transaction(async (tx) => {
+      await tx.update(recipe).set({
+        title: data.title,
+        description: data.description,
+        image_path: data.imagePath,
+        servings: data.servings,
+        preparationTime: data.preparationTime,
+        updatedAt: new Date()
+      }).where(eq(recipe.id, id));
+
+      await tx.delete(ingredient).where(eq(ingredient.recipeId, id));
+      await tx.delete(instruction).where(eq(instruction.recipeId, id));
+      await tx.delete(recipeCategory).where(eq(recipeCategory.recipeId, id));
+      await tx.delete(recipeAllergy).where(eq(recipeAllergy.recipeId, id));
+
+      if (data.ingredients && data.ingredients.length > 0) {
+        await tx.insert(ingredient).values(
+          data.ingredients.map(ing => ({
+            recipeId: id,
+            name: ing.name,
+            quantity: ing.quantity,
+            unitId: ing.unitId
+          }))
+        );
+      }
+
+      if (data.instructions && data.instructions.length > 0) {
+        await tx.insert(instruction).values(
+          data.instructions.map(inst => ({
+            recipeId: id,
+            stepNumber: inst.stepNumber,
+            content: inst.content
+          }))
+        );
+      }
+
+      if (data.categories && data.categories.length > 0) {
+        await tx.insert(recipeCategory).values(
+          data.categories.map(categoryId => ({
+            recipeId: id,
+            categoryId
+          }))
+        );
+      }
+
+      if (data.allergies && data.allergies.length > 0) {
+        await tx.insert(recipeAllergy).values(
+          data.allergies.map(allergyId => ({
+            recipeId: id,
+            allergyId
+          }))
+        );
+      }
+    });
+
+    return true;
+  } catch (error) {
+    console.error('Error updating recipe:', error);
+    return false;
   }
 }
