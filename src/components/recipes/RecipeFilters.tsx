@@ -18,6 +18,8 @@ interface RecipeFiltersProps {
   selectedAllergyIds: string[];
   onSelectedAllergyIdsChange: (ids: string[]) => void;
   isLoadingAllergies: boolean;
+  ingredientSearch: string;
+  onIngredientSearchChange: (search: string) => void;
   maxPrepTime: string;
   onMaxPrepTimeChange: (time: string) => void;
   minServings: string;
@@ -39,6 +41,8 @@ export function RecipeFilters({
   selectedAllergyIds,
   onSelectedAllergyIdsChange,
   isLoadingAllergies,
+  ingredientSearch,
+  onIngredientSearchChange,
   maxPrepTime,
   onMaxPrepTimeChange,
   minServings,
@@ -49,11 +53,11 @@ export function RecipeFilters({
   initiallyExpanded = false,
 }: RecipeFiltersProps) {
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(initiallyExpanded);
-
   const hasActiveAdvancedFilters = Boolean(
-    selectedCategoryIds.length > 0 || 
-    selectedAllergyIds.length > 0 || 
-    maxPrepTime || 
+    selectedCategoryIds.length > 0 ||
+    selectedAllergyIds.length > 0 ||
+    ingredientSearch ||
+    maxPrepTime ||
     minServings
   );
 
@@ -73,7 +77,7 @@ export function RecipeFilters({
             onChange={(e) => onSearchTermChange(e.target.value)}
             className="pl-10 h-11"
           />
-        </div>        
+        </div>
         <Button
           variant="outline"
           onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
@@ -105,6 +109,11 @@ export function RecipeFilters({
                 {selectedAllergyIds.length} alergen{selectedAllergyIds.length === 1 ? '' : 'a'}
               </span>
             )}
+            {ingredientSearch && (
+              <span className="bg-background px-2 py-1 rounded border">
+                Sastojak: {ingredientSearch}
+              </span>
+            )}
             {maxPrepTime && (
               <span className="bg-background px-2 py-1 rounded border">
                 Max. {maxPrepTime} min
@@ -130,7 +139,18 @@ export function RecipeFilters({
 
       {showAdvancedFilters && (
         <div className="p-4 md:p-6 border rounded-lg shadow-sm bg-card mb-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
+            <div className="space-y-2">
+              <Label htmlFor="ingredientSearch">Pretraži sastojke</Label>
+              <Input
+                id="ingredientSearch"
+                type="text"
+                placeholder="Npr. mlijeko, brašno..."
+                value={ingredientSearch}
+                onChange={(e) => onIngredientSearchChange(e.target.value)}
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="categories">Kategorije</Label>
               <MultiSelect
@@ -183,11 +203,9 @@ export function RecipeFilters({
                 onChange={(e) => onMinServingsChange(e.target.value)}
                 min="1"
               />
-            </div>
-
-            <div className="sm:col-start-2 lg:col-start-3 flex items-end">
+            </div>            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-3 flex items-end justify-center">
               {hasActiveFilters && (
-                <Button onClick={onClearFilters} className="w-full">
+                <Button onClick={onClearFilters} className="w-full max-w-md">
                   <XCircle className="mr-2 h-4 w-4" />
                   Očisti filtere
                 </Button>
