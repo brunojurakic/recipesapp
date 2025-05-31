@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { UtensilsCrossed, Shield, Users } from 'lucide-react'
+import { UtensilsCrossed, Shield } from 'lucide-react'
 import SessionButtons from './auth/SessionButtons'
 import { MobileMenu } from './MobileMenu'
 import { auth } from '@/lib/auth'

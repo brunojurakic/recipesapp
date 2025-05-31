@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useSession, signOut } from '@/lib/auth-client'
 import { useRouter } from 'next/navigation'
-import { UtensilsCrossed, Menu, User, LogOut, LogIn, UserPlus, BookOpen, Home, Tag, Award, Shield, Users } from 'lucide-react'
+import { UtensilsCrossed, Menu, User, LogOut, LogIn, UserPlus, BookOpen, Home, Tag, Award, Shield } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
