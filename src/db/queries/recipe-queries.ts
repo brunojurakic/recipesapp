@@ -135,6 +135,7 @@ export async function getFilteredRecipes(filters: {
   allergyIds?: string[];
   maxPrepTime?: number;
   minServings?: number;
+  ingredientSearch?: string;
 }) {
   try {
     const basicConditions = [];
@@ -197,10 +198,26 @@ export async function getFilteredRecipes(filters: {
             inArray(recipeAllergy.recipeId, candidateRecipeIds),
             inArray(recipeAllergy.allergyId, filters.allergyIds)
           )
+        );      const excludedRecipeIds = new Set(recipesWithExcludedAllergies.map(r => r.recipeId));
+      candidateRecipeIds = candidateRecipeIds.filter(id => !excludedRecipeIds.has(id));
+    }
+
+    if (candidateRecipeIds.length === 0) {
+      return [];
+    }
+
+    if (filters.ingredientSearch && filters.ingredientSearch.trim().length > 0) {
+      const recipesWithIngredients = await db
+        .select({ recipeId: ingredient.recipeId })
+        .from(ingredient)
+        .where(
+          and(
+            inArray(ingredient.recipeId, candidateRecipeIds),
+            like(ingredient.name, `%${filters.ingredientSearch.trim()}%`)
+          )
         );
 
-      const excludedRecipeIds = new Set(recipesWithExcludedAllergies.map(r => r.recipeId));
-      candidateRecipeIds = candidateRecipeIds.filter(id => !excludedRecipeIds.has(id));
+      candidateRecipeIds = [...new Set(recipesWithIngredients.map(r => r.recipeId))];
     }
 
     if (candidateRecipeIds.length === 0) {

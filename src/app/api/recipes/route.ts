@@ -116,14 +116,14 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-
     const search = searchParams.get('search') || undefined;
     const categoryIds = searchParams.get('categoryIds')?.split(',').filter(Boolean) || undefined;
     const allergyIds = searchParams.get('allergyIds')?.split(',').filter(Boolean) || undefined;
     const maxPrepTime = searchParams.get('maxPrepTime') ? parseInt(searchParams.get('maxPrepTime')!, 10) : undefined;
     const minServings = searchParams.get('minServings') ? parseInt(searchParams.get('minServings')!, 10) : undefined;
+    const ingredientSearch = searchParams.get('ingredientSearch') || undefined;
 
-    const hasFilters = search || categoryIds || allergyIds || maxPrepTime || minServings;
+    const hasFilters = search || categoryIds || allergyIds || maxPrepTime || minServings || ingredientSearch;
 
     let recipes;
     if (hasFilters) {
@@ -133,6 +133,7 @@ export async function GET(request: NextRequest) {
         allergyIds,
         maxPrepTime: maxPrepTime && maxPrepTime > 0 ? maxPrepTime : undefined,
         minServings: minServings && minServings > 0 ? minServings : undefined,
+        ingredientSearch,
       });
     } else {
       recipes = await getRecipes();

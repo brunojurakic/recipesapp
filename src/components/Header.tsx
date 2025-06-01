@@ -20,7 +20,7 @@ const Header = async () => {
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <UtensilsCrossed className="h-6 w-6 text-zinc-900" />
-            <span className="text-lg font-semibold text-zinc-900">RecipeShare</span>
+            <span className="text-lg font-semibold text-zinc-900">ReceptiNet</span>
           </Link>
 
           <nav className="hidden sm:flex items-center gap-6 flex-1 justify-center">

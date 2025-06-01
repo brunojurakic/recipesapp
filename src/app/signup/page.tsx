@@ -44,7 +44,7 @@ export default function SignUp() {
             <div className="flex flex-col items-center mb-2">
               <Link href={'/'} className="flex items-center gap-2">
                 <UtensilsCrossed className="h-8 w-8" />
-                <h1 className="text-3xl font-bold">Recipe Share</h1>
+                <h1 className="text-3xl font-bold">ReceptiNet</h1>
               </Link>
             </div>
             <CardTitle className="text-2xl">Otvorite račun</CardTitle>

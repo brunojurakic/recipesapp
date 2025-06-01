@@ -75,7 +75,7 @@ export function MobileMenu() {
         <SheetHeader className="text-left border-b pb-4">
           <SheetTitle className="flex items-center gap-2">
             <UtensilsCrossed className="h-5 w-5" />
-            RecipeShare
+            ReceptiNet
           </SheetTitle>
         </SheetHeader>
 

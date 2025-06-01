@@ -20,21 +20,21 @@ export default function RecipesPage() {
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(true);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
-
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [selectedAllergyIds, setSelectedAllergyIds] = useState<string[]>([]);
+  const [ingredientSearch, setIngredientSearch] = useState("");
   const [maxPrepTime, setMaxPrepTime] = useState<string>("");
   const [minServings, setMinServings] = useState<string>("");
 
   const [allCategories, setAllCategories] = useState<SelectableItem[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [allAllergies, setAllAllergies] = useState<SelectableItem[]>([]);
-  const [isLoadingAllergies, setIsLoadingAllergies] = useState(true);
-  const debouncedFetchRecipes = useDebouncedCallback(async (
+  const [isLoadingAllergies, setIsLoadingAllergies] = useState(true);  const debouncedFetchRecipes = useDebouncedCallback(async (
     search: string,
     categoryIds: string[],
     allergyIds: string[],
+    ingredientSearch: string,
     maxPrepTime: string,
     minServings: string
   ) => {
@@ -55,6 +55,9 @@ export default function RecipesPage() {
       }
       if (allergyIds.length > 0) {
         params.append('allergyIds', allergyIds.join(','));
+      }
+      if (ingredientSearch.trim()) {
+        params.append('ingredientSearch', ingredientSearch.trim());
       }
       if (maxPrepTime && parseInt(maxPrepTime, 10) > 0) {
         params.append('maxPrepTime', maxPrepTime);
@@ -82,14 +85,13 @@ export default function RecipesPage() {
       setIsFiltering(false);
     }
   }, 500);
-
   useEffect(() => {
-    debouncedFetchRecipes("", [], [], "", "");
+    debouncedFetchRecipes("", [], [], "", "", "");
   }, [debouncedFetchRecipes]);
 
   useEffect(() => {
-    debouncedFetchRecipes(searchTerm, selectedCategoryIds, selectedAllergyIds, maxPrepTime, minServings);
-  }, [searchTerm, selectedCategoryIds, selectedAllergyIds, maxPrepTime, minServings, debouncedFetchRecipes]);
+    debouncedFetchRecipes(searchTerm, selectedCategoryIds, selectedAllergyIds, ingredientSearch, maxPrepTime, minServings);
+  }, [searchTerm, selectedCategoryIds, selectedAllergyIds, ingredientSearch, maxPrepTime, minServings, debouncedFetchRecipes]);
 
   useEffect(() => {
     const fetchFilterOptions = async () => {
@@ -139,18 +141,17 @@ export default function RecipesPage() {
 
     fetchFilterOptions();
   }, [session]);
-
   const clearFilters = () => {
     setSearchTerm("");
     setSelectedCategoryIds([]);
     setSelectedAllergyIds([]);
+    setIngredientSearch("");
     setMaxPrepTime("");
     setMinServings("");
   };
-
   const hasActiveFilters = useMemo(() => {
-    return Boolean(searchTerm || selectedCategoryIds.length > 0 || selectedAllergyIds.length > 0 || maxPrepTime || minServings);
-  }, [searchTerm, selectedCategoryIds, selectedAllergyIds, maxPrepTime, minServings]);
+    return Boolean(searchTerm || selectedCategoryIds.length > 0 || selectedAllergyIds.length > 0 || ingredientSearch || maxPrepTime || minServings);
+  }, [searchTerm, selectedCategoryIds, selectedAllergyIds, ingredientSearch, maxPrepTime, minServings]);
 
   return (
     <div className="max-w-7xl mx-auto p-6 pt-25">
@@ -179,6 +180,8 @@ export default function RecipesPage() {
         selectedAllergyIds={selectedAllergyIds}
         onSelectedAllergyIdsChange={setSelectedAllergyIds}
         isLoadingAllergies={isLoadingAllergies}
+        ingredientSearch={ingredientSearch}
+        onIngredientSearchChange={setIngredientSearch}
         maxPrepTime={maxPrepTime}
         onMaxPrepTimeChange={setMaxPrepTime}
         minServings={minServings}
