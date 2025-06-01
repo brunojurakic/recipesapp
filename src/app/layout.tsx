@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RecipeShare - Podijelite i otkrijte nevjerojatne recepte",
+  title: "ReceptiNet - Podijelite i otkrijte nevjerojatne recepte",
   description: "Moderna platforma za dijeljenje i otkrivanje ukusnih recepata iz cijelog svijeta.",
 };
 
