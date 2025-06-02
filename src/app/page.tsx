@@ -1,8 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import SearchBar from "@/components/SearchBar";
+import CategoryCard from "@/components/CategoryCard";
+import { toast } from "sonner";
 import {
   UtensilsCrossed,
   ChefHat,
@@ -16,7 +21,36 @@ import {
   ArrowRight
 } from 'lucide-react';
 
+interface PopularCategory {
+  id: string;
+  name: string;
+  image_path: string;
+  recipeCount: number;
+}
+
 const Home = () => {
+  const [popularCategories, setPopularCategories] = useState<PopularCategory[]>([]);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  useEffect(() => {
+    const fetchPopularCategories = async () => {
+      try {
+        const response = await fetch('/api/categories/popular');
+        if (response.ok) {
+          const categories = await response.json();
+          setPopularCategories(categories);
+        } else {
+          toast.error("Greška pri dohvaćanju kategorija. Molimo pokušajte kasnije.");
+        }
+      } catch (error) {
+        console.error('Failed to fetch popular categories:', error);
+        toast.error("Greška pri dohvaćanju kategorija. Molimo pokušajte kasnije.");
+      } finally {
+        setIsLoadingCategories(false);
+      }
+    };
+
+    fetchPopularCategories();
+  }, []);
   return (
     <div className="min-h-screen">
       <div className="relative h-[80vh] w-full overflow-hidden">
@@ -159,25 +193,28 @@ const Home = () => {
               Istražite recepte po kategorijama
             </p>
           </div>          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {[
-              { name: "Doručak", icon: "🥞" },
-              { name: "Ručak", icon: "🍽️" },
-              { name: "Večera", icon: "🍖" },
-              { name: "Desert", icon: "🍰" },
-              { name: "Vegetarijansko", icon: "🥗" },
-              { name: "Brza jela", icon: "⚡" }
-            ].map((category) => (
-              <Card key={category.name} className="hover:shadow-md transition-shadow cursor-pointer group">
-                <CardContent className="p-6 text-center">
-                  <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">
-                    {category.icon}
-                  </div>
-                  <div className="font-medium text-sm">
-                    {category.name}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {isLoadingCategories ? (
+              Array.from({ length: 6 }).map((_, index) => (
+                <Card key={index} className="hover:shadow-md transition-shadow overflow-hidden">
+                  <div className="relative aspect-square bg-muted animate-pulse" />
+                  <CardContent className="p-4 text-center">
+                    <div className="h-4 bg-muted rounded animate-pulse" />
+                  </CardContent>
+                </Card>
+              ))
+            ) : (
+              popularCategories.map((category) => (
+                <CategoryCard 
+                  key={category.id}
+                  category={{
+                    id: parseInt(category.id),
+                    name: category.name,
+                    image_path: category.image_path,
+                    recipe_count: category.recipeCount
+                  }}
+                />
+              ))
+            )}
           </div>
         </div>
       </section>
