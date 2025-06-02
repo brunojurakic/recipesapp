@@ -12,10 +12,12 @@ import { RecipeListDisplay } from "@/components/recipes/RecipeListDisplay";
 import type { SelectableItem } from "@/components/ui/multi-select";
 import type { Category, Allergy, RecipeClient } from "@/lib/types/database";
 import { useDebouncedCallback } from "use-debounce";
+import { useSearchParams } from "next/navigation";
 
 export default function RecipesPage() {
   const { data: sessionData, isPending: isSessionLoading } = useSession();
   const session = sessionData?.session;
+  const searchParams = useSearchParams();
   const [filteredRecipes, setFilteredRecipes] = useState<RecipeClient[]>([]);
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(true);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -30,7 +32,25 @@ export default function RecipesPage() {
   const [allCategories, setAllCategories] = useState<SelectableItem[]>([]);
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [allAllergies, setAllAllergies] = useState<SelectableItem[]>([]);
-  const [isLoadingAllergies, setIsLoadingAllergies] = useState(true);  const debouncedFetchRecipes = useDebouncedCallback(async (
+  const [isLoadingAllergies, setIsLoadingAllergies] = useState(true);
+
+  useEffect(() => {
+    const urlSearch = searchParams.get('search') || '';
+    const urlCategoryIds = searchParams.get('categoryIds')?.split(',').filter(Boolean) || [];
+    const urlAllergyIds = searchParams.get('allergyIds')?.split(',').filter(Boolean) || [];
+    const urlIngredientSearch = searchParams.get('ingredientSearch') || '';
+    const urlMaxPrepTime = searchParams.get('maxPrepTime') || '';
+    const urlMinServings = searchParams.get('minServings') || '';
+
+    setSearchTerm(urlSearch);
+    setSelectedCategoryIds(urlCategoryIds);
+    setSelectedAllergyIds(urlAllergyIds);
+    setIngredientSearch(urlIngredientSearch);
+    setMaxPrepTime(urlMaxPrepTime);
+    setMinServings(urlMinServings);
+  }, [searchParams]);
+  
+  const debouncedFetchRecipes = useDebouncedCallback(async (
     search: string,
     categoryIds: string[],
     allergyIds: string[],
@@ -85,14 +105,10 @@ export default function RecipesPage() {
       setIsFiltering(false);
     }
   }, 500);
-  useEffect(() => {
-    debouncedFetchRecipes("", [], [], "", "", "");
-  }, [debouncedFetchRecipes]);
 
   useEffect(() => {
     debouncedFetchRecipes(searchTerm, selectedCategoryIds, selectedAllergyIds, ingredientSearch, maxPrepTime, minServings);
   }, [searchTerm, selectedCategoryIds, selectedAllergyIds, ingredientSearch, maxPrepTime, minServings, debouncedFetchRecipes]);
-
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
@@ -125,7 +141,7 @@ export default function RecipesPage() {
         setIsLoadingAllergies(false);
       }
 
-      if (session) {
+      if (session && !searchParams.get('allergyIds')) {
         try {
           const userAllergiesRes = await fetch("/api/user-allergies");
           if (userAllergiesRes.ok) {
@@ -140,7 +156,7 @@ export default function RecipesPage() {
     };
 
     fetchFilterOptions();
-  }, [session]);
+  }, [session, searchParams]);
   const clearFilters = () => {
     setSearchTerm("");
     setSelectedCategoryIds([]);

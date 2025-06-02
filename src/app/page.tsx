@@ -207,7 +207,7 @@ const Home = () => {
                 <CategoryCard 
                   key={category.id}
                   category={{
-                    id: parseInt(category.id),
+                    id: category.id,
                     name: category.name,
                     image_path: category.image_path,
                     recipe_count: category.recipeCount
