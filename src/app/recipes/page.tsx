@@ -12,12 +12,13 @@ import { RecipeListDisplay } from "@/components/recipes/RecipeListDisplay";
 import type { SelectableItem } from "@/components/ui/multi-select";
 import type { Category, Allergy, RecipeClient } from "@/lib/types/database";
 import { useDebouncedCallback } from "use-debounce";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 export default function RecipesPage() {
   const { data: sessionData, isPending: isSessionLoading } = useSession();
   const session = sessionData?.session;
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [filteredRecipes, setFilteredRecipes] = useState<RecipeClient[]>([]);
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(true);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
@@ -33,7 +34,6 @@ export default function RecipesPage() {
   const [isLoadingCategories, setIsLoadingCategories] = useState(true);
   const [allAllergies, setAllAllergies] = useState<SelectableItem[]>([]);
   const [isLoadingAllergies, setIsLoadingAllergies] = useState(true);
-
   useEffect(() => {
     const urlSearch = searchParams.get('search') || '';
     const urlCategoryIds = searchParams.get('categoryIds')?.split(',').filter(Boolean) || [];
@@ -42,14 +42,21 @@ export default function RecipesPage() {
     const urlMaxPrepTime = searchParams.get('maxPrepTime') || '';
     const urlMinServings = searchParams.get('minServings') || '';
 
-    setSearchTerm(urlSearch);
-    setSelectedCategoryIds(urlCategoryIds);
-    setSelectedAllergyIds(urlAllergyIds);
-    setIngredientSearch(urlIngredientSearch);
-    setMaxPrepTime(urlMaxPrepTime);
-    setMinServings(urlMinServings);
-  }, [searchParams]);
-  
+    const hasUrlParams = urlSearch || urlCategoryIds.length > 0 || urlAllergyIds.length > 0 || 
+                        urlIngredientSearch || urlMaxPrepTime || urlMinServings;
+
+    if (hasUrlParams) {
+      setSearchTerm(urlSearch);
+      setSelectedCategoryIds(urlCategoryIds);
+      setSelectedAllergyIds(urlAllergyIds);
+      setIngredientSearch(urlIngredientSearch);
+      setMaxPrepTime(urlMaxPrepTime);
+      setMinServings(urlMinServings);
+
+      router.replace('/recipes', { scroll: false });
+    }
+  }, [searchParams, router]);
+
   const debouncedFetchRecipes = useDebouncedCallback(async (
     search: string,
     categoryIds: string[],
