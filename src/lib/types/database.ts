@@ -60,10 +60,7 @@ export type RecipeWithUser = Recipe & {
 
 export type RecipeWithCategories = Recipe & {
   categories: Array<{
-    category: {
-      id: string;
-      name: string;
-    };
+    category: Category;
   }>;
 };
 
@@ -72,10 +69,7 @@ export type RecipeWithUserAndCategories = Recipe & {
     name: string | null;
   };
   categories: Array<{
-    category: {
-      id: string;
-      name: string;
-    };
+    category: Category;
   }>;
 };
 

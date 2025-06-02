@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import {
   ColumnDef,
   flexRender,
@@ -50,11 +51,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { ChevronDown, ChevronUp, Trash2, ArrowUpDown, Search, Loader2, Plus, PencilIcon } from "lucide-react";
 import { toast } from "sonner";
-import { createCategorySchema, updateCategorySchema } from '@/lib/schemas/admin';
+import { updateCategorySchema } from '@/lib/schemas/admin';
 
 interface Category {
   id: string;
   name: string;
+  image_path: string;
   recipeCount: number;
 }
 
@@ -68,12 +70,34 @@ export function AdminCategoriesTable() {
   const [deleting, setDeleting] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryName, setNewCategoryName] = useState(""); const [newCategoryImage, setNewCategoryImage] = useState<File | null>(null);
+  const [editCategoryImage, setEditCategoryImage] = useState<File | null>(null);
   const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [adding, setAdding] = useState(false);
   const [updating, setUpdating] = useState(false);
-
   const columns: ColumnDef<Category>[] = [
+    {
+      accessorKey: "image_path",
+      header: "Slika",
+      cell: ({ row }) => {
+        const imagePath = row.getValue("image_path") as string; return (
+          <div className="w-16 h-16 relative">
+            {imagePath ? (
+              <Image
+                src={imagePath}
+                alt={row.original.name}
+                fill
+                className="object-cover rounded-md"
+              />
+            ) : (
+              <div className="w-full h-full bg-muted rounded-md flex items-center justify-center">
+                <span className="text-xs text-muted-foreground">Nema slike</span>
+              </div>
+            )}
+          </div>
+        );
+      },
+    },
     {
       accessorKey: "name",
       header: ({ column }) => {
@@ -131,8 +155,8 @@ export function AdminCategoriesTable() {
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="h-8 px-3 cursor-pointer text-sm"
               >
                 <span className="flex items-center">
@@ -229,24 +253,22 @@ export function AdminCategoriesTable() {
       setDeleting(false);
     }
   };
-
   const addCategory = async () => {
-    const validationResult = createCategorySchema.safeParse({ name: newCategoryName });
-    
-    if (!validationResult.success) {
-      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
-      toast.error(errorMessage);
+    if (!newCategoryImage) {
+      toast.error("Slika je obavezna");
       return;
     }
 
     try {
       setAdding(true);
+
+      const formData = new FormData();
+      formData.append("name", newCategoryName);
+      formData.append("image", newCategoryImage);
+
       const response = await fetch("/api/admin/categories", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(validationResult.data),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -257,6 +279,7 @@ export function AdminCategoriesTable() {
       toast.success("Kategorija je uspješno dodana");
       setIsAddDialogOpen(false);
       setNewCategoryName("");
+      setNewCategoryImage(null);
       loadCategories();
     } catch (error) {
       console.error("Error adding category:", error);
@@ -265,37 +288,54 @@ export function AdminCategoriesTable() {
       setAdding(false);
     }
   };
-
   const updateCategory = async () => {
     if (!editingCategory) return;
 
-    const validationResult = updateCategorySchema.safeParse({ name: newCategoryName });
-    
-    if (!validationResult.success) {
-      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
-      toast.error(errorMessage);
-      return;
-    }
-
     try {
       setUpdating(true);
-      const response = await fetch(`/api/admin/categories?categoryId=${editingCategory.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(validationResult.data),
-      });
 
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to update category");
+      if (editCategoryImage) {
+        const formData = new FormData();
+        formData.append("name", newCategoryName);
+        formData.append("image", editCategoryImage);
+
+        const response = await fetch(`/api/admin/categories?categoryId=${editingCategory.id}`, {
+          method: "PUT",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Failed to update category");
+        }
+      } else {
+        const validationResult = updateCategorySchema.safeParse({ name: newCategoryName });
+
+        if (!validationResult.success) {
+          const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
+          toast.error(errorMessage);
+          return;
+        }
+
+        const response = await fetch(`/api/admin/categories?categoryId=${editingCategory.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(validationResult.data),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Failed to update category");
+        }
       }
 
       toast.success("Kategorija je uspješno ažurirana");
       setIsEditDialogOpen(false);
       setEditingCategory(null);
       setNewCategoryName("");
+      setEditCategoryImage(null);
       loadCategories();
     } catch (error) {
       console.error("Error updating category:", error);
@@ -330,7 +370,7 @@ export function AdminCategoriesTable() {
             }
             className="pl-10"
           />
-        </div>        
+        </div>
         <Button onClick={() => setIsAddDialogOpen(true)} variant="default">
           <Plus className="h-4 w-4 sm:mr-2" />
           <span className="hidden sm:inline">Nova kategorija</span>
@@ -350,9 +390,9 @@ export function AdminCategoriesTable() {
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -410,7 +450,7 @@ export function AdminCategoriesTable() {
           <AlertDialogHeader>
             <AlertDialogTitle>Obrisati kategoriju?</AlertDialogTitle>
             <AlertDialogDescription>
-              Jeste li sigurni da želite obrisati kategoriju &quot;{categoryToDelete?.name}&quot;? 
+              Jeste li sigurni da želite obrisati kategoriju &quot;{categoryToDelete?.name}&quot;?
               Ova akcija će trajno obrisati kategoriju.
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -452,14 +492,43 @@ export function AdminCategoriesTable() {
                 placeholder="Unesite naziv kategorije..."
               />
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="image">Slika kategorije *</Label>
+              <div className="flex flex-col gap-2">
+                <div className="relative">
+                  <input
+                    id="image"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setNewCategoryImage(e.target.files?.[0] || null)}
+                    className="sr-only"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('image')?.click()}
+                    className="w-full justify-start text-left font-normal"
+                  >
+                    {newCategoryImage ? (
+                      <span className="text-green-600">✓ {newCategoryImage.name}</span>
+                    ) : (
+                      <span className="text-muted-foreground">Odaberite sliku...</span>
+                    )}
+                  </Button>
+                </div>
+                {!newCategoryImage && (
+                  <p className="text-xs text-muted-foreground">Molimo odaberite sliku za kategoriju.</p>
+                )}
+              </div>
+            </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setIsAddDialogOpen(false);
-              setNewCategoryName("");
-            }}>
-              Odustani
-            </Button>
+          <DialogFooter>            <Button variant="outline" onClick={() => {
+            setIsAddDialogOpen(false);
+            setNewCategoryName("");
+            setNewCategoryImage(null);
+          }}>
+            Odustani
+          </Button>
             <Button onClick={addCategory} disabled={adding}>
               {adding ? (
                 <>
@@ -492,15 +561,57 @@ export function AdminCategoriesTable() {
                 placeholder="Unesite naziv kategorije..."
               />
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="edit-image">Nova slika kategorije (opcionalno)</Label>
+              <div className="flex flex-col gap-2">
+                <div className="relative">
+                  <input
+                    id="edit-image"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setEditCategoryImage(e.target.files?.[0] || null)}
+                    className="sr-only"
+                  />
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('edit-image')?.click()}
+                    className="w-full justify-start text-left font-normal"
+                  >
+                    {editCategoryImage ? (
+                      <span className="text-green-600">✓ {editCategoryImage.name}</span>
+                    ) : (
+                      <span className="text-muted-foreground">Odaberite novu sliku...</span>
+                    )}
+                  </Button>
+                </div>
+                {editingCategory && !editCategoryImage && (
+                  <div className="flex items-center gap-2">
+                    <div className="w-12 h-12 relative">
+                      <Image
+                        src={editingCategory.image_path}
+                        alt={editingCategory.name}
+                        fill
+                        className="object-cover rounded-md"
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground">Trenutna slika će ostati ako ne odaberete novu.</p>
+                  </div>
+                )}
+                {editCategoryImage && (
+                  <p className="text-xs text-green-600">Nova slika odabrana.</p>
+                )}
+              </div>
+            </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setIsEditDialogOpen(false);
-              setEditingCategory(null);
-              setNewCategoryName("");
-            }}>
-              Odustani
-            </Button>
+          <DialogFooter>            <Button variant="outline" onClick={() => {
+            setIsEditDialogOpen(false);
+            setEditingCategory(null);
+            setNewCategoryName("");
+            setEditCategoryImage(null);
+          }}>
+            Odustani
+          </Button>
             <Button onClick={updateCategory} disabled={updating}>
               {updating ? (
                 <>

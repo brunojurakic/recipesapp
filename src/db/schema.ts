@@ -75,7 +75,8 @@ export const recipe = pgTable("Recept", {
 
 export const category = pgTable("KategorijaJela", {
   id: uuid('id_kategorije').defaultRandom().primaryKey(),
-  name: text('naziv').notNull().unique()
+  name: text('naziv').notNull().unique(),
+  image_path: text('url_slike').notNull()
 }, (table) => [
   check('name_length', sql`length(${table.name}) >= 2 AND length(${table.name}) <= 30`)
 ]);

@@ -19,10 +19,13 @@ export const categorySchema = z.object({
     .max(30, "Naziv može imati najviše 30 znakova")
     .trim()
     .refine((name) => name.length > 0, "Naziv je obavezan"),
+  image_path: z.string()
+    .min(1, "Slika je obavezna")
+    .url("Slika mora biti valjana URL adresa"),
 });
 
 export const createCategorySchema = categorySchema.omit({ id: true });
-export const updateCategorySchema = categorySchema.partial({ name: true });
+export const updateCategorySchema = categorySchema.partial({ name: true, image_path: true });
 
 export type AllergySchema = z.infer<typeof allergySchema>;
 export type CreateAllergySchema = z.infer<typeof createAllergySchema>;
