@@ -30,9 +30,6 @@ const Header = async () => {
             <Link href="/categories" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
               Kategorije
             </Link>
-            <Link href="/featured" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
-              Istaknuto
-            </Link>
             {isAdmin && (
               <Link href="/admin" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 flex items-center gap-1">
                 <Shield className="h-4 w-4" />
