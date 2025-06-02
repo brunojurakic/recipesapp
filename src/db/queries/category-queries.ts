@@ -19,14 +19,15 @@ export async function getAllCategoriesWithCounts() {
   return categories.map(categoryItem => ({
     id: categoryItem.id,
     name: categoryItem.name,
+    image_path: categoryItem.image_path,
     recipeCount: categoryItem.recipes.length,
   }));
 }
 
-export async function createCategory(name: string) {
+export async function createCategory(name: string, image_path: string) {
   const newCategory = await db
     .insert(category)
-    .values({ name })
+    .values({ name, image_path })
     .returning();
 
   return newCategory[0];
@@ -38,10 +39,15 @@ export async function findCategoryByName(name: string) {
   });
 }
 
-export async function updateCategory(categoryId: string, name: string) {
+export async function updateCategory(categoryId: string, name: string, image_path?: string) {
+  const updateData: { name: string; image_path?: string } = { name };
+  if (image_path) {
+    updateData.image_path = image_path;
+  }
+
   const updatedCategory = await db
     .update(category)
-    .set({ name })
+    .set(updateData)
     .where(eq(category.id, categoryId))
     .returning();
 
