@@ -8,6 +8,15 @@ export {
 } from './recipe-queries';
 
 export {
+  getAllBlogs,
+  getBlogById,
+  createBlog,
+  updateBlog,
+  deleteBlog,
+  incrementViewCount
+} from './blog-queries';
+
+export {
   getBookmark,
   isRecipeBookmarked,
   createBookmark,

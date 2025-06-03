@@ -6,6 +6,9 @@ import { ArrowLeft, Eye, Heart, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BlogLikeButton } from '@/components/blog_page/BlogLikeButton';
+import { DeleteBlogButton } from '@/components/blog_page/DeleteBlogButton';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 interface BlogPageProps {
   params: Promise<{ id: string }>;
@@ -36,6 +39,11 @@ export default async function BlogPage({ params }: BlogPageProps) {
   if (!blog) {
     notFound();
   }
+
+  const session = await auth.api.getSession({
+    headers: await headers()
+  });
+  const isAuthor = session?.user?.id === blog.userId;
 
   await incrementViewCount(id);
 
@@ -138,6 +146,12 @@ export default async function BlogPage({ params }: BlogPageProps) {
                 <div className="pt-4 border-t border-muted">
                   <BlogLikeButton blogId={blog.id} />
                 </div>
+
+                {isAuthor && (
+                  <div>
+                    <DeleteBlogButton blogId={blog.id} />
+                  </div>
+                )}
               </div>
             </div>
           </div>
