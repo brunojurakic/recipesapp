@@ -10,9 +10,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2 } from 'lucide-react';
+import { Loader2, ImageIcon } from 'lucide-react';
 import { toast } from 'sonner';
 import { createBlogSchema, type CreateBlogInput } from '@/lib/validations/blog-validations';
+import Image from 'next/image';
 
 interface NewBlogFormProps {
   userId: string;
@@ -21,30 +22,44 @@ interface NewBlogFormProps {
 export default function NewBlogForm({ userId }: NewBlogFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const router = useRouter();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm<CreateBlogInput>({
     resolver: zodResolver(createBlogSchema),
   });
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setValue('image', file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setImagePreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const onSubmit = async (data: CreateBlogInput) => {
     setIsLoading(true);
     setError(null);
 
     try {
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('description', data.description);
+      formData.append('content', data.content);
+      formData.append('image', data.image);
+      formData.append('userId', userId);
+
       const response = await fetch('/api/blog', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...data,
-          userId,
-        }),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -71,7 +86,7 @@ export default function NewBlogForm({ userId }: NewBlogFormProps) {
           <CardTitle className='text-lg'>Novi članak</CardTitle>
         </div>
       </CardHeader>
-      
+
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {error && (
@@ -108,14 +123,51 @@ export default function NewBlogForm({ userId }: NewBlogFormProps) {
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="image">Naslovna slika</Label>
+            <div className="flex flex-col gap-4">
+              {imagePreview ? (
+                <div className="relative w-full max-w-md">
+                  <Image
+                    src={imagePreview}
+                    alt="Preview"
+                    width={400}
+                    height={200}
+                    className="rounded-lg object-cover w-full h-48"
+                  />
+                </div>
+              ) : (
+                <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 text-center">
+                  <ImageIcon className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Kliknite za odabir slike ili ju povucite ovdje
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    PNG, JPG, WebP do 5MB
+                  </p>
+                </div>
+              )}
+              <Input
+                id="image"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                disabled={isLoading}
+              />
+            </div>
+            {errors.image && (
+              <p className="text-sm text-red-600">{errors.image.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
             <Label htmlFor="content">Sadržaj članka</Label>
             <Textarea
               id="content"
               placeholder="Napišite sadržaj vašeg članka..."
-              rows={6}
+              rows={8}
               {...register('content')}
               disabled={isLoading}
-              className="h-[144px]"
+              className="min-h-[200px]"
             />
             {errors.content && (
               <p className="text-sm text-red-600">{errors.content.message}</p>

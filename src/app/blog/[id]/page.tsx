@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { ArrowLeft, Eye, Heart, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface BlogPageProps {
   params: Promise<{ id: string }>;
@@ -57,6 +58,16 @@ export default async function BlogPage({ params }: BlogPageProps) {
         </div>
 
         <Card>
+          <div className="relative w-full h-64 md:h-80">
+            <Image
+              src={blog.imagePath}
+              alt={blog.name}
+              fill
+              className="object-cover rounded-t-lg"
+              priority
+            />
+          </div>
+          
           <CardHeader className="space-y-4">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">

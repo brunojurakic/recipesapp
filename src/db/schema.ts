@@ -169,6 +169,7 @@ export const blog = pgTable("Blog", {
   name: text('naziv').notNull(),
   description: text('opis').notNull(),
   content: text('sadrzaj').notNull(),
+  imagePath: text('url_slike').notNull(),
   userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
   viewCount: integer('broj_pregleda').notNull().default(0),
   likeCount: integer('broj_lajkova').notNull().default(0),

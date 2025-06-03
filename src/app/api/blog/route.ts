@@ -3,6 +3,7 @@ import { auth } from '@/lib/auth';
 import { getCurrentUser } from '@/db/queries/user-queries';
 import { createBlog } from '@/db/queries/blog-queries';
 import { createBlogSchema } from '@/lib/validations/blog-validations';
+import { saveImage } from '@/lib/utils/functions';
 import { headers } from 'next/headers';
 
 export async function POST(req: NextRequest) {
@@ -37,8 +38,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const body = await req.json();
-    const validation = createBlogSchema.safeParse(body);
+    const formData = await req.formData();
+    const name = formData.get('name') as string;
+    const description = formData.get('description') as string;
+    const content = formData.get('content') as string;
+    const image = formData.get('image') as File;
+
+    const validation = createBlogSchema.safeParse({
+      name,
+      description,
+      content,
+      image,
+    });
 
     if (!validation.success) {
       return NextResponse.json(
@@ -50,10 +61,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const imagePath = await saveImage(image);
+    if (!imagePath) {
+      return NextResponse.json(
+        { message: 'Greška pri učitavanju slike' },
+        { status: 500 }
+      );
+    }
+
     const newBlog = await createBlog({
       name: validation.data.name,
       description: validation.data.description,
       content: validation.data.content,
+      imagePath,
       userId: currentUser.id,
     });
 

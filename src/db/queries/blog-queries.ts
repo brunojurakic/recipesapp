@@ -34,6 +34,7 @@ export async function createBlog(data: {
   name: string;
   description: string;
   content: string;
+  imagePath: string;
   userId: string;
 }) {
   const newBlog = await db
@@ -42,6 +43,7 @@ export async function createBlog(data: {
       name: data.name,
       description: data.description,
       content: data.content,
+      imagePath: data.imagePath,
       userId: data.userId,
       createdAt: new Date(),
       updatedAt: new Date(),
