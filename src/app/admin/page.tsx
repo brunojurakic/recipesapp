@@ -3,14 +3,31 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Users, ChefHat, MessageSquare, Bookmark, Star, AlertTriangle, Tags } from "lucide-react";
+import {
+  Loader2,
+  Users,
+  ChefHat,
+  MessageSquare,
+  Bookmark,
+  Star,
+  AlertTriangle,
+  Tags,
+  FileText,
+} from "lucide-react";
 import { AdminUsersTable } from "@/components/admin/AdminUsersTable";
 import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable";
 import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable";
 import { AdminAllergiesTable } from "@/components/admin/AdminAllergiesTable";
 import { AdminCategoriesTable } from "@/components/admin/AdminCategoriesTable";
+import { AdminBlogsTable } from "@/components/admin/AdminBlogsTable";
 
 interface DashboardStats {
   totalUsers: number;
@@ -69,7 +86,9 @@ export default function AdminDashboard() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin" />
-          <span className="text-lg font-medium">Učitavanje admin panela...</span>
+          <span className="text-lg font-medium">
+            Učitavanje admin panela...
+          </span>
         </div>
       </div>
     );
@@ -89,17 +108,21 @@ export default function AdminDashboard() {
     <div className="min-h-screen">
       <div className="container mx-auto py-8 px-4 pt-24">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Admin Panel</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Admin Panel
+          </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Upravljanje korisnicima, receptima, recenzijama, alergijama i kategorijama
+            Upravljanje korisnicima, receptima, recenzijama, alergijama i
+            kategorijama
           </p>
         </div>
-
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Ukupno korisnika</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Ukupno korisnika
+                </CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -112,7 +135,9 @@ export default function AdminDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Ukupno recepata</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Ukupno recepata
+                </CardTitle>
                 <ChefHat className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -125,7 +150,9 @@ export default function AdminDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Ukupno recenzija</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Ukupno recenzija
+                </CardTitle>
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -139,7 +166,9 @@ export default function AdminDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Ukupno oznaka</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Ukupno oznaka
+                </CardTitle>
                 <Bookmark className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -150,31 +179,52 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </div>
-        )}
+        )}{" "}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="users" className="flex items-center gap-2 cursor-pointer">
+          <TabsList className="grid w-full grid-cols-6">
+            <TabsTrigger
+              value="users"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">Korisnici</span>
             </TabsTrigger>
-            <TabsTrigger value="recipes" className="flex items-center gap-2 cursor-pointer">
+            <TabsTrigger
+              value="recipes"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <ChefHat className="h-4 w-4" />
               <span className="hidden sm:inline">Recepti</span>
             </TabsTrigger>
-            <TabsTrigger value="reviews" className="flex items-center gap-2 cursor-pointer">
+            <TabsTrigger
+              value="blogs"
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="hidden sm:inline">Blogovi</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="reviews"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <MessageSquare className="h-4 w-4" />
               <span className="hidden sm:inline">Recenzije</span>
             </TabsTrigger>
-            <TabsTrigger value="allergies" className="flex items-center gap-2 cursor-pointer">
+            <TabsTrigger
+              value="allergies"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <AlertTriangle className="h-4 w-4" />
               <span className="hidden sm:inline">Alergije</span>
             </TabsTrigger>
-            <TabsTrigger value="categories" className="flex items-center gap-2 cursor-pointer">
+            <TabsTrigger
+              value="categories"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <Tags className="h-4 w-4" />
               <span className="hidden sm:inline">Kategorije</span>
             </TabsTrigger>
           </TabsList>
-
           <TabsContent value="users">
             <Card>
               <CardHeader>
@@ -187,8 +237,7 @@ export default function AdminDashboard() {
                 <AdminUsersTable />
               </CardContent>
             </Card>
-          </TabsContent>
-
+          </TabsContent>{" "}
           <TabsContent value="recipes">
             <Card>
               <CardHeader>
@@ -202,7 +251,19 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
-
+          <TabsContent value="blogs">
+            <Card>
+              <CardHeader>
+                <CardTitle>Upravljanje blogovima</CardTitle>
+                <CardDescription>
+                  Pregledajte i upravljajte objavljenim blog člancima
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AdminBlogsTable />
+              </CardContent>
+            </Card>
+          </TabsContent>
           <TabsContent value="reviews">
             <Card>
               <CardHeader>
@@ -216,13 +277,13 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
-
           <TabsContent value="allergies">
             <Card>
               <CardHeader>
                 <CardTitle>Upravljanje alergijama</CardTitle>
                 <CardDescription>
-                  Dodajte, uredite ili uklonite alergije koje se koriste u receptima
+                  Dodajte, uredite ili uklonite alergije koje se koriste u
+                  receptima
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -230,13 +291,13 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
-
           <TabsContent value="categories">
             <Card>
               <CardHeader>
                 <CardTitle>Upravljanje kategorijama jela</CardTitle>
                 <CardDescription>
-                  Dodajte, uredite ili uklonite kategorije jela za organizaciju recepata
+                  Dodajte, uredite ili uklonite kategorije jela za organizaciju
+                  recepata
                 </CardDescription>
               </CardHeader>
               <CardContent>
