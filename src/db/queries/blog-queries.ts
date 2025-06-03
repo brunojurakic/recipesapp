@@ -11,6 +11,13 @@ export async function getAllBlogs() {
           id: true,
           name: true,
         },
+        with: {
+          role: {
+            columns: {
+              name: true,
+            },
+          },
+        },
       },
     },
   });
@@ -24,6 +31,13 @@ export async function getBlogById(id: string) {
         columns: {
           id: true,
           name: true,
+        },
+        with: {
+          role: {
+            columns: {
+              name: true,
+            },
+          },
         },
       },
     },

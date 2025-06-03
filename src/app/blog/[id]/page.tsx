@@ -101,15 +101,25 @@ export default async function BlogPage({ params }: BlogPageProps) {
 
             <div className="lg:col-span-1">
               <div className="bg-muted/30 rounded-2xl p-6 space-y-6 sticky top-24">
-                <h3 className="text-lg font-semibold text-foreground mb-4">Informacije o članku</h3>
-
-                <div className="flex items-center gap-3">
+                <h3 className="text-lg font-semibold text-foreground mb-4">Informacije o članku</h3>                <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                     <User className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Autor</p>
-                    <p className="font-medium text-foreground">{blog.user.name}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-foreground">{blog.user.name}</p>
+                      {blog.user.role?.name === "Admin" && (
+                        <span className="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400 px-2 py-0.5 rounded-full">
+                          Admin
+                        </span>
+                      )}
+                      {blog.user.role?.name === "Moderator" && (
+                        <span className="text-xs font-semibold text-orange-600 bg-orange-100 dark:bg-orange-900/30 dark:text-orange-400 px-2 py-0.5 rounded-full">
+                          Moderator
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
 

@@ -14,6 +14,9 @@ interface BlogCardProps {
     createdAt: Date;
     user: {
       name: string;
+      role?: {
+        name: string;
+      };
     };
   };
 }
@@ -40,11 +43,22 @@ export default function BlogCard({ blog }: BlogCardProps) {
           </p>
         </CardHeader>
         
-        <CardContent className="pt-0">
-          <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
-            <div className="flex items-center gap-1">
-              <User className="h-4 w-4" />
-              <span>{blog.user.name}</span>
+        <CardContent className="pt-0">          <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <User className="h-4 w-4" />
+                <span>{blog.user.name}</span>
+              </div>
+              {blog.user.role?.name === "Admin" && (
+                <span className="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400 px-2 py-0.5 rounded-full">
+                  Admin
+                </span>
+              )}
+              {blog.user.role?.name === "Moderator" && (
+                <span className="text-xs font-semibold text-orange-600 bg-orange-100 dark:bg-orange-900/30 dark:text-orange-400 px-2 py-0.5 rounded-full">
+                  Moderator
+                </span>
+              )}
             </div>
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
