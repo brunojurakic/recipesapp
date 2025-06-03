@@ -164,11 +164,31 @@ export const unit = pgTable("MjernaJedinica", {
   check('type_length', sql`length(${table.type}) >= 2 AND length(${table.type}) <= 20`)
 ]);
 
+export const blog = pgTable("Blog", {
+  id: uuid('id_bloga').defaultRandom().primaryKey(),
+  name: text('naziv').notNull(),
+  description: text('opis').notNull(),
+  content: text('sadrzaj').notNull(),
+  userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  viewCount: integer('broj_pregleda').notNull().default(0),
+  likeCount: integer('broj_lajkova').notNull().default(0),
+  createdAt: timestamp('datum_kreiranja').notNull(),
+  updatedAt: timestamp('datum_azuriranja').notNull()
+}, (table) => [
+  check('name_length', sql`length(${table.name}) >= 3 AND length(${table.name}) <= 100`),
+  check('description_length', sql`length(${table.description}) >= 10 AND length(${table.description}) <= 500`),
+  check('content_length', sql`length(${table.content}) >= 50`),
+  check('view_count_non_negative', sql`${table.viewCount} >= 0`),
+  check('like_count_non_negative', sql`${table.likeCount} >= 0`),
+  check('created_before_updated', sql`${table.createdAt} <= ${table.updatedAt}`)
+]);
+
 export const userRelations = relations(user, ({ one, many }) => ({
   recipes: many(recipe),
   reviews: many(review),
   bookmarks: many(bookmark),
   allergies: many(userAllergy),
+  blogs: many(blog),
   role: one(role, {
     fields: [user.roleId],
     references: [role.id],
@@ -276,6 +296,13 @@ export const userAllergyRelations = relations(userAllergy, ({ one }) => ({
 
 export const roleRelations = relations(role, ({ many }) => ({
   users: many(user),
+}));
+
+export const blogRelations = relations(blog, ({ one }) => ({
+  user: one(user, {
+    fields: [blog.userId],
+    references: [user.id],
+  }),
 }));
 
 export const schema = { user, session, account, verification }
