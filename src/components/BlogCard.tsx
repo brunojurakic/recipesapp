@@ -20,7 +20,7 @@ interface BlogCardProps {
 
 export default function BlogCard({ blog }: BlogCardProps) {
   return (
-    <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer overflow-hidden">
+    <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer overflow-hidden pt-0">
       <Link href={`/blog/${blog.id}`}>
         <div className="relative w-full h-48">
           <Image
@@ -32,7 +32,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
         </div>
         
         <CardHeader className="pb-3">
-          <h3 className="text-xl font-semibold line-clamp-2 mb-2">
+          <h3 className="text-xl font-semibold line-clamp-2 mb-2 mt-3">
             {blog.name}
           </h3>
           <p className="text-sm text-muted-foreground line-clamp-3">
