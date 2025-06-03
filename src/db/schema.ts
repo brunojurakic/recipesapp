@@ -184,12 +184,19 @@ export const blog = pgTable("Blog", {
   check('created_before_updated', sql`${table.createdAt} <= ${table.updatedAt}`)
 ]);
 
+export const blogLike = pgTable("LajakoBlog", {
+  userId: text('id_korisnika').notNull().references(() => user.id, { onDelete: 'cascade' }),
+  blogId: uuid('id_bloga').notNull().references(() => blog.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('datum_kreiranja').notNull()
+});
+
 export const userRelations = relations(user, ({ one, many }) => ({
   recipes: many(recipe),
   reviews: many(review),
   bookmarks: many(bookmark),
   allergies: many(userAllergy),
   blogs: many(blog),
+  blogLikes: many(blogLike),
   role: one(role, {
     fields: [user.roleId],
     references: [role.id],
@@ -299,9 +306,21 @@ export const roleRelations = relations(role, ({ many }) => ({
   users: many(user),
 }));
 
-export const blogRelations = relations(blog, ({ one }) => ({
+export const blogRelations = relations(blog, ({ one, many }) => ({
   user: one(user, {
     fields: [blog.userId],
+    references: [user.id],
+  }),
+  likes: many(blogLike),
+}));
+
+export const blogLikeRelations = relations(blogLike, ({ one }) => ({
+  blog: one(blog, {
+    fields: [blogLike.blogId],
+    references: [blog.id],
+  }),
+  user: one(user, {
+    fields: [blogLike.userId],
     references: [user.id],
   }),
 }));

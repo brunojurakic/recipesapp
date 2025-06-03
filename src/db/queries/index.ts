@@ -63,3 +63,11 @@ export {
 export {
   getAdminStats
 } from './stats-queries';
+
+export {
+  getBlogLike,
+  isBlogLiked,
+  createBlogLike,
+  deleteBlogLike,
+  toggleBlogLike
+} from './blog-like-queries';

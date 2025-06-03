@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ArrowLeft, Eye, Heart, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { BlogLikeButton } from '@/components/blog_page/BlogLikeButton';
 
 interface BlogPageProps {
   params: Promise<{ id: string }>;
@@ -132,6 +133,10 @@ export default async function BlogPage({ params }: BlogPageProps) {
                     <p className="text-sm text-muted-foreground">Lajkovi</p>
                     <p className="font-medium text-foreground">{blog.likeCount}</p>
                   </div>
+                </div>
+
+                <div className="pt-4 border-t border-muted">
+                  <BlogLikeButton blogId={blog.id} />
                 </div>
               </div>
             </div>
