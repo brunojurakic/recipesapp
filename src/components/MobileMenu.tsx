@@ -95,7 +95,7 @@ export function MobileMenu() {
           <nav className="flex flex-col space-y-4">
             <Link
               href="/"
-              className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+              className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
               onClick={() => setOpen(false)}
             >
               <Home className="h-4 w-4" />
@@ -103,7 +103,7 @@ export function MobileMenu() {
             </Link>
             <Link
               href="/recipes"
-              className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+              className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
               onClick={() => setOpen(false)}
             >
               <BookOpen className="h-4 w-4" />
@@ -111,7 +111,7 @@ export function MobileMenu() {
             </Link>
             <Link
               href="/categories"
-              className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+              className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
               onClick={() => setOpen(false)}
             >
               <Tag className="h-4 w-4" />
@@ -119,7 +119,7 @@ export function MobileMenu() {
             </Link>
             <Link
               href="/featured"
-              className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+              className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
               onClick={() => setOpen(false)}
             >
               <Award className="h-4 w-4" />
@@ -128,7 +128,7 @@ export function MobileMenu() {
             {session && isAdmin && (
               <Link
                 href="/admin"
-                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
                 onClick={() => setOpen(false)}
               >
                 <Shield className="h-4 w-4" />
@@ -138,10 +138,10 @@ export function MobileMenu() {
             {session && isModerator && !isAdmin && (
               <Link
                 href="/moderator"
-                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
                 onClick={() => setOpen(false)}
               >
-                <Shield className="h-4 w-4 text-black" />
+                <Shield className="h-4 w-4" />
                 Moderator
               </Link>
             )}
@@ -152,7 +152,7 @@ export function MobileMenu() {
           {isPending ? (
             <div className="flex justify-center">
               <svg
-                className="animate-spin h-5 w-5 text-zinc-600"
+                className="animate-spin h-5 w-5 text-muted-foreground"
                 viewBox="0 0 24 24"
               >
                 <circle
@@ -175,7 +175,7 @@ export function MobileMenu() {
             <>
               <Link
                 href="/profile"
-                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
                 onClick={() => setOpen(false)}
               >
                 <User className="h-4 w-4" />
@@ -183,7 +183,7 @@ export function MobileMenu() {
               </Link>
               <button
                 onClick={handleSignOut}
-                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors text-left w-full"
+                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors text-left w-full"
               >
                 <LogOut className="h-4 w-4" />
                 Odjava
@@ -193,7 +193,7 @@ export function MobileMenu() {
             <>
               <Link
                 href="/login"
-                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
                 onClick={() => setOpen(false)}
               >
                 <LogIn className="h-4 w-4" />
@@ -201,7 +201,7 @@ export function MobileMenu() {
               </Link>
               <Link
                 href="/signup"
-                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
+                className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent rounded-lg transition-colors"
                 onClick={() => setOpen(false)}
               >
                 <UserPlus className="h-4 w-4" />
