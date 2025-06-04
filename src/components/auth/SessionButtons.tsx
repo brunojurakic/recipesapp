@@ -27,13 +27,13 @@ const InteractiveHeader = () => {
         <>
           <Link
             href="/profile"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors"
           >
             Profil
           </Link>
           <button
             onClick={handleSignOut}
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors hover:cursor-pointer"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors hover:cursor-pointer"
           >
             Odjava
           </button>
@@ -42,13 +42,13 @@ const InteractiveHeader = () => {
         <>
           <Link
             href="/login"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors"
           >
             Prijava
           </Link>
           <Link
             href="/signup"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors"
           >
             Registracija
           </Link>

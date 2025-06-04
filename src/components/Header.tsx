@@ -29,26 +29,26 @@ const Header = async () => {
           <nav className="hidden sm:flex items-center gap-6 flex-1 justify-center">
             <Link
               href="/recipes"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors"
             >
               Recepti
             </Link>
             <Link
               href="/categories"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors"
             >
               Kategorije
             </Link>
             <Link
               href="/blog"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors"
             >
               Blog
             </Link>
             {isAdmin && (
               <Link
                 href="/admin"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors flex items-center gap-1"
               >
                 <Shield className="h-4 w-4" />
                 Admin
@@ -57,7 +57,7 @@ const Header = async () => {
             {isModerator && !isAdmin && (
               <Link
                 href="/moderator"
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1"
+                className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors flex items-center gap-1"
               >
                 <Shield className="h-4 w-4" />
                 Moderator
