@@ -16,7 +16,7 @@ interface CategoryCardProps {
 export default function CategoryCard({ category }: CategoryCardProps) {
   return (
     <Link href={`/recipes?categoryIds=${category.id}`}>
-      <Card className="w-full max-w-sm overflow-hidden hover:shadow-lg transition-shadow duration-300 p-0 cursor-pointer">
+      <Card className="w-full max-w-sm overflow-hidden hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-white/10 transition-shadow duration-300 p-0 cursor-pointer">
         <div className="relative h-48 w-full">
           <Image
             src={category.image_path}

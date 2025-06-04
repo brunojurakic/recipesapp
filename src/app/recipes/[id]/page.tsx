@@ -70,11 +70,10 @@ export default async function RecipePage({
                 <Badge key={category.id} variant="outline">
                   {category.name}
                 </Badge>
-              ))}
-              {recipe.difficulty && (
+              ))}              {recipe.difficulty && (
                 <Badge
                   variant="outline"
-                  className="bg-purple-100 text-purple-800 border-purple-200"
+                  className="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800"
                 >
                   <Target className="w-3 h-3 mr-1" />
                   {recipe.difficulty.name}
@@ -83,7 +82,7 @@ export default async function RecipePage({
               {recipe.isVegan && (
                 <Badge
                   variant="outline"
-                  className="bg-green-50 text-green-700 border-green-200"
+                  className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
                 >
                   <Leaf className="w-3 h-3 mr-1" />
                   Veganski
@@ -92,7 +91,7 @@ export default async function RecipePage({
               {recipe.isVegetarian && !recipe.isVegan && (
                 <Badge
                   variant="outline"
-                  className="bg-green-50 text-green-700 border-green-200"
+                  className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
                 >
                   <Leaf className="w-3 h-3 mr-1" />
                   Vegetarijanski

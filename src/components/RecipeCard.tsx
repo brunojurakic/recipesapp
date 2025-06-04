@@ -110,11 +110,10 @@ export function RecipeCard({
                 <Badge variant={"outline"} key={category.id}>
                   {category.name}
                 </Badge>
-              ))}{" "}
-              {recipe.difficulty && (
+              ))}{" "}              {recipe.difficulty && (
                 <Badge
                   variant="secondary"
-                  className="bg-purple-100 text-purple-800 border-purple-200"
+                  className="bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950 dark:text-purple-300 dark:border-purple-800"
                 >
                   <Target className="w-3 h-3 mr-1" />
                   {recipe.difficulty.name}
@@ -122,11 +121,10 @@ export function RecipeCard({
               )}
             </div>
 
-            <div className="flex flex-wrap gap-2 mb-2">
-              {recipe.isVegan && (
+            <div className="flex flex-wrap gap-2 mb-2">              {recipe.isVegan && (
                 <Badge
                   variant="outline"
-                  className="bg-green-50 text-green-700 border-green-200"
+                  className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
                 >
                   <Leaf className="w-3 h-3 mr-1" />
                   Veganski
@@ -135,7 +133,7 @@ export function RecipeCard({
               {recipe.isVegetarian && !recipe.isVegan && (
                 <Badge
                   variant="outline"
-                  className="bg-green-50 text-green-700 border-green-200"
+                  className="bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800"
                 >
                   <Leaf className="w-3 h-3 mr-1" />
                   Vegetarijanski
@@ -144,7 +142,7 @@ export function RecipeCard({
               {recipe.allergies && recipe.allergies.length > 0 && (
                 <Badge
                   variant="outline"
-                  className="bg-orange-50 text-orange-700 border-orange-200"
+                  className="bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-300 dark:border-orange-800"
                 >
                   <ShieldAlert className="w-3 h-3 mr-1" />
                   {recipe.allergies.length} alergen

@@ -66,7 +66,7 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       <div className="relative h-[80vh] w-full overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-white z-10" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-background z-10" />
 
         <Image
           src="https://images.unsplash.com/photo-1543353071-10c8ba85a904?q=80&w=2067&auto=format&fit=crop"
@@ -124,7 +124,7 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <Card className="text-center hover:shadow-lg transition-shadow">
+            <Card className="text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-white/10 transition-shadow">
               <CardHeader>
                 <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
                   <BookOpen className="h-8 w-8 text-primary" />
@@ -137,7 +137,7 @@ const Home = () => {
               </CardHeader>
             </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
+            <Card className="text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-white/10 transition-shadow">
               <CardHeader>
                 <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
                   <Users className="h-8 w-8 text-primary" />
@@ -149,7 +149,7 @@ const Home = () => {
               </CardHeader>
             </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
+            <Card className="text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-white/10 transition-shadow">
               <CardHeader>
                 <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
                   <Star className="h-8 w-8 text-primary" />
@@ -161,7 +161,7 @@ const Home = () => {
               </CardHeader>
             </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
+            <Card className="text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-white/10 transition-shadow">
               <CardHeader>
                 <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
                   <Heart className="h-8 w-8 text-primary" />
@@ -174,7 +174,7 @@ const Home = () => {
               </CardHeader>
             </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
+            <Card className="text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-white/10 transition-shadow">
               <CardHeader>
                 <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
                   <Search className="h-8 w-8 text-primary" />
@@ -187,7 +187,7 @@ const Home = () => {
               </CardHeader>
             </Card>
 
-            <Card className="text-center hover:shadow-lg transition-shadow">
+            <Card className="text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-white/10 transition-shadow">
               <CardHeader>
                 <div className="mx-auto mb-4 p-3 bg-primary/10 rounded-full w-fit">
                   <Share2 className="h-8 w-8 text-primary" />
@@ -218,7 +218,7 @@ const Home = () => {
               ? Array.from({ length: 6 }).map((_, index) => (
                   <Card
                     key={index}
-                    className="hover:shadow-md transition-shadow overflow-hidden"
+                    className="hover:shadow-md dark:hover:shadow-lg dark:hover:shadow-white/10 transition-shadow overflow-hidden"
                   >
                     <div className="relative aspect-square bg-muted animate-pulse" />
                     <CardContent className="p-4 text-center">

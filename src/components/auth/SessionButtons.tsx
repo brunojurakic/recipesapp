@@ -22,18 +22,18 @@ const InteractiveHeader = () => {
   return (
     <div className="flex items-center gap-4" style={{ minWidth: "150px" }}>
       {isPending ? (
-        <Loader2 className="animate-spin text-zinc-600" />
+        <Loader2 className="animate-spin text-muted-foreground" />
       ) : session ? (
         <>
           <Link
             href="/profile"
-            className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors"
           >
             Profil
           </Link>
           <button
             onClick={handleSignOut}
-            className="text-sm font-medium text-zinc-600 hover:text-zinc-900 hover:cursor-pointer"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors hover:cursor-pointer"
           >
             Odjava
           </button>
@@ -42,13 +42,13 @@ const InteractiveHeader = () => {
         <>
           <Link
             href="/login"
-            className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors"
           >
             Prijava
           </Link>
           <Link
             href="/signup"
-            className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+            className="text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground transition-colors"
           >
             Registracija
           </Link>
