@@ -14,7 +14,6 @@ import {
   BookOpen,
   Home,
   Tag,
-  Award,
   Shield,
 } from "lucide-react"
 import {
@@ -118,12 +117,12 @@ export function MobileMenu() {
               Kategorije
             </Link>
             <Link
-              href="/featured"
+              href="/blog"
               className="flex items-center gap-3 px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-200 hover:text-foreground hover:bg-accent rounded-lg transition-colors"
               onClick={() => setOpen(false)}
             >
-              <Award className="h-4 w-4" />
-              Istaknuto
+              <BookOpen className="h-4 w-4" />
+              Blog
             </Link>
             {session && isAdmin && (
               <Link
