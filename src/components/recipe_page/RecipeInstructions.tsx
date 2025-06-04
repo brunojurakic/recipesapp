@@ -1,13 +1,19 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
-import type { Instruction } from "@/lib/types/database";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card"
+import type { Instruction } from "@/lib/types/database"
 
 interface RecipeInstructionsProps {
-  instructions: Instruction[];
+  instructions: Instruction[]
 }
 
 export function RecipeInstructions({ instructions }: RecipeInstructionsProps) {
   return (
-    <Card className='shadow-xl'>
+    <Card className="shadow-xl">
       <CardHeader className="pb-3">
         <CardTitle>Upute</CardTitle>
         <CardDescription>Korak po korak vodič</CardDescription>
@@ -29,5 +35,5 @@ export function RecipeInstructions({ instructions }: RecipeInstructionsProps) {
         </ol>
       </CardContent>
     </Card>
-  );
+  )
 }

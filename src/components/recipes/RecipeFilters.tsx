@@ -1,33 +1,40 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { MultiSelect, SelectableItem } from "@/components/ui/multi-select";
-import { Button } from "@/components/ui/button";
-import { Search, XCircle, Loader2, Filter, ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { MultiSelect, SelectableItem } from "@/components/ui/multi-select"
+import { Button } from "@/components/ui/button"
+import {
+  Search,
+  XCircle,
+  Loader2,
+  Filter,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react"
 
 interface RecipeFiltersProps {
-  searchTerm: string;
-  onSearchTermChange: (term: string) => void;
-  allCategories: SelectableItem[];
-  selectedCategoryIds: string[];
-  onSelectedCategoryIdsChange: (ids: string[]) => void;
-  isLoadingCategories: boolean;
-  allAllergies: SelectableItem[];
-  selectedAllergyIds: string[];
-  onSelectedAllergyIdsChange: (ids: string[]) => void;
-  isLoadingAllergies: boolean;
-  ingredientSearch: string;
-  onIngredientSearchChange: (search: string) => void;
-  maxPrepTime: string;
-  onMaxPrepTimeChange: (time: string) => void;
-  minServings: string;
-  onMinServingsChange: (servings: string) => void;
-  hasActiveFilters: boolean;
-  onClearFilters: () => void;
-  isFiltering?: boolean;
-  initiallyExpanded?: boolean;
+  searchTerm: string
+  onSearchTermChange: (term: string) => void
+  allCategories: SelectableItem[]
+  selectedCategoryIds: string[]
+  onSelectedCategoryIdsChange: (ids: string[]) => void
+  isLoadingCategories: boolean
+  allAllergies: SelectableItem[]
+  selectedAllergyIds: string[]
+  onSelectedAllergyIdsChange: (ids: string[]) => void
+  isLoadingAllergies: boolean
+  ingredientSearch: string
+  onIngredientSearchChange: (search: string) => void
+  maxPrepTime: string
+  onMaxPrepTimeChange: (time: string) => void
+  minServings: string
+  onMinServingsChange: (servings: string) => void
+  hasActiveFilters: boolean
+  onClearFilters: () => void
+  isFiltering?: boolean
+  initiallyExpanded?: boolean
 }
 
 export function RecipeFilters({
@@ -52,14 +59,15 @@ export function RecipeFilters({
   isFiltering = false,
   initiallyExpanded = false,
 }: RecipeFiltersProps) {
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(initiallyExpanded);
+  const [showAdvancedFilters, setShowAdvancedFilters] =
+    useState(initiallyExpanded)
   const hasActiveAdvancedFilters = Boolean(
     selectedCategoryIds.length > 0 ||
-    selectedAllergyIds.length > 0 ||
-    ingredientSearch ||
-    maxPrepTime ||
-    minServings
-  );
+      selectedAllergyIds.length > 0 ||
+      ingredientSearch ||
+      maxPrepTime ||
+      minServings,
+  )
 
   return (
     <div>
@@ -101,12 +109,14 @@ export function RecipeFilters({
             <span>Aktivni filteri:</span>
             {selectedCategoryIds.length > 0 && (
               <span className="bg-background px-2 py-1 rounded border">
-                {selectedCategoryIds.length} kategorij{selectedCategoryIds.length === 1 ? 'a' : 'e'}
+                {selectedCategoryIds.length} kategorij
+                {selectedCategoryIds.length === 1 ? "a" : "e"}
               </span>
             )}
             {selectedAllergyIds.length > 0 && (
               <span className="bg-background px-2 py-1 rounded border">
-                {selectedAllergyIds.length} alergen{selectedAllergyIds.length === 1 ? '' : 'a'}
+                {selectedAllergyIds.length} alergen
+                {selectedAllergyIds.length === 1 ? "" : "a"}
               </span>
             )}
             {ingredientSearch && (
@@ -121,7 +131,8 @@ export function RecipeFilters({
             )}
             {minServings && (
               <span className="bg-background px-2 py-1 rounded border">
-                Min. {minServings} porcij{parseInt(minServings) === 1 ? 'a' : 'e'}
+                Min. {minServings} porcij
+                {parseInt(minServings) === 1 ? "a" : "e"}
               </span>
             )}
             <Button
@@ -150,7 +161,6 @@ export function RecipeFilters({
                 onChange={(e) => onIngredientSearchChange(e.target.value)}
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="categories">Kategorije</Label>
               <MultiSelect
@@ -165,7 +175,6 @@ export function RecipeFilters({
                 badgeVariant="outline"
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="allergies">Izbjegavaj alergene</Label>
               <MultiSelect
@@ -180,7 +189,6 @@ export function RecipeFilters({
                 badgeVariant="outline"
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="maxPrepTime">Max. vrijeme pripreme (min)</Label>
               <Input
@@ -192,7 +200,6 @@ export function RecipeFilters({
                 min="0"
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="minServings">Min. broj porcija</Label>
               <Input
@@ -203,7 +210,8 @@ export function RecipeFilters({
                 onChange={(e) => onMinServingsChange(e.target.value)}
                 min="1"
               />
-            </div>            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-3 flex items-end justify-center">
+            </div>{" "}
+            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-3 flex items-end justify-center">
               {hasActiveFilters && (
                 <Button onClick={onClearFilters} className="w-full max-w-md">
                   <XCircle className="mr-2 h-4 w-4" />
@@ -215,5 +223,5 @@ export function RecipeFilters({
         </div>
       )}
     </div>
-  );
+  )
 }

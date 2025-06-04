@@ -1,14 +1,14 @@
-'use client';
+"use client"
 
-import React from 'react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { User, ChefHat, BookmarkIcon, BarChart3, Shield } from 'lucide-react';
+import React from "react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { User, ChefHat, BookmarkIcon, BarChart3, Shield } from "lucide-react"
 
-import { ProfileInfo } from './ProfileInfo';
-import { UserRecipes } from './UserRecipes';
-import { UserBookmarks } from './UserBookmarks';
-import { UserStats } from './UserStats';
-import { UserAllergiesManager } from './UserAllergiesManager';
+import { ProfileInfo } from "./ProfileInfo"
+import { UserRecipes } from "./UserRecipes"
+import { UserBookmarks } from "./UserBookmarks"
+import { UserStats } from "./UserStats"
+import { UserAllergiesManager } from "./UserAllergiesManager"
 
 export function ProfilePage() {
   return (
@@ -22,23 +22,38 @@ export function ProfilePage() {
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="profile" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="profile"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <User className="h-4 w-4" />
             <span className="hidden sm:inline">Profil</span>
           </TabsTrigger>
-          <TabsTrigger value="recipes" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="recipes"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <ChefHat className="h-4 w-4" />
             <span className="hidden sm:inline">Moji recepti</span>
           </TabsTrigger>
-          <TabsTrigger value="bookmarks" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="bookmarks"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <BookmarkIcon className="h-4 w-4" />
             <span className="hidden sm:inline">Spremljeno</span>
           </TabsTrigger>
-          <TabsTrigger value="allergies" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="allergies"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <Shield className="h-4 w-4" />
             <span className="hidden sm:inline">Alergije</span>
           </TabsTrigger>
-          <TabsTrigger value="stats" className="flex items-center gap-2 cursor-pointer">
+          <TabsTrigger
+            value="stats"
+            className="flex items-center gap-2 cursor-pointer"
+          >
             <BarChart3 className="h-4 w-4" />
             <span className="hidden sm:inline">Statistike</span>
           </TabsTrigger>
@@ -65,5 +80,5 @@ export function ProfilePage() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

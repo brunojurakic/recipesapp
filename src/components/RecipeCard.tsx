@@ -33,44 +33,52 @@ interface RecipeCardProps {
   onDelete?: (recipeId: string) => void
 }
 
-export function RecipeCard({ recipe, showDeleteButton = false, onDelete }: RecipeCardProps) {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
+export function RecipeCard({
+  recipe,
+  showDeleteButton = false,
+  onDelete,
+}: RecipeCardProps) {
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleDelete = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
+    e.preventDefault()
+    e.stopPropagation()
+
     try {
-      setIsDeleting(true);
-      
+      setIsDeleting(true)
+
       const response = await fetch(`/api/recipes/${recipe.id}`, {
         method: "DELETE",
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to delete recipe");
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to delete recipe")
       }
 
-      toast.success("Recept je uspješno obrisan!");
-      setDialogOpen(false);
-      
+      toast.success("Recept je uspješno obrisan!")
+      setDialogOpen(false)
+
       if (onDelete) {
-        onDelete(recipe.id);
+        onDelete(recipe.id)
       }
     } catch (error) {
-      console.error("Error deleting recipe:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri brisanju recepta");
+      console.error("Error deleting recipe:", error)
+      toast.error(
+        error instanceof Error ? error.message : "Greška pri brisanju recepta",
+      )
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false)
     }
-  };
+  }
 
   return (
     <div className="relative group">
-      <Link href={`/recipes/${recipe.id}`}
-        className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+      <Link
+        href={`/recipes/${recipe.id}`}
+        className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
         <div className="overflow-hidden rounded-xl bg-card shadow transition-all hover:shadow-lg border h-full flex flex-col">
           <div className="relative h-48 w-full">
             {recipe.image_path ? (
@@ -103,13 +111,16 @@ export function RecipeCard({ recipe, showDeleteButton = false, onDelete }: Recip
                 <User className="h-4 w-4" />
               </div>
             </div>
-            <h3 className="mt-2 font-semibold text-lg text-foreground line-clamp-2" title={recipe.title}>
+            <h3
+              className="mt-2 font-semibold text-lg text-foreground line-clamp-2"
+              title={recipe.title}
+            >
               {recipe.title}
             </h3>
           </div>
         </div>
       </Link>
-        {showDeleteButton && (
+      {showDeleteButton && (
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
@@ -118,9 +129,9 @@ export function RecipeCard({ recipe, showDeleteButton = false, onDelete }: Recip
                 size="sm"
                 className="h-8 w-8 p-0 shadow-md"
                 onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setDialogOpen(true);
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setDialogOpen(true)
                 }}
               >
                 <Trash2 className="h-4 w-4" />
@@ -128,15 +139,25 @@ export function RecipeCard({ recipe, showDeleteButton = false, onDelete }: Recip
             </DialogTrigger>
             <DialogContent onClick={(e) => e.stopPropagation()}>
               <DialogHeader>
-                <DialogTitle>Obriši recept</DialogTitle>                <DialogDescription>
-                  Jeste li sigurni da želite obrisati recept &quot;{recipe.title}&quot;? Ova akcija se ne može poništiti.
+                <DialogTitle>Obriši recept</DialogTitle>{" "}
+                <DialogDescription>
+                  Jeste li sigurni da želite obrisati recept &quot;
+                  {recipe.title}&quot;? Ova akcija se ne može poništiti.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={isDeleting}>
+                <Button
+                  variant="outline"
+                  onClick={() => setDialogOpen(false)}
+                  disabled={isDeleting}
+                >
                   Odustani
                 </Button>
-                <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+                <Button
+                  variant="destructive"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                >
                   {isDeleting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

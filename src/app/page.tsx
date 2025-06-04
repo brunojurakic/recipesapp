@@ -1,13 +1,19 @@
-"use client";
+"use client"
 
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import SearchBar from "@/components/SearchBar";
-import CategoryCard from "@/components/CategoryCard";
-import { toast } from "sonner";
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import SearchBar from "@/components/SearchBar"
+import CategoryCard from "@/components/CategoryCard"
+import { toast } from "sonner"
 import {
   UtensilsCrossed,
   ChefHat,
@@ -18,39 +24,45 @@ import {
   Heart,
   Share2,
   Award,
-  ArrowRight
-} from 'lucide-react';
+  ArrowRight,
+} from "lucide-react"
 
 interface PopularCategory {
-  id: string;
-  name: string;
-  image_path: string;
-  recipeCount: number;
+  id: string
+  name: string
+  image_path: string
+  recipeCount: number
 }
 
 const Home = () => {
-  const [popularCategories, setPopularCategories] = useState<PopularCategory[]>([]);
-  const [isLoadingCategories, setIsLoadingCategories] = useState(true);
+  const [popularCategories, setPopularCategories] = useState<PopularCategory[]>(
+    [],
+  )
+  const [isLoadingCategories, setIsLoadingCategories] = useState(true)
   useEffect(() => {
     const fetchPopularCategories = async () => {
       try {
-        const response = await fetch('/api/categories/popular');
+        const response = await fetch("/api/categories/popular")
         if (response.ok) {
-          const categories = await response.json();
-          setPopularCategories(categories);
+          const categories = await response.json()
+          setPopularCategories(categories)
         } else {
-          toast.error("Greška pri dohvaćanju kategorija. Molimo pokušajte kasnije.");
+          toast.error(
+            "Greška pri dohvaćanju kategorija. Molimo pokušajte kasnije.",
+          )
         }
       } catch (error) {
-        console.error('Failed to fetch popular categories:', error);
-        toast.error("Greška pri dohvaćanju kategorija. Molimo pokušajte kasnije.");
+        console.error("Failed to fetch popular categories:", error)
+        toast.error(
+          "Greška pri dohvaćanju kategorija. Molimo pokušajte kasnije.",
+        )
       } finally {
-        setIsLoadingCategories(false);
+        setIsLoadingCategories(false)
       }
-    };
+    }
 
-    fetchPopularCategories();
-  }, []);
+    fetchPopularCategories()
+  }, [])
   return (
     <div className="min-h-screen">
       <div className="relative h-[80vh] w-full overflow-hidden">
@@ -85,7 +97,11 @@ const Home = () => {
                   Pregledaj recepte
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="py-5 w-full sm:w-48 h-11">
+              <Button
+                asChild
+                variant="outline"
+                className="py-5 w-full sm:w-48 h-11"
+              >
                 <Link href="/recipes/new">
                   <ChefHat className="mr-2 h-5 w-5" />
                   Objavi recept
@@ -115,7 +131,8 @@ const Home = () => {
                 </div>
                 <CardTitle>Jednostavni recepti</CardTitle>
                 <CardDescription>
-                  Detaljne upute korak po korak s fotografijama za savršene rezultate
+                  Detaljne upute korak po korak s fotografijama za savršene
+                  rezultate
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -151,7 +168,8 @@ const Home = () => {
                 </div>
                 <CardTitle>Spremite najdraže recepte</CardTitle>
                 <CardDescription>
-                  Označite svoje omiljene recepte i lakše ih pronađite kad god želite
+                  Označite svoje omiljene recepte i lakše ih pronađite kad god
+                  želite
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -163,7 +181,8 @@ const Home = () => {
                 </div>
                 <CardTitle>Napredna pretraga</CardTitle>
                 <CardDescription>
-                  Filtrirajte po kategorijama, alergenima, vremenu pripreme, sastojcima...
+                  Filtrirajte po kategorijama, alergenima, vremenu pripreme,
+                  sastojcima...
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -175,7 +194,8 @@ const Home = () => {
                 </div>
                 <CardTitle>Podijelite recepte</CardTitle>
                 <CardDescription>
-                  Jednostavno podijelite svoje kulinarske kreacije s cijelim svijetom
+                  Jednostavno podijelite svoje kulinarske kreacije s cijelim
+                  svijetom
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -192,29 +212,31 @@ const Home = () => {
             <p className="text-xl text-muted-foreground">
               Istražite recepte po kategorijama
             </p>
-          </div>          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {isLoadingCategories ? (
-              Array.from({ length: 6 }).map((_, index) => (
-                <Card key={index} className="hover:shadow-md transition-shadow overflow-hidden">
-                  <div className="relative aspect-square bg-muted animate-pulse" />
-                  <CardContent className="p-4 text-center">
-                    <div className="h-4 bg-muted rounded animate-pulse" />
-                  </CardContent>
-                </Card>
-              ))
-            ) : (
-              popularCategories.map((category) => (
-                <CategoryCard 
-                  key={category.id}
-                  category={{
-                    id: category.id,
-                    name: category.name,
-                    image_path: category.image_path,
-                    recipe_count: category.recipeCount
-                  }}
-                />
-              ))
-            )}
+          </div>{" "}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {isLoadingCategories
+              ? Array.from({ length: 6 }).map((_, index) => (
+                  <Card
+                    key={index}
+                    className="hover:shadow-md transition-shadow overflow-hidden"
+                  >
+                    <div className="relative aspect-square bg-muted animate-pulse" />
+                    <CardContent className="p-4 text-center">
+                      <div className="h-4 bg-muted rounded animate-pulse" />
+                    </CardContent>
+                  </Card>
+                ))
+              : popularCategories.map((category) => (
+                  <CategoryCard
+                    key={category.id}
+                    category={{
+                      id: category.id,
+                      name: category.name,
+                      image_path: category.image_path,
+                      recipe_count: category.recipeCount,
+                    }}
+                  />
+                ))}
           </div>
         </div>
       </section>
@@ -227,7 +249,8 @@ const Home = () => {
               Spremni ste za kulinarsku avanturu?
             </h2>
             <p className="text-xl text-muted-foreground mb-8">
-              Pridružite se drugim kuharima koji već dijele svoje recepte i savjete
+              Pridružite se drugim kuharima koji već dijele svoje recepte i
+              savjete
             </p>
             <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
               <Button asChild className="py-5 w-full sm:w-48 h-11">
@@ -236,7 +259,11 @@ const Home = () => {
                   <ArrowRight className="mr-2 h-5 w-5" />
                 </Link>
               </Button>
-              <Button asChild variant="outline" className="py-5 w-full sm:w-48 h-11">
+              <Button
+                asChild
+                variant="outline"
+                className="py-5 w-full sm:w-48 h-11"
+              >
                 <Link href="/recipes">
                   <ChefHat className="mr-2 h-5 w-5" />
                   Istraži recepte
@@ -247,7 +274,7 @@ const Home = () => {
         </div>
       </section>
     </div>
-  );
+  )
 }
 
-export default Home;
+export default Home

@@ -1,7 +1,8 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const profileFormSchema = z.object({
-  name: z.string()
+  name: z
+    .string()
     .min(2, {
       message: "Ime mora imati najmanje 2 znakova.",
     })
@@ -9,6 +10,6 @@ export const profileFormSchema = z.object({
       message: "Ime ne smije imati više od 50 znakova.",
     })
     .trim(),
-});
+})
 
-export type ProfileFormData = z.infer<typeof profileFormSchema>;
+export type ProfileFormData = z.infer<typeof profileFormSchema>

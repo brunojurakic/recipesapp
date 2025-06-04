@@ -1,15 +1,22 @@
-import type { Metadata } from 'next';
-import CategoryCard from '@/components/CategoryCard';
-import { getAllCategories } from '@/db/queries/category-queries';
+import type { Metadata } from "next"
+import CategoryCard from "@/components/CategoryCard"
+import { getAllCategories } from "@/db/queries/category-queries"
 
 export const metadata: Metadata = {
-  title: 'ReceptiNet - Kulinarske Kategorije',
-  description: 'Istražite sve kategorije jela na našoj platformi. Pronađite recepte prema kategorijama kao što su predjela, glavna jela, deserti i mnogo više.',
-  keywords: ['kategorije jela', 'recepti po kategorijama', 'kulinarske kategorije', 'vrste jela', 'kuharstvo']
-};
+  title: "ReceptiNet - Kulinarske Kategorije",
+  description:
+    "Istražite sve kategorije jela na našoj platformi. Pronađite recepte prema kategorijama kao što su predjela, glavna jela, deserti i mnogo više.",
+  keywords: [
+    "kategorije jela",
+    "recepti po kategorijama",
+    "kulinarske kategorije",
+    "vrste jela",
+    "kuharstvo",
+  ],
+}
 
 export default async function CategoriesPage() {
-  const categories = await getAllCategories();
+  const categories = await getAllCategories()
 
   return (
     <div className="container mx-auto px-4 py-8 pt-25">
@@ -18,8 +25,8 @@ export default async function CategoriesPage() {
           Kategorije jela
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl">
-          Istražite našu kolekciju kategorija jela. Od tradicionalnih jela do deserta,
-          pronađite recept koji odgovara vašem ukusu.
+          Istražite našu kolekciju kategorija jela. Od tradicionalnih jela do
+          deserta, pronađite recept koji odgovara vašem ukusu.
         </p>
       </div>
 
@@ -45,5 +52,5 @@ export default async function CategoriesPage() {
         </div>
       )}
     </div>
-  );
+  )
 }

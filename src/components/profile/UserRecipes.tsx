@@ -1,53 +1,63 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { RecipeCard } from "@/components/RecipeCard";
-import { toast } from "sonner";
-import { Loader2, BookOpen } from "lucide-react";
-import Link from "next/link";
-import type { RecipeWithUserAndCategories, ClassNameProps } from "@/lib/types";
+import { useState, useEffect } from "react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { RecipeCard } from "@/components/RecipeCard"
+import { toast } from "sonner"
+import { Loader2, BookOpen } from "lucide-react"
+import Link from "next/link"
+import type { RecipeWithUserAndCategories, ClassNameProps } from "@/lib/types"
 
 export function UserRecipes({ className }: ClassNameProps) {
-  const [recipes, setRecipes] = useState<RecipeWithUserAndCategories[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [recipes, setRecipes] = useState<RecipeWithUserAndCategories[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    fetchUserRecipes();
-  }, []);
+    fetchUserRecipes()
+  }, [])
   const fetchUserRecipes = async () => {
     try {
-      setIsLoading(true);
-      const response = await fetch("/api/profile/recipes");
-      
+      setIsLoading(true)
+      const response = await fetch("/api/profile/recipes")
+
       if (!response.ok) {
-        throw new Error("Failed to fetch recipes");
+        throw new Error("Failed to fetch recipes")
       }
 
-      const recipesData = await response.json();
-      
-      const processedRecipes = recipesData.map((recipe: {
-        createdAt: string;
-        updatedAt: string;
-        [key: string]: unknown;
-      }) => ({
-        ...recipe,
-        createdAt: new Date(recipe.createdAt),
-        updatedAt: new Date(recipe.updatedAt),
-      }));
-      
-      setRecipes(processedRecipes);
+      const recipesData = await response.json()
+
+      const processedRecipes = recipesData.map(
+        (recipe: {
+          createdAt: string
+          updatedAt: string
+          [key: string]: unknown
+        }) => ({
+          ...recipe,
+          createdAt: new Date(recipe.createdAt),
+          updatedAt: new Date(recipe.updatedAt),
+        }),
+      )
+
+      setRecipes(processedRecipes)
     } catch (error) {
-      console.error("Error fetching recipes:", error);
-      toast.error("Došlo je do greške pri dohvaćanju recepta.");
+      console.error("Error fetching recipes:", error)
+      toast.error("Došlo je do greške pri dohvaćanju recepta.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleRecipeDelete = (recipeId: string) => {
-    setRecipes(prevRecipes => prevRecipes.filter(recipe => recipe.id !== recipeId));
-  };
+    setRecipes((prevRecipes) =>
+      prevRecipes.filter((recipe) => recipe.id !== recipeId),
+    )
+  }
 
   if (isLoading) {
     return (
@@ -56,7 +66,7 @@ export function UserRecipes({ className }: ClassNameProps) {
           <Loader2 className="h-6 w-6 animate-spin" />
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
@@ -67,10 +77,9 @@ export function UserRecipes({ className }: ClassNameProps) {
           Moji recepti
         </CardTitle>
         <CardDescription>
-          {recipes.length === 0 
-            ? "Još niste objavili nijedan recept." 
-            : `Objavljeno ${recipes.length} ${recipes.length === 1 ? 'recept' : 'recepta'}.`
-          }
+          {recipes.length === 0
+            ? "Još niste objavili nijedan recept."
+            : `Objavljeno ${recipes.length} ${recipes.length === 1 ? "recept" : "recepta"}.`}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -80,8 +89,8 @@ export function UserRecipes({ className }: ClassNameProps) {
             <p className="text-muted-foreground mb-4">
               Još niste objavili nijedan recept.
             </p>
-            <Link 
-              href="/recipes/new" 
+            <Link
+              href="/recipes/new"
               className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
             >
               Stvori prvi recept
@@ -90,9 +99,9 @@ export function UserRecipes({ className }: ClassNameProps) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {recipes.map((recipe) => (
-              <RecipeCard 
-                key={recipe.id} 
-                recipe={recipe} 
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
                 showDeleteButton={true}
                 onDelete={handleRecipeDelete}
               />
@@ -101,5 +110,5 @@ export function UserRecipes({ className }: ClassNameProps) {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

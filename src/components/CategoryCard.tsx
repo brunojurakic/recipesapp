@@ -27,7 +27,9 @@ export default function CategoryCard({ category }: CategoryCardProps) {
           />
         </div>
         <CardContent className="p-4">
-          <h3 className="text-lg font-semibold text-center mb-1">{category.name}</h3>
+          <h3 className="text-lg font-semibold text-center mb-1">
+            {category.name}
+          </h3>
         </CardContent>
       </Card>
     </Link>

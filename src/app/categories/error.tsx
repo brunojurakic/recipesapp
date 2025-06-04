@@ -1,20 +1,20 @@
-'use client';
+"use client"
 
-import { useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { AlertTriangle, RefreshCw } from "lucide-react"
 
 export default function CategoriesError({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: Error & { digest?: string }
+  reset: () => void
 }) {
   useEffect(() => {
-    console.error('Categories page error:', error);
-  }, [error]);
+    console.error("Categories page error:", error)
+  }, [error])
 
   return (
     <div className="container mx-auto px-4 py-8 pt-25">
@@ -30,19 +30,15 @@ export default function CategoriesError({
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-muted-foreground">
-              Dogodila se greška prilikom dohvaćanja kategorija jela. 
-              Molimo pokušajte ponovno.
+              Dogodila se greška prilikom dohvaćanja kategorija jela. Molimo
+              pokušajte ponovno.
             </p>
-            <Button 
-              onClick={reset}
-              className="w-full"
-              variant="default"
-            >
+            <Button onClick={reset} className="w-full" variant="default">
               <RefreshCw className="mr-2 h-4 w-4" />
               Pokušaj ponovno
             </Button>
-            <Button 
-              onClick={() => window.location.href = '/'}
+            <Button
+              onClick={() => (window.location.href = "/")}
               variant="outline"
               className="w-full"
             >
@@ -52,5 +48,5 @@ export default function CategoriesError({
         </Card>
       </div>
     </div>
-  );
+  )
 }

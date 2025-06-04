@@ -1,85 +1,98 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MultiSelect, SelectableItem } from "@/components/ui/multi-select";
-import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
-import type { ClassNameProps } from "@/lib/types";
+import { useState, useEffect } from "react"
+import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { MultiSelect, SelectableItem } from "@/components/ui/multi-select"
+import { toast } from "sonner"
+import { Loader2 } from "lucide-react"
+import type { ClassNameProps } from "@/lib/types"
 
 interface AllergyItem extends SelectableItem {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 export function UserAllergiesManager({ className }: ClassNameProps) {
-  const [allAllergies, setAllAllergies] = useState<AllergyItem[]>([]);
-  const [userAllergies, setUserAllergies] = useState<AllergyItem[]>([]);
-  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
+  const [allAllergies, setAllAllergies] = useState<AllergyItem[]>([])
+  const [userAllergies, setUserAllergies] = useState<AllergyItem[]>([])
+  const [selectedAllergies, setSelectedAllergies] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
-    fetchAllergies();
-  }, []);
+    fetchAllergies()
+  }, [])
 
   const fetchAllergies = async () => {
     try {
-      setIsLoading(true);
-      const response = await fetch("/api/user-allergies");
-      
+      setIsLoading(true)
+      const response = await fetch("/api/user-allergies")
+
       if (!response.ok) {
-        throw new Error("Failed to fetch allergies");
+        throw new Error("Failed to fetch allergies")
       }
 
-      const data = await response.json();
-      setAllAllergies(data.allAllergies);
-      setUserAllergies(data.userAllergies);
-      setSelectedAllergies(data.userAllergies.map((allergy: AllergyItem) => allergy.id));
+      const data = await response.json()
+      setAllAllergies(data.allAllergies)
+      setUserAllergies(data.userAllergies)
+      setSelectedAllergies(
+        data.userAllergies.map((allergy: AllergyItem) => allergy.id),
+      )
     } catch (error) {
-      console.error("Error fetching allergies:", error);
-      toast.error("Došlo je do greške pri dohvaćanju alergija.");
+      console.error("Error fetching allergies:", error)
+      toast.error("Došlo je do greške pri dohvaćanju alergija.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleAllergyChange = (allergyIds: string[]) => {
-    setSelectedAllergies(allergyIds);
-  };
+    setSelectedAllergies(allergyIds)
+  }
 
   const handleSave = async () => {
     try {
-      setIsSaving(true);
-      
+      setIsSaving(true)
+
       const response = await fetch("/api/user-allergies", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ allergyIds: selectedAllergies }),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to update allergies");
+        throw new Error("Failed to update allergies")
       }
 
-      toast.success("Alergije su uspješno ažurirane!");
-      await fetchAllergies();
+      toast.success("Alergije su uspješno ažurirane!")
+      await fetchAllergies()
     } catch (error) {
-      console.error("Error updating allergies:", error);
-      toast.error("Došlo je do greške pri ažuriranju alergija.");
+      console.error("Error updating allergies:", error)
+      toast.error("Došlo je do greške pri ažuriranju alergija.")
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   const hasChanges = () => {
-    const currentUserAllergyIds = userAllergies.map(allergy => allergy.id).sort();
-    const selectedAllergyIds = [...selectedAllergies].sort();
-    return JSON.stringify(currentUserAllergyIds) !== JSON.stringify(selectedAllergyIds);
-  };
+    const currentUserAllergyIds = userAllergies
+      .map((allergy) => allergy.id)
+      .sort()
+    const selectedAllergyIds = [...selectedAllergies].sort()
+    return (
+      JSON.stringify(currentUserAllergyIds) !==
+      JSON.stringify(selectedAllergyIds)
+    )
+  }
 
   if (isLoading) {
     return (
@@ -88,7 +101,7 @@ export function UserAllergiesManager({ className }: ClassNameProps) {
           <Loader2 className="h-6 w-6 animate-spin" />
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
@@ -96,7 +109,8 @@ export function UserAllergiesManager({ className }: ClassNameProps) {
       <CardHeader>
         <CardTitle>Moje alergije</CardTitle>
         <CardDescription>
-          Odaberite alergije koje imate kako biste filtrirali recepte koji ih sadrže.
+          Odaberite alergije koje imate kako biste filtrirali recepte koji ih
+          sadrže.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -111,14 +125,10 @@ export function UserAllergiesManager({ className }: ClassNameProps) {
           emptyMessage="Nema pronađenih alergija."
           badgeVariant="secondary"
         />
-        
+
         {hasChanges() && (
           <div className="pt-4 border-t">
-            <Button 
-              onClick={handleSave} 
-              disabled={isSaving}
-              className="w-full"
-            >
+            <Button onClick={handleSave} disabled={isSaving} className="w-full">
               {isSaving ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -132,5 +142,5 @@ export function UserAllergiesManager({ className }: ClassNameProps) {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

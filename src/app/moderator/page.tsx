@@ -1,63 +1,71 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { redirect } from "next/navigation";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Loader2, ChefHat, MessageSquare, Shield } from "lucide-react";
-import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable";
-import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable";
+import { useState, useEffect } from "react"
+import { redirect } from "next/navigation"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { Loader2, ChefHat, MessageSquare, Shield } from "lucide-react"
+import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable"
+import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable"
 
 interface User {
-  id: string;
-  name: string;
-  email: string;
+  id: string
+  name: string
+  email: string
   role: {
-    id: string;
-    name: string;
-  };
+    id: string
+    name: string
+  }
 }
 
 export default function ModeratorPage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const checkAccess = async () => {
       try {
-        const response = await fetch("/api/moderator/check");
-        const data = await response.json();
+        const response = await fetch("/api/moderator/check")
+        const data = await response.json()
 
         if (!response.ok) {
           if (response.status === 401 || response.status === 403) {
-            redirect("/");
+            redirect("/")
           }
-          throw new Error(data.error || "Failed to check access");
+          throw new Error(data.error || "Failed to check access")
         }
 
-        setUser(data.user);
+        setUser(data.user)
       } catch (err) {
-        console.error("Access check error:", err);
-        setError(err instanceof Error ? err.message : "Unknown error");
+        console.error("Access check error:", err)
+        setError(err instanceof Error ? err.message : "Unknown error")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    checkAccess();
-  }, []);
+    checkAccess()
+  }, [])
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin" />
-          <span className="text-lg font-medium text-gray-600">Provjera dozvola...</span>
+          <span className="text-lg font-medium text-gray-600">
+            Provjera dozvola...
+          </span>
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -68,7 +76,7 @@ export default function ModeratorPage() {
           <p className="text-gray-600 mt-2">{error}</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -78,7 +86,7 @@ export default function ModeratorPage() {
           <Shield className="h-8 w-8 text-black" />
           <h1 className="text-3xl font-bold">Moderatorski Panel</h1>
         </div>
-        
+
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -86,7 +94,8 @@ export default function ModeratorPage() {
               <Badge variant="default">{user?.role?.name}</Badge>
             </CardTitle>
             <CardDescription>
-              Upravljajte receptima i recenzijama kako biste održali kvalitetu sadržaja na platformi.
+              Upravljajte receptima i recenzijama kako biste održali kvalitetu
+              sadržaja na platformi.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -94,11 +103,17 @@ export default function ModeratorPage() {
 
       <Tabs defaultValue="recipes" className="space-y-6">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="recipes" className="flex items-center gap-2 hover:cursor-pointer">
+          <TabsTrigger
+            value="recipes"
+            className="flex items-center gap-2 hover:cursor-pointer"
+          >
             <ChefHat className="h-4 w-4" />
             Recepti
           </TabsTrigger>
-          <TabsTrigger value="reviews" className="flex items-center gap-2 hover:cursor-pointer">
+          <TabsTrigger
+            value="reviews"
+            className="flex items-center gap-2 hover:cursor-pointer"
+          >
             <MessageSquare className="h-4 w-4" />
             Recenzije
           </TabsTrigger>
@@ -109,7 +124,8 @@ export default function ModeratorPage() {
             <CardHeader>
               <CardTitle>Upravljanje Receptima</CardTitle>
               <CardDescription>
-                Pregledajte i moderirajte prijave recepata kako biste osigurali kvalitetan sadržaj.
+                Pregledajte i moderirajte prijave recepata kako biste osigurali
+                kvalitetan sadržaj.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -123,7 +139,8 @@ export default function ModeratorPage() {
             <CardHeader>
               <CardTitle>Upravljanje Recenzijama</CardTitle>
               <CardDescription>
-                Nadzrite i moderirajte korisničke recenzije kako biste održali standarde zajednice.
+                Nadzrite i moderirajte korisničke recenzije kako biste održali
+                standarde zajednice.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -133,5 +150,5 @@ export default function ModeratorPage() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

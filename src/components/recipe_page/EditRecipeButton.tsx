@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
-import { PenSquare } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { PenSquare } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 interface EditRecipeButtonProps {
-  recipeId: string;
+  recipeId: string
 }
 
 export function EditRecipeButton({ recipeId }: EditRecipeButtonProps) {
@@ -16,5 +16,5 @@ export function EditRecipeButton({ recipeId }: EditRecipeButtonProps) {
         Uredi recept
       </Link>
     </Button>
-  );
+  )
 }

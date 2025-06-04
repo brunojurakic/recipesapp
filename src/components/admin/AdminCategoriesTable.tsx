@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState, useEffect } from "react"
+import Image from "next/image"
 import {
   ColumnDef,
   flexRender,
@@ -12,7 +12,7 @@ import {
   useReactTable,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
+} from "@tanstack/react-table"
 import {
   Table,
   TableBody,
@@ -20,16 +20,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+} from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,7 +39,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
 import {
   Dialog,
   DialogContent,
@@ -47,40 +47,53 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { ChevronDown, ChevronUp, Trash2, ArrowUpDown, Search, Loader2, Plus, PencilIcon } from "lucide-react";
-import { toast } from "sonner";
-import { updateCategorySchema } from '@/lib/schemas/admin';
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import {
+  ChevronDown,
+  ChevronUp,
+  Trash2,
+  ArrowUpDown,
+  Search,
+  Loader2,
+  Plus,
+  PencilIcon,
+} from "lucide-react"
+import { toast } from "sonner"
+import { updateCategorySchema } from "@/lib/schemas/admin"
 
 interface Category {
-  id: string;
-  name: string;
-  image_path: string;
-  recipeCount: number;
+  id: string
+  name: string
+  image_path: string
+  recipeCount: number
 }
 
 export function AdminCategoriesTable() {
-  const [data, setData] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
-  const [deleting, setDeleting] = useState(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [newCategoryName, setNewCategoryName] = useState(""); const [newCategoryImage, setNewCategoryImage] = useState<File | null>(null);
-  const [editCategoryImage, setEditCategoryImage] = useState<File | null>(null);
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [adding, setAdding] = useState(false);
-  const [updating, setUpdating] = useState(false);
+  const [data, setData] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(
+    null,
+  )
+  const [deleting, setDeleting] = useState(false)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [newCategoryName, setNewCategoryName] = useState("")
+  const [newCategoryImage, setNewCategoryImage] = useState<File | null>(null)
+  const [editCategoryImage, setEditCategoryImage] = useState<File | null>(null)
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null)
+  const [adding, setAdding] = useState(false)
+  const [updating, setUpdating] = useState(false)
   const columns: ColumnDef<Category>[] = [
     {
       accessorKey: "image_path",
       header: "Slika",
       cell: ({ row }) => {
-        const imagePath = row.getValue("image_path") as string; return (
+        const imagePath = row.getValue("image_path") as string
+        return (
           <div className="w-16 h-16 relative">
             {imagePath ? (
               <Image
@@ -91,17 +104,19 @@ export function AdminCategoriesTable() {
               />
             ) : (
               <div className="w-full h-full bg-muted rounded-md flex items-center justify-center">
-                <span className="text-xs text-muted-foreground">Nema slike</span>
+                <span className="text-xs text-muted-foreground">
+                  Nema slike
+                </span>
               </div>
             )}
           </div>
-        );
+        )
       },
     },
     {
       accessorKey: "name",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -117,13 +132,13 @@ export function AdminCategoriesTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
     },
     {
       accessorKey: "recipeCount",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -139,18 +154,18 @@ export function AdminCategoriesTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
       cell: ({ row }) => {
-        const recipeCount = row.getValue("recipeCount") as number;
-        return <Badge variant="outline">{recipeCount}</Badge>;
+        const recipeCount = row.getValue("recipeCount") as number
+        return <Badge variant="outline">{recipeCount}</Badge>
       },
     },
     {
       id: "actions",
       cell: ({ row }) => {
-        const category = row.original;
-        const canDelete = category.recipeCount === 0;
+        const category = row.original
+        const canDelete = category.recipeCount === 0
 
         return (
           <DropdownMenu>
@@ -169,9 +184,9 @@ export function AdminCategoriesTable() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => {
-                  setEditingCategory(category);
-                  setNewCategoryName(category.name);
-                  setIsEditDialogOpen(true);
+                  setEditingCategory(category)
+                  setNewCategoryName(category.name)
+                  setIsEditDialogOpen(true)
                 }}
                 className="cursor-pointer"
               >
@@ -181,11 +196,11 @@ export function AdminCategoriesTable() {
               <DropdownMenuItem
                 onClick={() => {
                   if (canDelete) {
-                    setCategoryToDelete(category);
-                    setDeleteDialogOpen(true);
+                    setCategoryToDelete(category)
+                    setDeleteDialogOpen(true)
                   }
                 }}
-                className={'text-red-600 cursor-pointer'}
+                className={"text-red-600 cursor-pointer"}
                 disabled={!canDelete}
               >
                 <Trash2 className="mr-2 h-4 w-4 text-red-600" />
@@ -193,10 +208,10 @@ export function AdminCategoriesTable() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        );
+        )
       },
     },
-  ];
+  ]
 
   const table = useReactTable({
     data,
@@ -211,150 +226,174 @@ export function AdminCategoriesTable() {
       sorting,
       columnFilters,
     },
-  });
+  })
 
   const loadCategories = async () => {
     try {
-      setLoading(true);
-      const response = await fetch("/api/admin/categories");
-      if (!response.ok) throw new Error("Failed to fetch categories");
-      const { categories } = await response.json();
-      setData(categories);
+      setLoading(true)
+      const response = await fetch("/api/admin/categories")
+      if (!response.ok) throw new Error("Failed to fetch categories")
+      const { categories } = await response.json()
+      setData(categories)
     } catch (error) {
-      console.error("Error loading categories:", error);
-      toast.error("Greška pri učitavanju kategorija");
+      console.error("Error loading categories:", error)
+      toast.error("Greška pri učitavanju kategorija")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const deleteCategory = async () => {
-    if (!categoryToDelete) return;
+    if (!categoryToDelete) return
 
     try {
-      setDeleting(true);
-      const response = await fetch(`/api/admin/categories?categoryId=${categoryToDelete.id}`, {
-        method: "DELETE",
-      });
+      setDeleting(true)
+      const response = await fetch(
+        `/api/admin/categories?categoryId=${categoryToDelete.id}`,
+        {
+          method: "DELETE",
+        },
+      )
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to delete category");
+        const error = await response.json()
+        throw new Error(error.error || "Failed to delete category")
       }
 
-      toast.success("Kategorija je uspješno obrisana");
-      setDeleteDialogOpen(false);
-      setCategoryToDelete(null);
-      loadCategories();
+      toast.success("Kategorija je uspješno obrisana")
+      setDeleteDialogOpen(false)
+      setCategoryToDelete(null)
+      loadCategories()
     } catch (error) {
-      console.error("Error deleting category:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri brisanju kategorije");
+      console.error("Error deleting category:", error)
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Greška pri brisanju kategorije",
+      )
     } finally {
-      setDeleting(false);
+      setDeleting(false)
     }
-  };
+  }
   const addCategory = async () => {
     if (!newCategoryImage) {
-      toast.error("Slika je obavezna");
-      return;
+      toast.error("Slika je obavezna")
+      return
     }
 
     try {
-      setAdding(true);
+      setAdding(true)
 
-      const formData = new FormData();
-      formData.append("name", newCategoryName);
-      formData.append("image", newCategoryImage);
+      const formData = new FormData()
+      formData.append("name", newCategoryName)
+      formData.append("image", newCategoryImage)
 
       const response = await fetch("/api/admin/categories", {
         method: "POST",
         body: formData,
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to add category");
+        const error = await response.json()
+        throw new Error(error.error || "Failed to add category")
       }
 
-      toast.success("Kategorija je uspješno dodana");
-      setIsAddDialogOpen(false);
-      setNewCategoryName("");
-      setNewCategoryImage(null);
-      loadCategories();
+      toast.success("Kategorija je uspješno dodana")
+      setIsAddDialogOpen(false)
+      setNewCategoryName("")
+      setNewCategoryImage(null)
+      loadCategories()
     } catch (error) {
-      console.error("Error adding category:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri dodavanju kategorije");
+      console.error("Error adding category:", error)
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Greška pri dodavanju kategorije",
+      )
     } finally {
-      setAdding(false);
+      setAdding(false)
     }
-  };
+  }
   const updateCategory = async () => {
-    if (!editingCategory) return;
+    if (!editingCategory) return
 
     try {
-      setUpdating(true);
+      setUpdating(true)
 
       if (editCategoryImage) {
-        const formData = new FormData();
-        formData.append("name", newCategoryName);
-        formData.append("image", editCategoryImage);
+        const formData = new FormData()
+        formData.append("name", newCategoryName)
+        formData.append("image", editCategoryImage)
 
-        const response = await fetch(`/api/admin/categories?categoryId=${editingCategory.id}`, {
-          method: "PUT",
-          body: formData,
-        });
+        const response = await fetch(
+          `/api/admin/categories?categoryId=${editingCategory.id}`,
+          {
+            method: "PUT",
+            body: formData,
+          },
+        )
 
         if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || "Failed to update category");
+          const error = await response.json()
+          throw new Error(error.error || "Failed to update category")
         }
       } else {
-        const validationResult = updateCategorySchema.safeParse({ name: newCategoryName });
+        const validationResult = updateCategorySchema.safeParse({
+          name: newCategoryName,
+        })
 
         if (!validationResult.success) {
-          const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
-          toast.error(errorMessage);
-          return;
+          const errorMessage =
+            validationResult.error.errors[0]?.message || "Neispravni podaci"
+          toast.error(errorMessage)
+          return
         }
 
-        const response = await fetch(`/api/admin/categories?categoryId=${editingCategory.id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
+        const response = await fetch(
+          `/api/admin/categories?categoryId=${editingCategory.id}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(validationResult.data),
           },
-          body: JSON.stringify(validationResult.data),
-        });
+        )
 
         if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || "Failed to update category");
+          const error = await response.json()
+          throw new Error(error.error || "Failed to update category")
         }
       }
 
-      toast.success("Kategorija je uspješno ažurirana");
-      setIsEditDialogOpen(false);
-      setEditingCategory(null);
-      setNewCategoryName("");
-      setEditCategoryImage(null);
-      loadCategories();
+      toast.success("Kategorija je uspješno ažurirana")
+      setIsEditDialogOpen(false)
+      setEditingCategory(null)
+      setNewCategoryName("")
+      setEditCategoryImage(null)
+      loadCategories()
     } catch (error) {
-      console.error("Error updating category:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri ažuriranju kategorije");
+      console.error("Error updating category:", error)
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Greška pri ažuriranju kategorije",
+      )
     } finally {
-      setUpdating(false);
+      setUpdating(false)
     }
-  };
+  }
 
   useEffect(() => {
-    loadCategories();
-  }, []);
+    loadCategories()
+  }, [])
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
-    );
+    )
   }
 
   return (
@@ -390,9 +429,9 @@ export function AdminCategoriesTable() {
                     {header.isPlaceholder
                       ? null
                       : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -404,14 +443,20 @@ export function AdminCategoriesTable() {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   Nema kategorija.
                 </TableCell>
               </TableRow>
@@ -450,8 +495,9 @@ export function AdminCategoriesTable() {
           <AlertDialogHeader>
             <AlertDialogTitle>Obrisati kategoriju?</AlertDialogTitle>
             <AlertDialogDescription>
-              Jeste li sigurni da želite obrisati kategoriju &quot;{categoryToDelete?.name}&quot;?
-              Ova akcija će trajno obrisati kategoriju.
+              Jeste li sigurni da želite obrisati kategoriju &quot;
+              {categoryToDelete?.name}&quot;? Ova akcija će trajno obrisati
+              kategoriju.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -479,7 +525,8 @@ export function AdminCategoriesTable() {
           <DialogHeader>
             <DialogTitle>Nova kategorija</DialogTitle>
             <DialogDescription>
-              Dodajte novu kategoriju jela. Naziv kategorije mora biti jedinstven.
+              Dodajte novu kategoriju jela. Naziv kategorije mora biti
+              jedinstven.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -500,35 +547,48 @@ export function AdminCategoriesTable() {
                     id="image"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setNewCategoryImage(e.target.files?.[0] || null)}
+                    onChange={(e) =>
+                      setNewCategoryImage(e.target.files?.[0] || null)
+                    }
                     className="sr-only"
                   />
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => document.getElementById('image')?.click()}
+                    onClick={() => document.getElementById("image")?.click()}
                     className="w-full justify-start text-left font-normal"
                   >
                     {newCategoryImage ? (
-                      <span className="text-green-600">✓ {newCategoryImage.name}</span>
+                      <span className="text-green-600">
+                        ✓ {newCategoryImage.name}
+                      </span>
                     ) : (
-                      <span className="text-muted-foreground">Odaberite sliku...</span>
+                      <span className="text-muted-foreground">
+                        Odaberite sliku...
+                      </span>
                     )}
                   </Button>
                 </div>
                 {!newCategoryImage && (
-                  <p className="text-xs text-muted-foreground">Molimo odaberite sliku za kategoriju.</p>
+                  <p className="text-xs text-muted-foreground">
+                    Molimo odaberite sliku za kategoriju.
+                  </p>
                 )}
               </div>
             </div>
           </div>
-          <DialogFooter>            <Button variant="outline" onClick={() => {
-            setIsAddDialogOpen(false);
-            setNewCategoryName("");
-            setNewCategoryImage(null);
-          }}>
-            Odustani
-          </Button>
+          <DialogFooter>
+            {" "}
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsAddDialogOpen(false)
+                setNewCategoryName("")
+                setNewCategoryImage(null)
+              }}
+            >
+              Odustani
+            </Button>
             <Button onClick={addCategory} disabled={adding}>
               {adding ? (
                 <>
@@ -548,7 +608,8 @@ export function AdminCategoriesTable() {
           <DialogHeader>
             <DialogTitle>Uredi kategoriju</DialogTitle>
             <DialogDescription>
-              Izmijenite naziv kategorije jela. Naziv kategorije mora biti jedinstven.
+              Izmijenite naziv kategorije jela. Naziv kategorije mora biti
+              jedinstven.
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-4 py-4">
@@ -562,26 +623,36 @@ export function AdminCategoriesTable() {
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="edit-image">Nova slika kategorije (opcionalno)</Label>
+              <Label htmlFor="edit-image">
+                Nova slika kategorije (opcionalno)
+              </Label>
               <div className="flex flex-col gap-2">
                 <div className="relative">
                   <input
                     id="edit-image"
                     type="file"
                     accept="image/*"
-                    onChange={(e) => setEditCategoryImage(e.target.files?.[0] || null)}
+                    onChange={(e) =>
+                      setEditCategoryImage(e.target.files?.[0] || null)
+                    }
                     className="sr-only"
                   />
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => document.getElementById('edit-image')?.click()}
+                    onClick={() =>
+                      document.getElementById("edit-image")?.click()
+                    }
                     className="w-full justify-start text-left font-normal"
                   >
                     {editCategoryImage ? (
-                      <span className="text-green-600">✓ {editCategoryImage.name}</span>
+                      <span className="text-green-600">
+                        ✓ {editCategoryImage.name}
+                      </span>
                     ) : (
-                      <span className="text-muted-foreground">Odaberite novu sliku...</span>
+                      <span className="text-muted-foreground">
+                        Odaberite novu sliku...
+                      </span>
                     )}
                   </Button>
                 </div>
@@ -595,7 +666,9 @@ export function AdminCategoriesTable() {
                         className="object-cover rounded-md"
                       />
                     </div>
-                    <p className="text-xs text-muted-foreground">Trenutna slika će ostati ako ne odaberete novu.</p>
+                    <p className="text-xs text-muted-foreground">
+                      Trenutna slika će ostati ako ne odaberete novu.
+                    </p>
                   </div>
                 )}
                 {editCategoryImage && (
@@ -604,14 +677,19 @@ export function AdminCategoriesTable() {
               </div>
             </div>
           </div>
-          <DialogFooter>            <Button variant="outline" onClick={() => {
-            setIsEditDialogOpen(false);
-            setEditingCategory(null);
-            setNewCategoryName("");
-            setEditCategoryImage(null);
-          }}>
-            Odustani
-          </Button>
+          <DialogFooter>
+            {" "}
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsEditDialogOpen(false)
+                setEditingCategory(null)
+                setNewCategoryName("")
+                setEditCategoryImage(null)
+              }}
+            >
+              Odustani
+            </Button>
             <Button onClick={updateCategory} disabled={updating}>
               {updating ? (
                 <>
@@ -626,5 +704,5 @@ export function AdminCategoriesTable() {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }

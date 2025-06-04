@@ -1,78 +1,95 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Loader2, Users, ChefHat, MessageSquare, Bookmark, Star, AlertTriangle, Tags } from "lucide-react";
-import { AdminUsersTable } from "@/components/admin/AdminUsersTable";
-import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable";
-import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable";
-import { AdminAllergiesTable } from "@/components/admin/AdminAllergiesTable";
-import { AdminCategoriesTable } from "@/components/admin/AdminCategoriesTable";
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import {
+  Loader2,
+  Users,
+  ChefHat,
+  MessageSquare,
+  Bookmark,
+  Star,
+  AlertTriangle,
+  Tags,
+} from "lucide-react"
+import { AdminUsersTable } from "@/components/admin/AdminUsersTable"
+import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable"
+import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable"
+import { AdminAllergiesTable } from "@/components/admin/AdminAllergiesTable"
+import { AdminCategoriesTable } from "@/components/admin/AdminCategoriesTable"
 
 interface DashboardStats {
-  totalUsers: number;
-  totalRecipes: number;
-  totalReviews: number;
-  totalBookmarks: number;
-  newUsers30Days: number;
-  newRecipes30Days: number;
-  averageRating: number;
+  totalUsers: number
+  totalRecipes: number
+  totalReviews: number
+  totalBookmarks: number
+  newUsers30Days: number
+  newRecipes30Days: number
+  averageRating: number
 }
 
 export default function AdminDashboard() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [stats, setStats] = useState<DashboardStats | null>(null)
 
   useEffect(() => {
     const checkAdminAccess = async () => {
       try {
-        const response = await fetch("/api/admin/check");
+        const response = await fetch("/api/admin/check")
         if (response.status === 401) {
-          router.push("/login");
-          return;
+          router.push("/login")
+          return
         }
         if (response.status === 403) {
-          setError("Nemate dozvolu za pristup admin panelu.");
-          router.push("/");
-          setLoading(false);
-          return;
+          setError("Nemate dozvolu za pristup admin panelu.")
+          router.push("/")
+          setLoading(false)
+          return
         }
         if (!response.ok) {
-          throw new Error("Failed to check admin access");
+          throw new Error("Failed to check admin access")
         }
 
-        const statsResponse = await fetch("/api/admin/stats");
+        const statsResponse = await fetch("/api/admin/stats")
         if (!statsResponse.ok) {
-          throw new Error("Failed to load dashboard stats");
+          throw new Error("Failed to load dashboard stats")
         }
 
-        const { stats: dashboardStats } = await statsResponse.json();
-        setStats(dashboardStats);
-        setLoading(false);
+        const { stats: dashboardStats } = await statsResponse.json()
+        setStats(dashboardStats)
+        setLoading(false)
       } catch (err) {
-        console.error("Error loading admin dashboard:", err);
-        setError("Greška pri učitavanju admin panela.");
-        setLoading(false);
+        console.error("Error loading admin dashboard:", err)
+        setError("Greška pri učitavanju admin panela.")
+        setLoading(false)
       }
-    };
+    }
 
-    checkAdminAccess();
-  }, [router]);
+    checkAdminAccess()
+  }, [router])
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="flex items-center gap-3">
           <Loader2 className="h-8 w-8 animate-spin" />
-          <span className="text-lg font-medium">Učitavanje admin panela...</span>
+          <span className="text-lg font-medium">
+            Učitavanje admin panela...
+          </span>
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -82,16 +99,19 @@ export default function AdminDashboard() {
           <AlertDescription className="text-center">{error}</AlertDescription>
         </Alert>
       </div>
-    );
+    )
   }
 
   return (
     <div className="min-h-screen">
       <div className="container mx-auto py-8 px-4 pt-24">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Admin Panel</h1>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Admin Panel
+          </h1>
           <p className="text-gray-600 dark:text-gray-400 mt-2">
-            Upravljanje korisnicima, receptima, recenzijama, alergijama i kategorijama
+            Upravljanje korisnicima, receptima, recenzijama, alergijama i
+            kategorijama
           </p>
         </div>
 
@@ -99,7 +119,9 @@ export default function AdminDashboard() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Ukupno korisnika</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Ukupno korisnika
+                </CardTitle>
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -112,7 +134,9 @@ export default function AdminDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Ukupno recepata</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Ukupno recepata
+                </CardTitle>
                 <ChefHat className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -125,7 +149,9 @@ export default function AdminDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Ukupno recenzija</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Ukupno recenzija
+                </CardTitle>
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -139,7 +165,9 @@ export default function AdminDashboard() {
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Ukupno oznaka</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  Ukupno oznaka
+                </CardTitle>
                 <Bookmark className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -153,23 +181,38 @@ export default function AdminDashboard() {
         )}
         <Tabs defaultValue="users" className="space-y-6">
           <TabsList className="grid w-full grid-cols-5">
-            <TabsTrigger value="users" className="flex items-center gap-2 cursor-pointer">
+            <TabsTrigger
+              value="users"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">Korisnici</span>
             </TabsTrigger>
-            <TabsTrigger value="recipes" className="flex items-center gap-2 cursor-pointer">
+            <TabsTrigger
+              value="recipes"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <ChefHat className="h-4 w-4" />
               <span className="hidden sm:inline">Recepti</span>
             </TabsTrigger>
-            <TabsTrigger value="reviews" className="flex items-center gap-2 cursor-pointer">
+            <TabsTrigger
+              value="reviews"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <MessageSquare className="h-4 w-4" />
               <span className="hidden sm:inline">Recenzije</span>
             </TabsTrigger>
-            <TabsTrigger value="allergies" className="flex items-center gap-2 cursor-pointer">
+            <TabsTrigger
+              value="allergies"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <AlertTriangle className="h-4 w-4" />
               <span className="hidden sm:inline">Alergije</span>
             </TabsTrigger>
-            <TabsTrigger value="categories" className="flex items-center gap-2 cursor-pointer">
+            <TabsTrigger
+              value="categories"
+              className="flex items-center gap-2 cursor-pointer"
+            >
               <Tags className="h-4 w-4" />
               <span className="hidden sm:inline">Kategorije</span>
             </TabsTrigger>
@@ -222,7 +265,8 @@ export default function AdminDashboard() {
               <CardHeader>
                 <CardTitle>Upravljanje alergijama</CardTitle>
                 <CardDescription>
-                  Dodajte, uredite ili uklonite alergije koje se koriste u receptima
+                  Dodajte, uredite ili uklonite alergije koje se koriste u
+                  receptima
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -236,7 +280,8 @@ export default function AdminDashboard() {
               <CardHeader>
                 <CardTitle>Upravljanje kategorijama jela</CardTitle>
                 <CardDescription>
-                  Dodajte, uredite ili uklonite kategorije jela za organizaciju recepata
+                  Dodajte, uredite ili uklonite kategorije jela za organizaciju
+                  recepata
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -247,5 +292,5 @@ export default function AdminDashboard() {
         </Tabs>
       </div>
     </div>
-  );
+  )
 }

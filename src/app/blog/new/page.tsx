@@ -1,32 +1,33 @@
-import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
-import { auth } from '@/lib/auth';
-import { getCurrentUser } from '@/db/queries/user-queries';
-import { headers } from 'next/headers';
-import NewBlogForm from '@/components/forms/NewBlogForm';
+import type { Metadata } from "next"
+import { redirect } from "next/navigation"
+import { auth } from "@/lib/auth"
+import { getCurrentUser } from "@/db/queries/user-queries"
+import { headers } from "next/headers"
+import NewBlogForm from "@/components/forms/NewBlogForm"
 
 export const metadata: Metadata = {
-  title: 'ReceptiNet - Napiši novi blog',
-  description: 'Stvorite novi članak o kulinarstvu i podijelite svoje znanje s ostalima.',
-  robots: 'noindex',
-};
+  title: "ReceptiNet - Napiši novi blog",
+  description:
+    "Stvorite novi članak o kulinarstvu i podijelite svoje znanje s ostalima.",
+  robots: "noindex",
+}
 
 export default async function NewBlogPage() {
   const session = await auth.api.getSession({
-    headers: await headers()
-  });
-  const currentUser = session ? await getCurrentUser() : null;
+    headers: await headers(),
+  })
+  const currentUser = session ? await getCurrentUser() : null
 
   if (!currentUser) {
-    redirect('/login');
+    redirect("/login")
   }
 
-  const isAdmin = currentUser?.role?.name === "Admin";
-  const isModerator = currentUser?.role?.name === "Moderator";
-  const canCreateBlog = isAdmin || isModerator;
+  const isAdmin = currentUser?.role?.name === "Admin"
+  const isModerator = currentUser?.role?.name === "Moderator"
+  const canCreateBlog = isAdmin || isModerator
 
   if (!canCreateBlog) {
-    redirect('/blog');
+    redirect("/blog")
   }
 
   return (
@@ -37,12 +38,13 @@ export default async function NewBlogPage() {
             Napiši novi članak
           </h1>
           <p className="text-lg text-muted-foreground">
-            Stvorite novi članak i podijelite svoje kulinarske savjete, metode ili iskustva
+            Stvorite novi članak i podijelite svoje kulinarske savjete, metode
+            ili iskustva
           </p>
         </div>
 
         <NewBlogForm userId={currentUser.id} />
       </div>
     </div>
-  );
+  )
 }

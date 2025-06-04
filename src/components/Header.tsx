@@ -1,14 +1,14 @@
-import Link from 'next/link'
-import { UtensilsCrossed, Shield } from 'lucide-react'
-import SessionButtons from './auth/SessionButtons'
-import { MobileMenu } from './MobileMenu'
-import { auth } from '@/lib/auth'
-import { getCurrentUser } from '@/db/queries/user-queries'
-import { headers } from 'next/headers'
+import Link from "next/link"
+import { UtensilsCrossed, Shield } from "lucide-react"
+import SessionButtons from "./auth/SessionButtons"
+import { MobileMenu } from "./MobileMenu"
+import { auth } from "@/lib/auth"
+import { getCurrentUser } from "@/db/queries/user-queries"
+import { headers } from "next/headers"
 
 const Header = async () => {
   const session = await auth.api.getSession({
-    headers: await headers()
+    headers: await headers(),
   })
   const currentUser = session ? await getCurrentUser() : null
   const isAdmin = currentUser?.role?.name === "Admin"
@@ -20,27 +20,44 @@ const Header = async () => {
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <UtensilsCrossed className="h-6 w-6 text-zinc-900" />
-            <span className="text-lg font-semibold text-zinc-900">ReceptiNet</span>
+            <span className="text-lg font-semibold text-zinc-900">
+              ReceptiNet
+            </span>
           </Link>
 
           <nav className="hidden sm:flex items-center gap-6 flex-1 justify-center">
-            <Link href="/recipes" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
+            <Link
+              href="/recipes"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+            >
               Recepti
             </Link>
-            <Link href="/categories" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
+            <Link
+              href="/categories"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+            >
               Kategorije
             </Link>
-            <Link href="/blog" className="text-sm font-medium text-zinc-600 hover:text-zinc-900">
+            <Link
+              href="/blog"
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900"
+            >
               Blog
             </Link>
             {isAdmin && (
-              <Link href="/admin" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 flex items-center gap-1">
+              <Link
+                href="/admin"
+                className="text-sm font-medium text-zinc-600 hover:text-zinc-900 flex items-center gap-1"
+              >
                 <Shield className="h-4 w-4" />
                 Admin
               </Link>
             )}
             {isModerator && !isAdmin && (
-              <Link href="/moderator" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 flex items-center gap-1">
+              <Link
+                href="/moderator"
+                className="text-sm font-medium text-zinc-600 hover:text-zinc-900 flex items-center gap-1"
+              >
                 <Shield className="h-4 w-4 text-black" />
                 Moderator
               </Link>

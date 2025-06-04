@@ -1,26 +1,26 @@
 "use client"
 
-import Link from 'next/link'
-import { useSession, signOut } from '@/lib/auth-client'
-import { useRouter } from 'next/navigation'
-import { Loader2 } from 'lucide-react'
+import Link from "next/link"
+import { useSession, signOut } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
+import { Loader2 } from "lucide-react"
 
 const InteractiveHeader = () => {
-  const { data: session, isPending } = useSession();
-  const router = useRouter();
+  const { data: session, isPending } = useSession()
+  const router = useRouter()
 
   const handleSignOut = async () => {
     await signOut({
       fetchOptions: {
         onSuccess: () => {
-          router.push("/");
-        }
-      }
-    });
-  };
+          router.push("/")
+        },
+      },
+    })
+  }
 
   return (
-    <div className="flex items-center gap-4" style={{ minWidth: '150px' }}>
+    <div className="flex items-center gap-4" style={{ minWidth: "150px" }}>
       {isPending ? (
         <Loader2 className="animate-spin text-zinc-600" />
       ) : session ? (
@@ -55,7 +55,7 @@ const InteractiveHeader = () => {
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default InteractiveHeader;
+export default InteractiveHeader

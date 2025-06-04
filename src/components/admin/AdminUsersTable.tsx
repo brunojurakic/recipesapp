@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 import {
   ColumnDef,
   flexRender,
@@ -11,7 +11,7 @@ import {
   useReactTable,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
+} from "@tanstack/react-table"
 import {
   Table,
   TableBody,
@@ -19,16 +19,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+} from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,38 +38,46 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { ChevronDown, ChevronUp, Trash2, ArrowUpDown, Search, Loader2, UserCheck } from "lucide-react";
-import { toast } from "sonner";
+} from "@/components/ui/alert-dialog"
+import {
+  ChevronDown,
+  ChevronUp,
+  Trash2,
+  ArrowUpDown,
+  Search,
+  Loader2,
+  UserCheck,
+} from "lucide-react"
+import { toast } from "sonner"
 
 interface User {
-  id: string;
-  name: string;
-  email: string;
-  emailVerified: boolean;
-  image: string | null;
+  id: string
+  name: string
+  email: string
+  emailVerified: boolean
+  image: string | null
   role: {
-    name: string;
-  } | null;
-  createdAt: string;
-  updatedAt: string;
+    name: string
+  } | null
+  createdAt: string
+  updatedAt: string
 }
 
 export function AdminUsersTable() {
-  const [data, setData] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [userToDelete, setUserToDelete] = useState<User | null>(null);
-  const [deleting, setDeleting] = useState(false);
-  const [promoting, setPromoting] = useState<string | null>(null);
+  const [data, setData] = useState<User[]>([])
+  const [loading, setLoading] = useState(true)
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [userToDelete, setUserToDelete] = useState<User | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [promoting, setPromoting] = useState<string | null>(null)
 
   const columns: ColumnDef<User>[] = [
     {
       accessorKey: "name",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -85,13 +93,13 @@ export function AdminUsersTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
     },
     {
       accessorKey: "email",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -107,13 +115,13 @@ export function AdminUsersTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
     },
     {
       accessorKey: "role",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -129,39 +137,37 @@ export function AdminUsersTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
       cell: ({ row }) => {
-        const role = row.getValue("role") as { name: string } | null;
-        const roleName = role?.name || "Korisnik";
-        
+        const role = row.getValue("role") as { name: string } | null
+        const roleName = role?.name || "Korisnik"
+
         const getBadgeVariant = (role: string) => {
           switch (role) {
             case "Admin":
-              return "destructive";
+              return "destructive"
             case "Moderator":
-              return "default";
+              return "default"
             default:
-              return "outline";
+              return "outline"
           }
-        };
-        
-        return (
-          <Badge variant={getBadgeVariant(roleName)}>
-            {roleName}
-          </Badge>
-        );
+        }
+
+        return <Badge variant={getBadgeVariant(roleName)}>{roleName}</Badge>
       },
       sortingFn: (rowA, rowB) => {
-        const roleA = (rowA.getValue("role") as { name: string } | null)?.name || "Korisnik";
-        const roleB = (rowB.getValue("role") as { name: string } | null)?.name || "Korisnik";
-        return roleA.localeCompare(roleB, 'hr-HR');
+        const roleA =
+          (rowA.getValue("role") as { name: string } | null)?.name || "Korisnik"
+        const roleB =
+          (rowB.getValue("role") as { name: string } | null)?.name || "Korisnik"
+        return roleA.localeCompare(roleB, "hr-HR")
       },
     },
     {
       accessorKey: "emailVerified",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -177,26 +183,26 @@ export function AdminUsersTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
       cell: ({ row }) => {
-        const verified = row.getValue("emailVerified") as boolean;
+        const verified = row.getValue("emailVerified") as boolean
         return (
           <Badge variant={verified ? "default" : "outline"}>
             {verified ? "Da" : "Ne"}
           </Badge>
-        );
+        )
       },
       sortingFn: (rowA, rowB) => {
-        const verifiedA = rowA.getValue("emailVerified") as boolean;
-        const verifiedB = rowB.getValue("emailVerified") as boolean;
-        return verifiedA === verifiedB ? 0 : verifiedA ? -1 : 1;
+        const verifiedA = rowA.getValue("emailVerified") as boolean
+        const verifiedB = rowB.getValue("emailVerified") as boolean
+        return verifiedA === verifiedB ? 0 : verifiedA ? -1 : 1
       },
     },
     {
       accessorKey: "createdAt",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -212,26 +218,26 @@ export function AdminUsersTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
       cell: ({ row }) => {
-        const date = new Date(row.getValue("createdAt"));
-        return date.toLocaleDateString("hr-HR");
+        const date = new Date(row.getValue("createdAt"))
+        return date.toLocaleDateString("hr-HR")
       },
     },
     {
       id: "actions",
       cell: ({ row }) => {
-        const user = row.original;
-        const isAdmin = user.role?.name === "Admin";
-        const isModerator = user.role?.name === "Moderator";
-        const isPromoting = promoting === user.id;
+        const user = row.original
+        const isAdmin = user.role?.name === "Admin"
+        const isModerator = user.role?.name === "Moderator"
+        const isPromoting = promoting === user.id
 
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="h-8 px-3 cursor-pointer text-sm"
               >
                 <span className="flex items-center">
@@ -258,10 +264,10 @@ export function AdminUsersTable() {
               )}
               <DropdownMenuItem
                 onClick={() => {
-                  setUserToDelete(user);
-                  setDeleteDialogOpen(true);
+                  setUserToDelete(user)
+                  setDeleteDialogOpen(true)
                 }}
-                className={`text-red-600 ${isAdmin ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                className={`text-red-600 ${isAdmin ? "cursor-not-allowed" : "cursor-pointer"}`}
                 disabled={isAdmin}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
@@ -269,10 +275,10 @@ export function AdminUsersTable() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        );
+        )
       },
     },
-  ];
+  ]
 
   const table = useReactTable({
     data,
@@ -287,84 +293,95 @@ export function AdminUsersTable() {
       sorting,
       columnFilters,
     },
-  });
+  })
 
   const loadUsers = async () => {
     try {
-      setLoading(true);
-      const response = await fetch("/api/admin/users");
-      if (!response.ok) throw new Error("Failed to fetch users");
-      const { users } = await response.json();
-      setData(users);
+      setLoading(true)
+      const response = await fetch("/api/admin/users")
+      if (!response.ok) throw new Error("Failed to fetch users")
+      const { users } = await response.json()
+      setData(users)
     } catch (error) {
-      console.error("Error loading users:", error);
-      toast.error("Greška pri učitavanju korisnika");
+      console.error("Error loading users:", error)
+      toast.error("Greška pri učitavanju korisnika")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
   const deleteUser = async () => {
-    if (!userToDelete) return;
+    if (!userToDelete) return
 
     try {
-      setDeleting(true);
-      const response = await fetch(`/api/admin/users?userId=${userToDelete.id}`, {
-        method: "DELETE",
-      });
+      setDeleting(true)
+      const response = await fetch(
+        `/api/admin/users?userId=${userToDelete.id}`,
+        {
+          method: "DELETE",
+        },
+      )
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to delete user");
+        const error = await response.json()
+        throw new Error(error.error || "Failed to delete user")
       }
 
-      toast.success("Korisnik je uspješno obrisan");
-      setDeleteDialogOpen(false);
-      setUserToDelete(null);
-      loadUsers();
+      toast.success("Korisnik je uspješno obrisan")
+      setDeleteDialogOpen(false)
+      setUserToDelete(null)
+      loadUsers()
     } catch (error) {
-      console.error("Error deleting user:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri brisanju korisnika");
+      console.error("Error deleting user:", error)
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Greška pri brisanju korisnika",
+      )
     } finally {
-      setDeleting(false);
+      setDeleting(false)
     }
-  };
+  }
 
   const promoteToModerator = async (userId: string) => {
     try {
-      setPromoting(userId);
+      setPromoting(userId)
       const response = await fetch("/api/admin/users/promote", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ userId }),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to promote user");
+        const error = await response.json()
+        throw new Error(error.error || "Failed to promote user")
       }
 
-      toast.success("Korisnik je uspješno promoviran u moderatora");
-      loadUsers();
+      toast.success("Korisnik je uspješno promoviran u moderatora")
+      loadUsers()
     } catch (error) {
-      console.error("Error promoting user:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri promoviranju korisnika");
+      console.error("Error promoting user:", error)
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Greška pri promoviranju korisnika",
+      )
     } finally {
-      setPromoting(null);
+      setPromoting(null)
     }
-  };
+  }
 
   useEffect(() => {
-    loadUsers();
-  }, []);
+    loadUsers()
+  }, [])
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
-    );
+    )
   }
 
   return (
@@ -397,7 +414,7 @@ export function AdminUsersTable() {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -410,14 +427,20 @@ export function AdminUsersTable() {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   Nema korisnika.
                 </TableCell>
               </TableRow>
@@ -456,8 +479,9 @@ export function AdminUsersTable() {
           <AlertDialogHeader>
             <AlertDialogTitle>Obrisati korisnika?</AlertDialogTitle>
             <AlertDialogDescription>
-              Jeste li sigurni da želite obrisati korisnika {userToDelete?.name}? 
-              Ova akcija će trajno obrisati korisnikov račun i sve povezane podatke.
+              Jeste li sigurni da želite obrisati korisnika {userToDelete?.name}
+              ? Ova akcija će trajno obrisati korisnikov račun i sve povezane
+              podatke.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -480,5 +504,5 @@ export function AdminUsersTable() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
+  )
 }

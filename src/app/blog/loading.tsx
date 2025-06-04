@@ -1,5 +1,5 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function BlogLoading() {
   return (
@@ -20,13 +20,13 @@ export default function BlogLoading() {
               <Skeleton className="h-4 w-full" />
               <Skeleton className="h-4 w-3/4" />
             </CardHeader>
-            
+
             <CardContent className="pt-0">
               <div className="flex items-center justify-between mb-3">
                 <Skeleton className="h-4 w-24" />
                 <Skeleton className="h-4 w-20" />
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <Skeleton className="h-4 w-20" />
                 <Skeleton className="h-4 w-16" />
@@ -36,5 +36,5 @@ export default function BlogLoading() {
         ))}
       </div>
     </div>
-  );
+  )
 }

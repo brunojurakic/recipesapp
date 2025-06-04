@@ -1,78 +1,113 @@
 "use client"
 
-import { UseFormRegister, FieldErrors } from 'react-hook-form'
-import { CreateRecipeFormData } from '@/lib/validations/recipe-zod'
-import { Input } from '../ui/input'
-import { Textarea } from '../ui/textarea'
-import { Label } from '../ui/label'
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
+import { UseFormRegister, FieldErrors } from "react-hook-form"
+import { CreateRecipeFormData } from "@/lib/validations/recipe-zod"
+import { Input } from "../ui/input"
+import { Textarea } from "../ui/textarea"
+import { Label } from "../ui/label"
+import { useEffect, useState } from "react"
+import Image from "next/image"
 
 interface RecipeFormProps {
   register: UseFormRegister<CreateRecipeFormData>
   errors: FieldErrors<CreateRecipeFormData>
-  image: File | null;
-  setImage: (file: File | null) => void;
-  imageError?: string | null;
+  image: File | null
+  setImage: (file: File | null) => void
+  imageError?: string | null
 }
 
-const RecipeForm = ({ register, errors, image, setImage, imageError }: RecipeFormProps) => {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+const RecipeForm = ({
+  register,
+  errors,
+  image,
+  setImage,
+  imageError,
+}: RecipeFormProps) => {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
   useEffect(() => {
     if (!image) {
-      setPreviewUrl(null);
-      return;
+      setPreviewUrl(null)
+      return
     }
-    const objectUrl = URL.createObjectURL(image);
-    setPreviewUrl(objectUrl);
+    const objectUrl = URL.createObjectURL(image)
+    setPreviewUrl(objectUrl)
 
     return () => {
-      URL.revokeObjectURL(objectUrl);
-    };
-  }, [image]);
+      URL.revokeObjectURL(objectUrl)
+    }
+  }, [image])
 
   return (
     <div className="space-y-6 mb-10">
       <h2 className="text-xl font-semibold">Detalji recepta</h2>
-      
+
       <div className="space-y-2">
         <Label htmlFor="title">Naslov</Label>
-        <Input id="title" {...register('title')} type="text" placeholder='Naslov recepta' />
-        {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
+        <Input
+          id="title"
+          {...register("title")}
+          type="text"
+          placeholder="Naslov recepta"
+        />
+        {errors.title && (
+          <p className="text-red-500 text-sm">{errors.title.message}</p>
+        )}
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="description">Opis</Label>
-        <Textarea id="description" {...register('description')} placeholder='Opis recepta' 
+        <Textarea
+          id="description"
+          {...register("description")}
+          placeholder="Opis recepta"
           className="min-h-[120px]"
         />
-        {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+        {errors.description && (
+          <p className="text-red-500 text-sm">{errors.description.message}</p>
+        )}
       </div>
 
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="servings">Broj porcija</Label>
-          <Input id="servings" {...register('servings', { valueAsNumber: true })} type="number" 
-            defaultValue={1} 
+          <Input
+            id="servings"
+            {...register("servings", { valueAsNumber: true })}
+            type="number"
+            defaultValue={1}
           />
-          {errors.servings && <p className="text-red-500 text-sm">{errors.servings.message}</p>}
+          {errors.servings && (
+            <p className="text-red-500 text-sm">{errors.servings.message}</p>
+          )}
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="preparationTime">Vrijeme pripreme (minute)</Label>
-          <Input id="preparationTime" {...register('preparationTime', { valueAsNumber: true })} type="number" 
-            defaultValue={1} 
+          <Input
+            id="preparationTime"
+            {...register("preparationTime", { valueAsNumber: true })}
+            type="number"
+            defaultValue={1}
           />
-          {errors.preparationTime && <p className="text-red-500 text-sm">{errors.preparationTime.message}</p>}
+          {errors.preparationTime && (
+            <p className="text-red-500 text-sm">
+              {errors.preparationTime.message}
+            </p>
+          )}
         </div>
-      </div><div className="space-y-2">
+      </div>
+      <div className="space-y-2">
         <Label htmlFor="image">Slika</Label>
-        <Input id="image" type="file" 
-          accept="image/jpeg,image/jpg,image/png,image/webp" className="cursor-pointer"
-          onChange={e => {
-            const file = e.target.files && e.target.files[0] ? e.target.files[0] : null;
-            setImage(file);
+        <Input
+          id="image"
+          type="file"
+          accept="image/jpeg,image/jpg,image/png,image/webp"
+          className="cursor-pointer"
+          onChange={(e) => {
+            const file =
+              e.target.files && e.target.files[0] ? e.target.files[0] : null
+            setImage(file)
           }}
         />
         {image && previewUrl && (
@@ -90,7 +125,9 @@ const RecipeForm = ({ register, errors, image, setImage, imageError }: RecipeFor
           </div>
         )}
         {imageError && <p className="text-red-500 text-sm">{imageError}</p>}
-        {errors.image && <p className="text-red-500 text-sm">{errors.image.message}</p>}
+        {errors.image && (
+          <p className="text-red-500 text-sm">{errors.image.message}</p>
+        )}
       </div>
     </div>
   )

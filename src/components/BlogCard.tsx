@@ -1,21 +1,21 @@
-import Link from 'next/link';
-import Image from 'next/image';
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Eye, Heart, Calendar, User } from 'lucide-react';
+import Link from "next/link"
+import Image from "next/image"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { Eye, Heart, Calendar, User } from "lucide-react"
 
 interface BlogCardProps {
   blog: {
-    id: string;
-    name: string;
-    description: string;
-    imagePath: string;
-    viewCount: number;
-    likeCount: number;
-    createdAt: Date;
+    id: string
+    name: string
+    description: string
+    imagePath: string
+    viewCount: number
+    likeCount: number
+    createdAt: Date
     user: {
-      name: string;
-    };
-  };
+      name: string
+    }
+  }
 }
 
 export default function BlogCard({ blog }: BlogCardProps) {
@@ -30,7 +30,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
             className="object-cover"
           />
         </div>
-        
+
         <CardHeader className="pb-3">
           <h3 className="text-xl font-semibold line-clamp-2 mb-2 mt-3">
             {blog.name}
@@ -39,7 +39,7 @@ export default function BlogCard({ blog }: BlogCardProps) {
             {blog.description}
           </p>
         </CardHeader>
-        
+
         <CardContent className="pt-0">
           <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
             <div className="flex items-center gap-1">
@@ -48,10 +48,10 @@ export default function BlogCard({ blog }: BlogCardProps) {
             </div>
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
-              <span>{blog.createdAt.toLocaleDateString('hr-HR')}</span>
+              <span>{blog.createdAt.toLocaleDateString("hr-HR")}</span>
             </div>
           </div>
-          
+
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Eye className="h-4 w-4" />
@@ -65,5 +65,5 @@ export default function BlogCard({ blog }: BlogCardProps) {
         </CardContent>
       </Link>
     </Card>
-  );
+  )
 }

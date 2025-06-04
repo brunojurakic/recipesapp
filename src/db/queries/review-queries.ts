@@ -1,8 +1,13 @@
-import { db } from "@/db/drizzle";
-import { review } from "@/db/schema";
-import { eq, desc, and } from "drizzle-orm";
+import { db } from "@/db/drizzle"
+import { review } from "@/db/schema"
+import { eq, desc, and } from "drizzle-orm"
 
-export async function addReview(recipeId: string, userId: string, content: string, rating: number) {
+export async function addReview(
+  recipeId: string,
+  userId: string,
+  content: string,
+  rating: number,
+) {
   await db.insert(review).values({
     recipeId,
     userId,
@@ -10,7 +15,7 @@ export async function addReview(recipeId: string, userId: string, content: strin
     rating,
     createdAt: new Date(),
     updatedAt: new Date(),
-  });
+  })
 }
 
 export async function getAllReviewsForAdmin() {
@@ -36,44 +41,47 @@ export async function getAllReviewsForAdmin() {
           },
         },
       },
-      orderBy: (table) => [
-        desc(table.createdAt)
-      ],
-    });
+      orderBy: (table) => [desc(table.createdAt)],
+    })
   } catch (error) {
-    console.error('Error fetching admin reviews:', error);
-    return [];
+    console.error("Error fetching admin reviews:", error)
+    return []
   }
 }
 
 export async function deleteReviewById(reviewId: string) {
   try {
-    await db.delete(review).where(eq(review.id, reviewId));
-    return true;
+    await db.delete(review).where(eq(review.id, reviewId))
+    return true
   } catch (error) {
-    console.error('Error deleting review:', error);
-    return false;
+    console.error("Error deleting review:", error)
+    return false
   }
 }
 
-export async function updateReview(reviewId: string, userId: string, content: string, rating: number) {
+export async function updateReview(
+  reviewId: string,
+  userId: string,
+  content: string,
+  rating: number,
+) {
   try {
     const updateData: Partial<typeof review.$inferInsert> = {
       content,
       rating,
       updatedAt: new Date(),
-    };
+    }
 
     const result = await db
       .update(review)
       .set(updateData)
       .where(and(eq(review.id, reviewId), eq(review.userId, userId)))
-      .returning({ id: review.id });
+      .returning({ id: review.id })
 
-    return result.length > 0 ? result[0] : null;
+    return result.length > 0 ? result[0] : null
   } catch (error) {
-    console.error('Error updating review:', error);
-    return null;
+    console.error("Error updating review:", error)
+    return null
   }
 }
 
@@ -82,11 +90,11 @@ export async function deleteReview(reviewId: string, userId: string) {
     const result = await db
       .delete(review)
       .where(and(eq(review.id, reviewId), eq(review.userId, userId)))
-      .returning({ id: review.id });
+      .returning({ id: review.id })
 
-    return result.length > 0 ? result[0] : null;
+    return result.length > 0 ? result[0] : null
   } catch (error) {
-    console.error('Error deleting review:', error);
-    return null;
+    console.error("Error deleting review:", error)
+    return null
   }
 }

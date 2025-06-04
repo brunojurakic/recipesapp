@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from "react"
 import {
   ColumnDef,
   flexRender,
@@ -11,7 +11,7 @@ import {
   useReactTable,
   SortingState,
   ColumnFiltersState,
-} from "@tanstack/react-table";
+} from "@tanstack/react-table"
 import {
   Table,
   TableBody,
@@ -19,16 +19,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+} from "@/components/ui/table"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/dropdown-menu"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -38,7 +38,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog"
 import {
   Dialog,
   DialogContent,
@@ -46,39 +46,48 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { ChevronDown, ChevronUp, Trash2, ArrowUpDown, Search, Loader2, Plus, PencilIcon } from "lucide-react";
-import { toast } from "sonner";
-import { createAllergySchema, updateAllergySchema } from '@/lib/schemas/admin';
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import {
+  ChevronDown,
+  ChevronUp,
+  Trash2,
+  ArrowUpDown,
+  Search,
+  Loader2,
+  Plus,
+  PencilIcon,
+} from "lucide-react"
+import { toast } from "sonner"
+import { createAllergySchema, updateAllergySchema } from "@/lib/schemas/admin"
 
 interface Allergy {
-  id: string;
-  name: string;
-  userCount: number;
-  recipeCount: number;
+  id: string
+  name: string
+  userCount: number
+  recipeCount: number
 }
 
 export function AdminAllergiesTable() {
-  const [data, setData] = useState<Allergy[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [allergyToDelete, setAllergyToDelete] = useState<Allergy | null>(null);
-  const [deleting, setDeleting] = useState(false);
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [newAllergyName, setNewAllergyName] = useState("");
-  const [editingAllergy, setEditingAllergy] = useState<Allergy | null>(null);
-  const [adding, setAdding] = useState(false);
-  const [updating, setUpdating] = useState(false);
+  const [data, setData] = useState<Allergy[]>([])
+  const [loading, setLoading] = useState(true)
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [allergyToDelete, setAllergyToDelete] = useState<Allergy | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false)
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
+  const [newAllergyName, setNewAllergyName] = useState("")
+  const [editingAllergy, setEditingAllergy] = useState<Allergy | null>(null)
+  const [adding, setAdding] = useState(false)
+  const [updating, setUpdating] = useState(false)
 
   const columns: ColumnDef<Allergy>[] = [
     {
       accessorKey: "name",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -94,13 +103,13 @@ export function AdminAllergiesTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
     },
     {
       accessorKey: "userCount",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -116,17 +125,17 @@ export function AdminAllergiesTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
       cell: ({ row }) => {
-        const userCount = row.getValue("userCount") as number;
-        return <Badge variant="outline">{userCount}</Badge>;
+        const userCount = row.getValue("userCount") as number
+        return <Badge variant="outline">{userCount}</Badge>
       },
     },
     {
       accessorKey: "recipeCount",
       header: ({ column }) => {
-        const sortState = column.getIsSorted();
+        const sortState = column.getIsSorted()
         return (
           <Button
             variant="ghost"
@@ -142,24 +151,24 @@ export function AdminAllergiesTable() {
               <ArrowUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
-        );
+        )
       },
       cell: ({ row }) => {
-        const recipeCount = row.getValue("recipeCount") as number;
-        return <Badge variant="outline">{recipeCount}</Badge>;
+        const recipeCount = row.getValue("recipeCount") as number
+        return <Badge variant="outline">{recipeCount}</Badge>
       },
     },
     {
       id: "actions",
       cell: ({ row }) => {
-        const allergy = row.original;
-        const canDelete = allergy.userCount === 0 && allergy.recipeCount === 0;
+        const allergy = row.original
+        const canDelete = allergy.userCount === 0 && allergy.recipeCount === 0
 
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button 
-                variant="ghost" 
+              <Button
+                variant="ghost"
                 className="h-8 px-3 cursor-pointer text-sm"
               >
                 <span className="flex items-center">
@@ -172,9 +181,9 @@ export function AdminAllergiesTable() {
             <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => {
-                  setEditingAllergy(allergy);
-                  setNewAllergyName(allergy.name);
-                  setIsEditDialogOpen(true);
+                  setEditingAllergy(allergy)
+                  setNewAllergyName(allergy.name)
+                  setIsEditDialogOpen(true)
                 }}
                 className="cursor-pointer"
               >
@@ -184,11 +193,11 @@ export function AdminAllergiesTable() {
               <DropdownMenuItem
                 onClick={() => {
                   if (canDelete) {
-                    setAllergyToDelete(allergy);
-                    setDeleteDialogOpen(true);
+                    setAllergyToDelete(allergy)
+                    setDeleteDialogOpen(true)
                   }
                 }}
-                className={'text-red-600 cursor-pointer'}
+                className={"text-red-600 cursor-pointer"}
                 disabled={!canDelete}
               >
                 <Trash2 className="mr-2 h-4 w-4 text-red-600" />
@@ -196,10 +205,10 @@ export function AdminAllergiesTable() {
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        );
+        )
       },
     },
-  ];
+  ]
 
   const table = useReactTable({
     data,
@@ -214,134 +223,156 @@ export function AdminAllergiesTable() {
       sorting,
       columnFilters,
     },
-  });
+  })
 
   const loadAllergies = async () => {
     try {
-      setLoading(true);
-      const response = await fetch("/api/admin/allergies");
-      if (!response.ok) throw new Error("Failed to fetch allergies");
-      const { allergies } = await response.json();
-      setData(allergies);
+      setLoading(true)
+      const response = await fetch("/api/admin/allergies")
+      if (!response.ok) throw new Error("Failed to fetch allergies")
+      const { allergies } = await response.json()
+      setData(allergies)
     } catch (error) {
-      console.error("Error loading allergies:", error);
-      toast.error("Greška pri učitavanju alergija");
+      console.error("Error loading allergies:", error)
+      toast.error("Greška pri učitavanju alergija")
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const deleteAllergy = async () => {
-    if (!allergyToDelete) return;
+    if (!allergyToDelete) return
 
     try {
-      setDeleting(true);
-      const response = await fetch(`/api/admin/allergies?allergyId=${allergyToDelete.id}`, {
-        method: "DELETE",
-      });
+      setDeleting(true)
+      const response = await fetch(
+        `/api/admin/allergies?allergyId=${allergyToDelete.id}`,
+        {
+          method: "DELETE",
+        },
+      )
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to delete allergy");
+        const error = await response.json()
+        throw new Error(error.error || "Failed to delete allergy")
       }
 
-      toast.success("Alergija je uspješno obrisana");
-      setDeleteDialogOpen(false);
-      setAllergyToDelete(null);
-      loadAllergies();
+      toast.success("Alergija je uspješno obrisana")
+      setDeleteDialogOpen(false)
+      setAllergyToDelete(null)
+      loadAllergies()
     } catch (error) {
-      console.error("Error deleting allergy:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri brisanju alergije");
+      console.error("Error deleting allergy:", error)
+      toast.error(
+        error instanceof Error ? error.message : "Greška pri brisanju alergije",
+      )
     } finally {
-      setDeleting(false);
+      setDeleting(false)
     }
-  };
+  }
 
   const addAllergy = async () => {
-    const validationResult = createAllergySchema.safeParse({ name: newAllergyName });
-    
+    const validationResult = createAllergySchema.safeParse({
+      name: newAllergyName,
+    })
+
     if (!validationResult.success) {
-      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
-      toast.error(errorMessage);
-      return;
+      const errorMessage =
+        validationResult.error.errors[0]?.message || "Neispravni podaci"
+      toast.error(errorMessage)
+      return
     }
 
     try {
-      setAdding(true);
+      setAdding(true)
       const response = await fetch("/api/admin/allergies", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(validationResult.data),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to add allergy");
+        const error = await response.json()
+        throw new Error(error.error || "Failed to add allergy")
       }
 
-      toast.success("Alergija je uspješno dodana");
-      setIsAddDialogOpen(false);
-      setNewAllergyName("");
-      loadAllergies();
+      toast.success("Alergija je uspješno dodana")
+      setIsAddDialogOpen(false)
+      setNewAllergyName("")
+      loadAllergies()
     } catch (error) {
-      console.error("Error adding allergy:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri dodavanju alergije");
+      console.error("Error adding allergy:", error)
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Greška pri dodavanju alergije",
+      )
     } finally {
-      setAdding(false);
+      setAdding(false)
     }
-  };
+  }
 
   const updateAllergy = async () => {
-    if (!editingAllergy) return;
+    if (!editingAllergy) return
 
-    const validationResult = updateAllergySchema.safeParse({ name: newAllergyName });
-    
+    const validationResult = updateAllergySchema.safeParse({
+      name: newAllergyName,
+    })
+
     if (!validationResult.success) {
-      const errorMessage = validationResult.error.errors[0]?.message || "Neispravni podaci";
-      toast.error(errorMessage);
-      return;
+      const errorMessage =
+        validationResult.error.errors[0]?.message || "Neispravni podaci"
+      toast.error(errorMessage)
+      return
     }
 
     try {
-      setUpdating(true);
-      const response = await fetch(`/api/admin/allergies?allergyId=${editingAllergy.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
+      setUpdating(true)
+      const response = await fetch(
+        `/api/admin/allergies?allergyId=${editingAllergy.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(validationResult.data),
         },
-        body: JSON.stringify(validationResult.data),
-      });
+      )
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to update allergy");
+        const error = await response.json()
+        throw new Error(error.error || "Failed to update allergy")
       }
 
-      toast.success("Alergija je uspješno ažurirana");
-      setIsEditDialogOpen(false);
-      setEditingAllergy(null);
-      setNewAllergyName("");
-      loadAllergies();
+      toast.success("Alergija je uspješno ažurirana")
+      setIsEditDialogOpen(false)
+      setEditingAllergy(null)
+      setNewAllergyName("")
+      loadAllergies()
     } catch (error) {
-      console.error("Error updating allergy:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri ažuriranju alergije");
+      console.error("Error updating allergy:", error)
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Greška pri ažuriranju alergije",
+      )
     } finally {
-      setUpdating(false);
+      setUpdating(false)
     }
-  };
+  }
 
   useEffect(() => {
-    loadAllergies();
-  }, []);
+    loadAllergies()
+  }, [])
 
   if (loading) {
     return (
       <div className="flex items-center justify-center py-8">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
-    );
+    )
   }
 
   return (
@@ -357,7 +388,7 @@ export function AdminAllergiesTable() {
             }
             className="pl-10"
           />
-        </div>        
+        </div>
         <Button onClick={() => setIsAddDialogOpen(true)} variant="default">
           <Plus className="h-4 w-4 sm:mr-2" />
           <span className="hidden sm:inline">Nova alergija</span>
@@ -378,7 +409,7 @@ export function AdminAllergiesTable() {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -391,14 +422,20 @@ export function AdminAllergiesTable() {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   Nema alergija.
                 </TableCell>
               </TableRow>
@@ -437,8 +474,9 @@ export function AdminAllergiesTable() {
           <AlertDialogHeader>
             <AlertDialogTitle>Obrisati alergiju?</AlertDialogTitle>
             <AlertDialogDescription>
-              Jeste li sigurni da želite obrisati alergiju &quot;{allergyToDelete?.name}&quot;? 
-              Ova akcija će trajno obrisati alergiju.
+              Jeste li sigurni da želite obrisati alergiju &quot;
+              {allergyToDelete?.name}&quot;? Ova akcija će trajno obrisati
+              alergiju.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -481,10 +519,13 @@ export function AdminAllergiesTable() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setIsAddDialogOpen(false);
-              setNewAllergyName("");
-            }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsAddDialogOpen(false)
+                setNewAllergyName("")
+              }}
+            >
               Odustani
             </Button>
             <Button onClick={addAllergy} disabled={adding}>
@@ -521,11 +562,14 @@ export function AdminAllergiesTable() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setIsEditDialogOpen(false);
-              setEditingAllergy(null);
-              setNewAllergyName("");
-            }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsEditDialogOpen(false)
+                setEditingAllergy(null)
+                setNewAllergyName("")
+              }}
+            >
               Odustani
             </Button>
             <Button onClick={updateAllergy} disabled={updating}>
@@ -542,5 +586,5 @@ export function AdminAllergiesTable() {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }
