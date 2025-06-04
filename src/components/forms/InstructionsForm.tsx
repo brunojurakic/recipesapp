@@ -46,15 +46,15 @@ const InstructionsForm = ({
       </div>
 
       {instructionFields.length === 0 && (
-        <div className="text-center p-4 border border-dashed rounded-md border-gray-300">
-          <p className="text-gray-500">
+        <div className="text-center p-4 border-2 border-dashed rounded-md border-muted">
+          <p className="text-muted-foreground">
             Još nema dodanih uputa. Kliknite Dodaj korak za početak.
           </p>
         </div>
       )}
 
       {instructionFields.map((field, index) => (
-        <div key={field.id} className="p-4 border rounded-md bg-gray-50">
+        <div key={field.id} className="p-4 border rounded-md bg-muted/50">
           <div className="flex justify-between items-center mb-3">
             <h3 className="font-medium">Korak {index + 1}</h3>
             <Button

@@ -107,8 +107,8 @@ const IngredientsForm = ({
       </div>
 
       {ingredientFields.length === 0 && !isLoading && (
-        <div className="text-center p-4 border border-dashed rounded-md border-gray-300">
-          <p className="text-gray-500">
+        <div className="text-center p-4 border-dashed rounded-md border-muted border-2">
+          <p className="text-muted-foreground">
             Još nema dodanih sastojaka. Kliknite Dodaj sastojak za početak.
           </p>
         </div>
@@ -119,7 +119,7 @@ const IngredientsForm = ({
           ingredientValues?.[index]?.unitId || field.unitId || ""
 
         return (
-          <div key={field.id} className="p-4 border rounded-md bg-gray-50">
+          <div key={field.id} className="p-4 border rounded-md bg-muted/50">
             <div className="flex justify-between items-center mb-3">
               <h3 className="font-medium">Sastojak {index + 1}</h3>
               <Button

@@ -120,7 +120,7 @@ const EditRecipeForm = ({
         />
         {previewUrl && (
           <div className="mt-2">
-            <div className="relative w-full max-w-[300px] h-[200px] rounded-md overflow-hidden border border-gray-200">
+            <div className="relative w-full max-w-[300px] h-[200px] rounded-md overflow-hidden border border-border">
               <Image
                 src={previewUrl}
                 alt="Recipe preview"
