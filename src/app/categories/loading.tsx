@@ -1,5 +1,5 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Card, CardContent } from "@/components/ui/card"
+import { Skeleton } from "@/components/ui/skeleton"
 
 export default function CategoriesLoading() {
   return (
@@ -20,5 +20,5 @@ export default function CategoriesLoading() {
         ))}
       </div>
     </div>
-  );
+  )
 }

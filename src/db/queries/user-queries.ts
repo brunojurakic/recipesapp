@@ -1,17 +1,17 @@
-import { db } from "@/db/drizzle";
-import { user, recipe, bookmark } from "@/db/schema";
-import { desc, eq } from "drizzle-orm";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
+import { db } from "@/db/drizzle"
+import { user, recipe, bookmark } from "@/db/schema"
+import { desc, eq } from "drizzle-orm"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
 export async function getCurrentUser() {
   try {
     const session = await auth.api.getSession({
-      headers: await headers()
-    });
+      headers: await headers(),
+    })
 
     if (!session) {
-      return null;
+      return null
     }
 
     return await db.query.user.findFirst({
@@ -19,10 +19,10 @@ export async function getCurrentUser() {
       with: {
         role: true,
       },
-    });
+    })
   } catch (error) {
-    console.error("Error getting current user:", error);
-    return null;
+    console.error("Error getting current user:", error)
+    return null
   }
 }
 
@@ -37,7 +37,7 @@ export async function getUserById(userId: string) {
       createdAt: true,
       updatedAt: true,
     },
-  });
+  })
 }
 
 export async function getUserRecipes(userId: string) {
@@ -48,7 +48,7 @@ export async function getUserRecipes(userId: string) {
         columns: {
           name: true,
           image: true,
-        }
+        },
       },
       categories: {
         with: {
@@ -64,15 +64,11 @@ export async function getUserRecipes(userId: string) {
         with: {
           user: true,
         },
-        orderBy: (table) => [
-          desc(table.createdAt)
-        ],
+        orderBy: (table) => [desc(table.createdAt)],
       },
     },
-    orderBy: (table) => [
-      desc(table.createdAt)
-    ],
-  });
+    orderBy: (table) => [desc(table.createdAt)],
+  })
 }
 
 export async function getUserBookmarks(userId: string) {
@@ -85,7 +81,7 @@ export async function getUserBookmarks(userId: string) {
             columns: {
               name: true,
               image: true,
-            }
+            },
           },
           categories: {
             with: {
@@ -101,23 +97,22 @@ export async function getUserBookmarks(userId: string) {
             with: {
               user: true,
             },
-            orderBy: (table) => [
-              desc(table.createdAt)
-            ],
+            orderBy: (table) => [desc(table.createdAt)],
           },
         },
       },
     },
-    orderBy: (table) => [
-      desc(table.createdAt)
-    ],
-  });
+    orderBy: (table) => [desc(table.createdAt)],
+  })
 }
 
-export async function updateUserProfile(userId: string, data: {
-  name?: string;
-  image?: string | null;
-}) {
+export async function updateUserProfile(
+  userId: string,
+  data: {
+    name?: string
+    image?: string | null
+  },
+) {
   const [updatedUser] = await db
     .update(user)
     .set({
@@ -132,9 +127,9 @@ export async function updateUserProfile(userId: string, data: {
       image: user.image,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
-    });
+    })
 
-  return updatedUser;
+  return updatedUser
 }
 
 export async function getAllUsersForAdmin() {
@@ -156,22 +151,20 @@ export async function getAllUsersForAdmin() {
           },
         },
       },
-      orderBy: (table) => [
-        desc(table.createdAt)
-      ],
-    });
+      orderBy: (table) => [desc(table.createdAt)],
+    })
   } catch (error) {
-    console.error('Error fetching admin users:', error);
-    return [];
+    console.error("Error fetching admin users:", error)
+    return []
   }
 }
 
 export async function deleteUserById(userId: string) {
   try {
-    await db.delete(user).where(eq(user.id, userId));
-    return true;
+    await db.delete(user).where(eq(user.id, userId))
+    return true
   } catch (error) {
-    console.error('Error deleting user:', error);
-    return false;
+    console.error("Error deleting user:", error)
+    return false
   }
 }

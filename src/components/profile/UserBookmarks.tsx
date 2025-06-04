@@ -1,56 +1,64 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { RecipeCard } from "@/components/RecipeCard";
-import { toast } from "sonner";
-import { Loader2, BookmarkIcon } from "lucide-react";
-import Link from "next/link";
-import type { BookmarkWithRecipe, ClassNameProps } from "@/lib/types";
+import { useState, useEffect } from "react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { RecipeCard } from "@/components/RecipeCard"
+import { toast } from "sonner"
+import { Loader2, BookmarkIcon } from "lucide-react"
+import Link from "next/link"
+import type { BookmarkWithRecipe, ClassNameProps } from "@/lib/types"
 
 export function UserBookmarks({ className }: ClassNameProps) {
-  const [bookmarks, setBookmarks] = useState<BookmarkWithRecipe[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [bookmarks, setBookmarks] = useState<BookmarkWithRecipe[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    fetchUserBookmarks();
-  }, []);
+    fetchUserBookmarks()
+  }, [])
 
   const fetchUserBookmarks = async () => {
     try {
-      setIsLoading(true);
-      const response = await fetch("/api/profile/bookmarks");
-      
+      setIsLoading(true)
+      const response = await fetch("/api/profile/bookmarks")
+
       if (!response.ok) {
-        throw new Error("Failed to fetch bookmarks");
+        throw new Error("Failed to fetch bookmarks")
       }
 
-      const bookmarksData = await response.json();
-      
-      const processedBookmarks = bookmarksData.map((bookmark: {
-        recipe: {
-          createdAt: string;
-          updatedAt: string;
-          [key: string]: unknown;
-        };
-        [key: string]: unknown;
-      }) => ({
-        ...bookmark,
-        recipe: {
-          ...bookmark.recipe,
-          createdAt: new Date(bookmark.recipe.createdAt),
-          updatedAt: new Date(bookmark.recipe.updatedAt),
-        },
-      }));
-      
-      setBookmarks(processedBookmarks);
+      const bookmarksData = await response.json()
+
+      const processedBookmarks = bookmarksData.map(
+        (bookmark: {
+          recipe: {
+            createdAt: string
+            updatedAt: string
+            [key: string]: unknown
+          }
+          [key: string]: unknown
+        }) => ({
+          ...bookmark,
+          recipe: {
+            ...bookmark.recipe,
+            createdAt: new Date(bookmark.recipe.createdAt),
+            updatedAt: new Date(bookmark.recipe.updatedAt),
+          },
+        }),
+      )
+
+      setBookmarks(processedBookmarks)
     } catch (error) {
-      console.error("Error fetching bookmarks:", error);
-      toast.error("Došlo je do greške pri dohvaćanju spremljenih recepta.");
+      console.error("Error fetching bookmarks:", error)
+      toast.error("Došlo je do greške pri dohvaćanju spremljenih recepta.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   if (isLoading) {
     return (
@@ -59,7 +67,7 @@ export function UserBookmarks({ className }: ClassNameProps) {
           <Loader2 className="h-6 w-6 animate-spin" />
         </CardContent>
       </Card>
-    );
+    )
   }
   return (
     <Card className={className}>
@@ -69,10 +77,9 @@ export function UserBookmarks({ className }: ClassNameProps) {
           Spremljeni recepti
         </CardTitle>
         <CardDescription>
-          {bookmarks.length === 0 
-            ? "Još niste spremili nijedan recept." 
-            : `Spremljeno ${bookmarks.length} ${bookmarks.length === 1 ? 'recept' : 'recepta'}.`
-          }
+          {bookmarks.length === 0
+            ? "Još niste spremili nijedan recept."
+            : `Spremljeno ${bookmarks.length} ${bookmarks.length === 1 ? "recept" : "recepta"}.`}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -83,7 +90,7 @@ export function UserBookmarks({ className }: ClassNameProps) {
               Još niste spremili nijedan recept.
             </p>
             <Link
-              href="/recipes" 
+              href="/recipes"
               className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90"
             >
               Pregledaj recepte
@@ -98,5 +105,5 @@ export function UserBookmarks({ className }: ClassNameProps) {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

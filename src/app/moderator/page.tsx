@@ -1,66 +1,60 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from "react";
-import { redirect } from "next/navigation";
+import { useState, useEffect } from "react"
+import { redirect } from "next/navigation"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import {
-  Loader2,
-  ChefHat,
-  MessageSquare,
-  Shield,
-  FileText,
-} from "lucide-react";
-import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable";
-import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable";
-import { AdminBlogsTable } from "@/components/admin/AdminBlogsTable";
+} from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Badge } from "@/components/ui/badge"
+import { Loader2, ChefHat, MessageSquare, Shield, FileText } from "lucide-react"
+import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable"
+import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable"
+import { AdminBlogsTable } from "@/components/admin/AdminBlogsTable"
 
 interface User {
-  id: string;
-  name: string;
-  email: string;
+  id: string
+  name: string
+  email: string
   role: {
-    id: string;
-    name: string;
-  };
+    id: string
+    name: string
+  }
 }
 
 export default function ModeratorPage() {
-  const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const checkAccess = async () => {
       try {
-        const response = await fetch("/api/moderator/check");
-        const data = await response.json();
+        const response = await fetch("/api/moderator/check")
+        const data = await response.json()
 
         if (!response.ok) {
           if (response.status === 401 || response.status === 403) {
-            redirect("/");
+            redirect("/")
           }
-          throw new Error(data.error || "Failed to check access");
+          throw new Error(data.error || "Failed to check access")
         }
 
-        setUser(data.user);
+        setUser(data.user)
       } catch (err) {
-        console.error("Access check error:", err);
-        setError(err instanceof Error ? err.message : "Unknown error");
+        console.error("Access check error:", err)
+        setError(err instanceof Error ? err.message : "Unknown error")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    checkAccess();
-  }, []);
+    checkAccess()
+  }, [])
 
   if (loading) {
     return (
@@ -72,7 +66,7 @@ export default function ModeratorPage() {
           </span>
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -83,7 +77,7 @@ export default function ModeratorPage() {
           <p className="text-gray-600 mt-2">{error}</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -175,5 +169,5 @@ export default function ModeratorPage() {
         </TabsContent>
       </Tabs>
     </div>
-  );
+  )
 }

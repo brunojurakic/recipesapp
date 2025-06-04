@@ -1,29 +1,32 @@
-'use client';
+"use client"
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Loader2, ImageIcon } from 'lucide-react';
-import { toast } from 'sonner';
-import { createBlogSchema, type CreateBlogInput } from '@/lib/validations/blog-validations';
-import Image from 'next/image';
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Label } from "@/components/ui/label"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Loader2, ImageIcon } from "lucide-react"
+import { toast } from "sonner"
+import {
+  createBlogSchema,
+  type CreateBlogInput,
+} from "@/lib/validations/blog-validations"
+import Image from "next/image"
 
 interface NewBlogFormProps {
-  userId: string;
+  userId: string
 }
 
 export default function NewBlogForm({ userId }: NewBlogFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -31,59 +34,60 @@ export default function NewBlogForm({ userId }: NewBlogFormProps) {
     setValue,
   } = useForm<CreateBlogInput>({
     resolver: zodResolver(createBlogSchema),
-  });
+  })
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      setValue('image', file);
-      const reader = new FileReader();
+      setValue("image", file)
+      const reader = new FileReader()
       reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+        setImagePreview(e.target?.result as string)
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   const onSubmit = async (data: CreateBlogInput) => {
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
 
     try {
-      const formData = new FormData();
-      formData.append('name', data.name);
-      formData.append('description', data.description);
-      formData.append('content', data.content);
-      formData.append('image', data.image);
-      formData.append('userId', userId);
+      const formData = new FormData()
+      formData.append("name", data.name)
+      formData.append("description", data.description)
+      formData.append("content", data.content)
+      formData.append("image", data.image)
+      formData.append("userId", userId)
 
-      const response = await fetch('/api/blog', {
-        method: 'POST',
+      const response = await fetch("/api/blog", {
+        method: "POST",
         body: formData,
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Greška pri stvaranju članka');
+        const errorData = await response.json()
+        throw new Error(errorData.message || "Greška pri stvaranju članka")
       }
 
-      const result = await response.json();
-      toast.success('Članak je uspješno objavljen!');
-      router.push(`/blog/${result.id}`);
+      const result = await response.json()
+      toast.success("Članak je uspješno objavljen!")
+      router.push(`/blog/${result.id}`)
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Došlo je do neočekivane greške';
-      setError(errorMessage);
-      toast.error(errorMessage);
+      const errorMessage =
+        err instanceof Error ? err.message : "Došlo je do neočekivane greške"
+      setError(errorMessage)
+      toast.error(errorMessage)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center gap-4">
-          <CardTitle className='text-lg'>Novi članak</CardTitle>
+          <CardTitle className="text-lg">Novi članak</CardTitle>
         </div>
       </CardHeader>
 
@@ -100,7 +104,7 @@ export default function NewBlogForm({ userId }: NewBlogFormProps) {
             <Input
               id="name"
               placeholder="Unesite naziv vašeg članka..."
-              {...register('name')}
+              {...register("name")}
               disabled={isLoading}
             />
             {errors.name && (
@@ -114,11 +118,13 @@ export default function NewBlogForm({ userId }: NewBlogFormProps) {
               id="description"
               placeholder="Napišite kratki opis koji će privući čitatelje..."
               rows={3}
-              {...register('description')}
+              {...register("description")}
               disabled={isLoading}
             />
             {errors.description && (
-              <p className="text-sm text-red-600">{errors.description.message}</p>
+              <p className="text-sm text-red-600">
+                {errors.description.message}
+              </p>
             )}
           </div>
 
@@ -165,7 +171,7 @@ export default function NewBlogForm({ userId }: NewBlogFormProps) {
               id="content"
               placeholder="Napišite sadržaj vašeg članka..."
               rows={8}
-              {...register('content')}
+              {...register("content")}
               disabled={isLoading}
               className="min-h-[200px]"
             />
@@ -191,5 +197,5 @@ export default function NewBlogForm({ userId }: NewBlogFormProps) {
         </form>
       </CardContent>
     </Card>
-  );
+  )
 }

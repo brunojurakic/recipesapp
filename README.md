@@ -6,13 +6,13 @@
 
 ## 🔧 Tech Stack
 
-| Kategorija | Tehnologije |
-|------------|-------------|
-| Frontend | Next.js 15.3.2, React 19, TypeScript, Tailwind CSS, Shadcn/ui |
-| Backend | Next.js API Routes, Drizzle ORM, Zod, Better Auth |
-| Baza | PostgreSQL (Neon Serverless) |
-| Storage | Vercel Blob |
-| Deploy | Vercel |
+| Kategorija | Tehnologije                                                   |
+| ---------- | ------------------------------------------------------------- |
+| Frontend   | Next.js 15.3.2, React 19, TypeScript, Tailwind CSS, Shadcn/ui |
+| Backend    | Next.js API Routes, Drizzle ORM, Zod, Better Auth             |
+| Baza       | PostgreSQL (Neon Serverless)                                  |
+| Storage    | Vercel Blob                                                   |
+| Deploy     | Vercel                                                        |
 
 ## ✨ Funkcionalnosti
 

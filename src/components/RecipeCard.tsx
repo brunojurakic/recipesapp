@@ -2,10 +2,15 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import type { Recipe, Category } from "@/lib/types/database"
+import type {
+  Recipe,
+  Category,
+  Difficulty,
+  Allergy,
+} from "@/lib/types/database"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
-import { User, Trash2, Loader2 } from "lucide-react"
+import { User, Trash2, Loader2, Leaf, ShieldAlert, Target } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 import {
@@ -25,6 +30,10 @@ interface RecipeWithRelations extends Recipe {
   categories: {
     category: Category
   }[]
+  difficulty?: Difficulty | null
+  allergies?: {
+    allergy: Allergy
+  }[]
 }
 
 interface RecipeCardProps {
@@ -33,44 +42,52 @@ interface RecipeCardProps {
   onDelete?: (recipeId: string) => void
 }
 
-export function RecipeCard({ recipe, showDeleteButton = false, onDelete }: RecipeCardProps) {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
+export function RecipeCard({
+  recipe,
+  showDeleteButton = false,
+  onDelete,
+}: RecipeCardProps) {
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
 
   const handleDelete = async (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
+    e.preventDefault()
+    e.stopPropagation()
+
     try {
-      setIsDeleting(true);
-      
+      setIsDeleting(true)
+
       const response = await fetch(`/api/recipes/${recipe.id}`, {
         method: "DELETE",
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to delete recipe");
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to delete recipe")
       }
 
-      toast.success("Recept je uspješno obrisan!");
-      setDialogOpen(false);
-      
+      toast.success("Recept je uspješno obrisan!")
+      setDialogOpen(false)
+
       if (onDelete) {
-        onDelete(recipe.id);
+        onDelete(recipe.id)
       }
     } catch (error) {
-      console.error("Error deleting recipe:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri brisanju recepta");
+      console.error("Error deleting recipe:", error)
+      toast.error(
+        error instanceof Error ? error.message : "Greška pri brisanju recepta",
+      )
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false)
     }
-  };
+  }
 
   return (
     <div className="relative group">
-      <Link href={`/recipes/${recipe.id}`}
-        className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+      <Link
+        href={`/recipes/${recipe.id}`}
+        className="group block h-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+      >
         <div className="overflow-hidden rounded-xl bg-card shadow transition-all hover:shadow-lg border h-full flex flex-col">
           <div className="relative h-48 w-full">
             {recipe.image_path ? (
@@ -86,15 +103,56 @@ export function RecipeCard({ recipe, showDeleteButton = false, onDelete }: Recip
                 <span className="text-muted-foreground">Nema slike</span>
               </div>
             )}
-          </div>
+          </div>{" "}
           <div className="p-4 flex flex-col flex-grow">
             <div className="flex flex-wrap gap-2 mb-2">
               {recipe.categories.map(({ category }) => (
                 <Badge variant={"outline"} key={category.id}>
                   {category.name}
                 </Badge>
-              ))}
+              ))}{" "}
+              {recipe.difficulty && (
+                <Badge
+                  variant="secondary"
+                  className="bg-purple-100 text-purple-800 border-purple-200"
+                >
+                  <Target className="w-3 h-3 mr-1" />
+                  {recipe.difficulty.name}
+                </Badge>
+              )}
             </div>
+
+            <div className="flex flex-wrap gap-2 mb-2">
+              {recipe.isVegan && (
+                <Badge
+                  variant="outline"
+                  className="bg-green-50 text-green-700 border-green-200"
+                >
+                  <Leaf className="w-3 h-3 mr-1" />
+                  Veganski
+                </Badge>
+              )}
+              {recipe.isVegetarian && !recipe.isVegan && (
+                <Badge
+                  variant="outline"
+                  className="bg-green-50 text-green-700 border-green-200"
+                >
+                  <Leaf className="w-3 h-3 mr-1" />
+                  Vegetarijanski
+                </Badge>
+              )}
+              {recipe.allergies && recipe.allergies.length > 0 && (
+                <Badge
+                  variant="outline"
+                  className="bg-orange-50 text-orange-700 border-orange-200"
+                >
+                  <ShieldAlert className="w-3 h-3 mr-1" />
+                  {recipe.allergies.length} alergen
+                  {recipe.allergies.length === 1 ? "" : "a"}
+                </Badge>
+              )}
+            </div>
+
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>{recipe.preparationTime} min</span>
               <span className="text-border">•</span>
@@ -103,13 +161,16 @@ export function RecipeCard({ recipe, showDeleteButton = false, onDelete }: Recip
                 <User className="h-4 w-4" />
               </div>
             </div>
-            <h3 className="mt-2 font-semibold text-lg text-foreground line-clamp-2" title={recipe.title}>
+            <h3
+              className="mt-2 font-semibold text-lg text-foreground line-clamp-2"
+              title={recipe.title}
+            >
               {recipe.title}
             </h3>
           </div>
         </div>
       </Link>
-        {showDeleteButton && (
+      {showDeleteButton && (
         <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
@@ -118,9 +179,9 @@ export function RecipeCard({ recipe, showDeleteButton = false, onDelete }: Recip
                 size="sm"
                 className="h-8 w-8 p-0 shadow-md"
                 onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  setDialogOpen(true);
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setDialogOpen(true)
                 }}
               >
                 <Trash2 className="h-4 w-4" />
@@ -128,15 +189,25 @@ export function RecipeCard({ recipe, showDeleteButton = false, onDelete }: Recip
             </DialogTrigger>
             <DialogContent onClick={(e) => e.stopPropagation()}>
               <DialogHeader>
-                <DialogTitle>Obriši recept</DialogTitle>                <DialogDescription>
-                  Jeste li sigurni da želite obrisati recept &quot;{recipe.title}&quot;? Ova akcija se ne može poništiti.
+                <DialogTitle>Obriši recept</DialogTitle>{" "}
+                <DialogDescription>
+                  Jeste li sigurni da želite obrisati recept &quot;
+                  {recipe.title}&quot;? Ova akcija se ne može poništiti.
                 </DialogDescription>
               </DialogHeader>
               <DialogFooter>
-                <Button variant="outline" onClick={() => setDialogOpen(false)} disabled={isDeleting}>
+                <Button
+                  variant="outline"
+                  onClick={() => setDialogOpen(false)}
+                  disabled={isDeleting}
+                >
                   Odustani
                 </Button>
-                <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+                <Button
+                  variant="destructive"
+                  onClick={handleDelete}
+                  disabled={isDeleting}
+                >
                   {isDeleting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

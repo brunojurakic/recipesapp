@@ -1,87 +1,91 @@
 "use client"
 
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { Loader2, Heart } from "lucide-react";
-import { useEffect, useState } from "react";
-import { toast } from 'sonner';
-import { LoginDialog } from "@/components/common/LoginDialog";
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
+import { Loader2, Heart } from "lucide-react"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+import { LoginDialog } from "@/components/common/LoginDialog"
 
 interface BlogLikeButtonProps {
-  blogId: string;
-  onToggle?: (isLiked: boolean) => void;
-  isInitialLoading?: boolean;
+  blogId: string
+  onToggle?: (isLiked: boolean) => void
+  isInitialLoading?: boolean
 }
 
-export function BlogLikeButton({ blogId, onToggle, isInitialLoading }: BlogLikeButtonProps) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const [showLoginDialog, setShowLoginDialog] = useState(false);
+export function BlogLikeButton({
+  blogId,
+  onToggle,
+  isInitialLoading,
+}: BlogLikeButtonProps) {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const [showLoginDialog, setShowLoginDialog] = useState(false)
 
   useEffect(() => {
     const checkLikeStatus = async () => {
       try {
-        const response = await fetch(`/api/blog-likes?blogId=${blogId}`);
+        const response = await fetch(`/api/blog-likes?blogId=${blogId}`)
         if (!response.ok) {
           if (response.status === 401) {
-            setIsLoggedIn(false);
-            return;
+            setIsLoggedIn(false)
+            return
           }
-          throw new Error("Failed to check like status");
+          throw new Error("Failed to check like status")
         }
-        setIsLoggedIn(true);
-        const data = await response.json();
-        setIsLiked(data.isLiked);
+        setIsLoggedIn(true)
+        const data = await response.json()
+        setIsLiked(data.isLiked)
       } catch (error) {
-        console.error("Error checking like status:", error);
+        console.error("Error checking like status:", error)
       }
-    };
+    }
 
-    checkLikeStatus();
-  }, [blogId]);
+    checkLikeStatus()
+  }, [blogId])
 
   const handleClick = async () => {
     if (!isLoggedIn) {
-      setShowLoginDialog(true);
-      return;
+      setShowLoginDialog(true)
+      return
     }
-    await toggleLike();
-  };
+    await toggleLike()
+  }
 
   const toggleLike = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       const response = await fetch("/api/blog-likes", {
         method: "POST",
         body: JSON.stringify({ blogId }),
         headers: {
           "Content-Type": "application/json",
         },
-      });
+      })
 
       if (!response.ok) {
         if (response.status === 401) {
-          setShowLoginDialog(true);
-          return;
+          setShowLoginDialog(true)
+          return
         }
-        throw new Error("Failed to toggle like");
+        throw new Error("Failed to toggle like")
       }
 
-      const data = await response.json();
-      setIsLiked(data.isLiked);
-      onToggle?.(data.isLiked);
-      router.refresh();
+      const data = await response.json()
+      setIsLiked(data.isLiked)
+      onToggle?.(data.isLiked)
+      router.refresh()
 
-      toast.success(data.isLiked ? "Članak je lajkan" : "Lajk je uklonjen");
+      toast.success(data.isLiked ? "Članak je lajkan" : "Lajk je uklonjen")
     } catch (error) {
-      console.error("Error toggling like:", error);
-      toast.error("Došlo je do greške pri lajkanju članka.");
+      console.error("Error toggling like:", error)
+      toast.error("Došlo je do greške pri lajkanju članka.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -111,5 +115,5 @@ export function BlogLikeButton({ blogId, onToggle, isInitialLoading }: BlogLikeB
         description="Za lajkanje članaka potrebno je prijaviti se. Želite li se prijaviti?"
       />
     </>
-  );
+  )
 }

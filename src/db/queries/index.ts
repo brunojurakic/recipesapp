@@ -4,8 +4,8 @@ export {
   getRecipes,
   getFilteredRecipes,
   deleteRecipe,
-  getAllRecipesForAdmin
-} from './recipe-queries';
+  getAllRecipesForAdmin,
+} from "./recipe-queries"
 
 export {
   getAllBlogs,
@@ -13,24 +13,24 @@ export {
   createBlog,
   updateBlog,
   deleteBlog,
-  incrementViewCount
-} from './blog-queries';
+  incrementViewCount,
+} from "./blog-queries"
 
 export {
   getBookmark,
   isRecipeBookmarked,
   createBookmark,
   deleteBookmark,
-  toggleBookmark
-} from './bookmark-queries';
+  toggleBookmark,
+} from "./bookmark-queries"
 
 export {
   addReview,
   getAllReviewsForAdmin,
   deleteReviewById,
   deleteReview,
-  updateReview
-} from './review-queries';
+  updateReview,
+} from "./review-queries"
 
 export {
   getAllAllergies,
@@ -42,8 +42,8 @@ export {
   createAllergy,
   findAllergyByName,
   updateAllergy,
-  deleteAllergy
-} from './allergy-queries';
+  deleteAllergy,
+} from "./allergy-queries"
 
 export {
   getAllCategories,
@@ -51,8 +51,8 @@ export {
   createCategory,
   findCategoryByName,
   updateCategory,
-  deleteCategory
-} from './category-queries';
+  deleteCategory,
+} from "./category-queries"
 
 export {
   getUserById,
@@ -60,23 +60,21 @@ export {
   getUserBookmarks,
   updateUserProfile,
   getAllUsersForAdmin,
-  deleteUserById
-} from './user-queries';
+  deleteUserById,
+} from "./user-queries"
 
 export {
   getDefaultUserRole,
   getModeratorRole,
-  assignRoleToUser
-} from './role-queries';
+  assignRoleToUser,
+} from "./role-queries"
 
-export {
-  getAdminStats
-} from './stats-queries';
+export { getAdminStats } from "./stats-queries"
 
 export {
   getBlogLike,
   isBlogLiked,
   createBlogLike,
   deleteBlogLike,
-  toggleBlogLike
-} from './blog-like-queries';
+  toggleBlogLike,
+} from "./blog-like-queries"

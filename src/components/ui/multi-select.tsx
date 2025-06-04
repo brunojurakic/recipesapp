@@ -45,20 +45,25 @@ export function MultiSelect<T extends SelectableItem>({
   placeholder,
   searchPlaceholder,
   emptyMessage,
-  badgeVariant = "secondary"
+  badgeVariant = "secondary",
 }: MultiSelectProps<T>) {
-  
-  const handleSelect = useCallback((itemId: string) => {
-    if (selectedIds.includes(itemId)) {
-      onChange(selectedIds.filter(id => id !== itemId))
-    } else {
-      onChange([...selectedIds, itemId])
-    }
-  }, [selectedIds, onChange])
+  const handleSelect = useCallback(
+    (itemId: string) => {
+      if (selectedIds.includes(itemId)) {
+        onChange(selectedIds.filter((id) => id !== itemId))
+      } else {
+        onChange([...selectedIds, itemId])
+      }
+    },
+    [selectedIds, onChange],
+  )
 
-  const handleRemove = useCallback((itemId: string) => {
-    onChange(selectedIds.filter(id => id !== itemId))
-  }, [selectedIds, onChange])
+  const handleRemove = useCallback(
+    (itemId: string) => {
+      onChange(selectedIds.filter((id) => id !== itemId))
+    },
+    [selectedIds, onChange],
+  )
 
   return (
     <div className="space-y-2">
@@ -69,9 +74,11 @@ export function MultiSelect<T extends SelectableItem>({
             disabled={isLoading}
             className={cn(
               "w-full justify-between",
-              !selectedIds.length && "text-muted-foreground"
+              !selectedIds.length && "text-muted-foreground",
             )}
-          >            {isLoading ? (
+          >
+            {" "}
+            {isLoading ? (
               <div className="flex items-center gap-2">
                 <span>Učitavanje {label.toLowerCase()}...</span>
                 <span className="ml-auto opacity-50">
@@ -80,13 +87,15 @@ export function MultiSelect<T extends SelectableItem>({
               </div>
             ) : selectedIds.length ? (
               `${selectedIds.length} odabrano`
-            ) : placeholder}
+            ) : (
+              placeholder
+            )}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-sm p-0">
           <Command>
-            <CommandInput placeholder={searchPlaceholder}/>
+            <CommandInput placeholder={searchPlaceholder} />
             <CommandList>
               {isLoading ? (
                 <div className="flex items-center justify-center py-6 text-sm text-muted-foreground">
@@ -98,17 +107,22 @@ export function MultiSelect<T extends SelectableItem>({
                   <CommandEmpty>{emptyMessage}</CommandEmpty>
                   <CommandGroup>
                     {items.map((item) => {
-                      const isSelected = selectedIds.includes(item.id);
+                      const isSelected = selectedIds.includes(item.id)
                       return (
                         <CommandItem
                           key={item.id}
                           value={item.name}
                           onSelect={() => handleSelect(item.id)}
                         >
-                          <Check className={cn("mr-2 h-4 w-4", isSelected ? "opacity-100" : "opacity-0")}/>
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4",
+                              isSelected ? "opacity-100" : "opacity-0",
+                            )}
+                          />
                           {item.name}
                         </CommandItem>
-                      );
+                      )
                     })}
                   </CommandGroup>
                 </>
@@ -121,17 +135,20 @@ export function MultiSelect<T extends SelectableItem>({
       {selectedIds.length > 0 && (
         <div className="flex flex-wrap gap-2 mt-3">
           {selectedIds.map((id) => {
-            const item = items.find(i => i.id === id);
+            const item = items.find((i) => i.id === id)
             return item ? (
               <Badge key={id} variant={badgeVariant} className="px-3 py-1">
                 {item.name}
-                <Button variant="ghost" size={"sm"} className="ml-1 h-4 w-4 p-0"
-                  onClick={() => handleRemove(id)} 
+                <Button
+                  variant="ghost"
+                  size={"sm"}
+                  className="ml-1 h-4 w-4 p-0"
+                  onClick={() => handleRemove(id)}
                 >
                   <X className="h-3 w-3" />
                 </Button>
               </Badge>
-            ) : null;
+            ) : null
           })}
         </div>
       )}

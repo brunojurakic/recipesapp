@@ -1,33 +1,49 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { MultiSelect, SelectableItem } from "@/components/ui/multi-select";
-import { Button } from "@/components/ui/button";
-import { Search, XCircle, Loader2, Filter, ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from "react"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { MultiSelect, SelectableItem } from "@/components/ui/multi-select"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Search,
+  XCircle,
+  Loader2,
+  Filter,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react"
 
 interface RecipeFiltersProps {
-  searchTerm: string;
-  onSearchTermChange: (term: string) => void;
-  allCategories: SelectableItem[];
-  selectedCategoryIds: string[];
-  onSelectedCategoryIdsChange: (ids: string[]) => void;
-  isLoadingCategories: boolean;
-  allAllergies: SelectableItem[];
-  selectedAllergyIds: string[];
-  onSelectedAllergyIdsChange: (ids: string[]) => void;
-  isLoadingAllergies: boolean;
-  ingredientSearch: string;
-  onIngredientSearchChange: (search: string) => void;
-  maxPrepTime: string;
-  onMaxPrepTimeChange: (time: string) => void;
-  minServings: string;
-  onMinServingsChange: (servings: string) => void;
-  hasActiveFilters: boolean;
-  onClearFilters: () => void;
-  isFiltering?: boolean;
-  initiallyExpanded?: boolean;
+  searchTerm: string
+  onSearchTermChange: (term: string) => void
+  allCategories: SelectableItem[]
+  selectedCategoryIds: string[]
+  onSelectedCategoryIdsChange: (ids: string[]) => void
+  isLoadingCategories: boolean
+  allAllergies: SelectableItem[]
+  selectedAllergyIds: string[]
+  onSelectedAllergyIdsChange: (ids: string[]) => void
+  isLoadingAllergies: boolean
+  allDifficulties: SelectableItem[]
+  selectedDifficultyIds: string[]
+  onSelectedDifficultyIdsChange: (ids: string[]) => void
+  isLoadingDifficulties: boolean
+  isVegan: boolean
+  onIsVeganChange: (isVegan: boolean) => void
+  isVegetarian: boolean
+  onIsVegetarianChange: (isVegetarian: boolean) => void
+  ingredientSearch: string
+  onIngredientSearchChange: (search: string) => void
+  maxPrepTime: string
+  onMaxPrepTimeChange: (time: string) => void
+  minServings: string
+  onMinServingsChange: (servings: string) => void
+  hasActiveFilters: boolean
+  onClearFilters: () => void
+  isFiltering?: boolean
+  initiallyExpanded?: boolean
 }
 
 export function RecipeFilters({
@@ -41,6 +57,14 @@ export function RecipeFilters({
   selectedAllergyIds,
   onSelectedAllergyIdsChange,
   isLoadingAllergies,
+  allDifficulties,
+  selectedDifficultyIds,
+  onSelectedDifficultyIdsChange,
+  isLoadingDifficulties,
+  isVegan,
+  onIsVeganChange,
+  isVegetarian,
+  onIsVegetarianChange,
   ingredientSearch,
   onIngredientSearchChange,
   maxPrepTime,
@@ -52,14 +76,18 @@ export function RecipeFilters({
   isFiltering = false,
   initiallyExpanded = false,
 }: RecipeFiltersProps) {
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(initiallyExpanded);
+  const [showAdvancedFilters, setShowAdvancedFilters] =
+    useState(initiallyExpanded)
   const hasActiveAdvancedFilters = Boolean(
     selectedCategoryIds.length > 0 ||
-    selectedAllergyIds.length > 0 ||
-    ingredientSearch ||
-    maxPrepTime ||
-    minServings
-  );
+      selectedAllergyIds.length > 0 ||
+      selectedDifficultyIds.length > 0 ||
+      isVegan ||
+      isVegetarian ||
+      ingredientSearch ||
+      maxPrepTime ||
+      minServings,
+  )
 
   return (
     <div>
@@ -94,19 +122,37 @@ export function RecipeFilters({
             <ChevronDown className="ml-2 h-4 w-4" />
           )}
         </Button>
-      </div>
+      </div>{" "}
       {!showAdvancedFilters && hasActiveAdvancedFilters && (
         <div className="mb-4 p-3 bg-muted/50 rounded-md border">
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
             <span>Aktivni filteri:</span>
             {selectedCategoryIds.length > 0 && (
               <span className="bg-background px-2 py-1 rounded border">
-                {selectedCategoryIds.length} kategorij{selectedCategoryIds.length === 1 ? 'a' : 'e'}
+                {selectedCategoryIds.length} kategorij
+                {selectedCategoryIds.length === 1 ? "a" : "e"}
               </span>
             )}
             {selectedAllergyIds.length > 0 && (
               <span className="bg-background px-2 py-1 rounded border">
-                {selectedAllergyIds.length} alergen{selectedAllergyIds.length === 1 ? '' : 'a'}
+                {selectedAllergyIds.length} alergen
+                {selectedAllergyIds.length === 1 ? "" : "a"}
+              </span>
+            )}
+            {selectedDifficultyIds.length > 0 && (
+              <span className="bg-background px-2 py-1 rounded border">
+                {selectedDifficultyIds.length} težin
+                {selectedDifficultyIds.length === 1 ? "a" : "e"}
+              </span>
+            )}
+            {isVegan && (
+              <span className="bg-background px-2 py-1 rounded border">
+                Veganski
+              </span>
+            )}
+            {isVegetarian && (
+              <span className="bg-background px-2 py-1 rounded border">
+                Vegetarijanski
               </span>
             )}
             {ingredientSearch && (
@@ -121,7 +167,8 @@ export function RecipeFilters({
             )}
             {minServings && (
               <span className="bg-background px-2 py-1 rounded border">
-                Min. {minServings} porcij{parseInt(minServings) === 1 ? 'a' : 'e'}
+                Min. {minServings} porcij
+                {parseInt(minServings) === 1 ? "a" : "e"}
               </span>
             )}
             <Button
@@ -136,7 +183,6 @@ export function RecipeFilters({
           </div>
         </div>
       )}
-
       {showAdvancedFilters && (
         <div className="p-4 md:p-6 border rounded-lg shadow-sm bg-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
@@ -150,7 +196,6 @@ export function RecipeFilters({
                 onChange={(e) => onIngredientSearchChange(e.target.value)}
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="categories">Kategorije</Label>
               <MultiSelect
@@ -164,8 +209,7 @@ export function RecipeFilters({
                 emptyMessage="Nema kategorija."
                 badgeVariant="outline"
               />
-            </div>
-
+            </div>{" "}
             <div className="space-y-2">
               <Label htmlFor="allergies">Izbjegavaj alergene</Label>
               <MultiSelect
@@ -180,7 +224,51 @@ export function RecipeFilters({
                 badgeVariant="outline"
               />
             </div>
-
+            <div className="space-y-2">
+              <Label htmlFor="difficulties">Težina pripreme</Label>
+              <MultiSelect
+                items={allDifficulties}
+                selectedIds={selectedDifficultyIds}
+                onChange={onSelectedDifficultyIdsChange}
+                isLoading={isLoadingDifficulties}
+                label="Težina"
+                placeholder="Odaberite težine pripreme"
+                searchPlaceholder="Pretraži težine..."
+                emptyMessage="Nema težina."
+                badgeVariant="outline"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Prehrambene preferencije</Label>
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isVegetarian"
+                    checked={isVegetarian}
+                    onCheckedChange={onIsVegetarianChange}
+                  />
+                  <Label
+                    htmlFor="isVegetarian"
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    Vegetarijanski
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isVegan"
+                    checked={isVegan}
+                    onCheckedChange={onIsVeganChange}
+                  />
+                  <Label
+                    htmlFor="isVegan"
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    Veganski
+                  </Label>
+                </div>
+              </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="maxPrepTime">Max. vrijeme pripreme (min)</Label>
               <Input
@@ -192,7 +280,6 @@ export function RecipeFilters({
                 min="0"
               />
             </div>
-
             <div className="space-y-2">
               <Label htmlFor="minServings">Min. broj porcija</Label>
               <Input
@@ -203,7 +290,8 @@ export function RecipeFilters({
                 onChange={(e) => onMinServingsChange(e.target.value)}
                 min="1"
               />
-            </div>            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-3 flex items-end justify-center">
+            </div>{" "}
+            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-3 flex items-end justify-center">
               {hasActiveFilters && (
                 <Button onClick={onClearFilters} className="w-full max-w-md">
                   <XCircle className="mr-2 h-4 w-4" />
@@ -215,5 +303,5 @@ export function RecipeFilters({
         </div>
       )}
     </div>
-  );
+  )
 }

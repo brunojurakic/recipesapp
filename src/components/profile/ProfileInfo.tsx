@@ -1,102 +1,115 @@
-"use client";
+"use client"
 
-import { useState, useEffect, useCallback } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { toast } from "sonner";
-import { Loader2, Camera } from "lucide-react";
-import { profileFormSchema } from "@/lib/validations/profile-schema";
-import type { User, ClassNameProps } from "@/lib/types";
+import { useState, useEffect, useCallback } from "react"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+import { toast } from "sonner"
+import { Loader2, Camera } from "lucide-react"
+import { profileFormSchema } from "@/lib/validations/profile-schema"
+import type { User, ClassNameProps } from "@/lib/types"
 
 export function ProfileInfo({ className }: ClassNameProps) {
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [isSaving, setIsSaving] = useState(false)
+  const [image, setImage] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
 
   const form = useForm<z.infer<typeof profileFormSchema>>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: {
       name: "",
     },
-  });
+  })
 
   const fetchUserProfile = useCallback(async () => {
     try {
-      setIsLoading(true);
-      const response = await fetch("/api/profile");
-      
+      setIsLoading(true)
+      const response = await fetch("/api/profile")
+
       if (!response.ok) {
-        throw new Error("Failed to fetch profile");
+        throw new Error("Failed to fetch profile")
       }
 
-      const userData = await response.json();
-      setUser(userData);
-      form.setValue("name", userData.name);
-      setImagePreview(userData.image);
+      const userData = await response.json()
+      setUser(userData)
+      form.setValue("name", userData.name)
+      setImagePreview(userData.image)
     } catch (error) {
-      console.error("Error fetching profile:", error);
-      toast.error("Došlo je do greške pri dohvaćanju profila.");
+      console.error("Error fetching profile:", error)
+      toast.error("Došlo je do greške pri dohvaćanju profila.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  }, [form]);
+  }, [form])
 
   useEffect(() => {
-    fetchUserProfile();
-  }, [fetchUserProfile]);
+    fetchUserProfile()
+  }, [fetchUserProfile])
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      setImage(file);
-      const reader = new FileReader();
+      setImage(file)
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   const onSubmit = async (values: z.infer<typeof profileFormSchema>) => {
     try {
-      setIsSaving(true);
-      
-      const formData = new FormData();
-      formData.append("name", values.name);
-      
+      setIsSaving(true)
+
+      const formData = new FormData()
+      formData.append("name", values.name)
+
       if (image) {
-        formData.append("image", image);
+        formData.append("image", image)
       }
 
       const response = await fetch("/api/profile", {
         method: "PUT",
         body: formData,
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to update profile");
+        throw new Error("Failed to update profile")
       }
 
-      const updatedUser = await response.json();
-      setUser(updatedUser);
-      setImage(null);
-      toast.success("Profil je uspješno ažuriran!");
+      const updatedUser = await response.json()
+      setUser(updatedUser)
+      setImage(null)
+      toast.success("Profil je uspješno ažuriran!")
     } catch (error) {
-      console.error("Error updating profile:", error);
-      toast.error("Došlo je do greške pri ažuriranju profila.");
+      console.error("Error updating profile:", error)
+      toast.error("Došlo je do greške pri ažuriranju profila.")
     } finally {
-      setIsSaving(false);
+      setIsSaving(false)
     }
-  };
+  }
 
   if (isLoading) {
     return (
@@ -105,26 +118,26 @@ export function ProfileInfo({ className }: ClassNameProps) {
           <Loader2 className="h-6 w-6 animate-spin" />
         </CardContent>
       </Card>
-    );
+    )
   }
 
   if (!user) {
     return (
       <Card className={className}>
         <CardContent className="flex items-center justify-center p-6">
-          <p className="text-muted-foreground">Greška pri učitavanju profila.</p>
+          <p className="text-muted-foreground">
+            Greška pri učitavanju profila.
+          </p>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
     <Card className={className}>
       <CardHeader>
         <CardTitle>Informacije o profilu</CardTitle>
-        <CardDescription>
-          Uredite svoje ime i profilnu sliku.
-        </CardDescription>
+        <CardDescription>Uredite svoje ime i profilnu sliku.</CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
@@ -134,7 +147,7 @@ export function ProfileInfo({ className }: ClassNameProps) {
               {user.name.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          
+
           <div className="space-y-2 flex-1">
             <Label htmlFor="image">Profilna slika</Label>
             <div className="flex items-center gap-2">
@@ -183,5 +196,5 @@ export function ProfileInfo({ className }: ClassNameProps) {
         </Form>
       </CardContent>
     </Card>
-  );
+  )
 }

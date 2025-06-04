@@ -1,39 +1,39 @@
-"use client";
+"use client"
 
-import { Search } from 'lucide-react';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Search } from "lucide-react"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
 interface SearchBarProps {
-  defaultValue?: string;
-  onSearch?: (term: string) => void;
-  placeholder?: string;
+  defaultValue?: string
+  onSearch?: (term: string) => void
+  placeholder?: string
 }
 
-const SearchBar = ({ 
-  defaultValue = "", 
-  onSearch, 
-  placeholder = "Pretraži recepte..." 
+const SearchBar = ({
+  defaultValue = "",
+  onSearch,
+  placeholder = "Pretraži recepte...",
 }: SearchBarProps) => {
-  const [searchTerm, setSearchTerm] = useState(defaultValue);
-  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState(defaultValue)
+  const router = useRouter()
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (onSearch) {
-      onSearch(searchTerm);
+      onSearch(searchTerm)
     } else {
       // Navigate to recipes page with search term
-      const searchParams = new URLSearchParams();
+      const searchParams = new URLSearchParams()
       if (searchTerm.trim()) {
-        searchParams.set('search', searchTerm.trim());
+        searchParams.set("search", searchTerm.trim())
       }
-      const url = searchParams.toString() 
-        ? `/recipes?${searchParams.toString()}` 
-        : '/recipes';
-      router.push(url);
+      const url = searchParams.toString()
+        ? `/recipes?${searchParams.toString()}`
+        : "/recipes"
+      router.push(url)
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit} className="relative w-full max-w-lg">
@@ -46,7 +46,7 @@ const SearchBar = ({
         className="text-zinc-700 w-full rounded-full bg-white/90 backdrop-blur-sm px-10 py-3 text-sm shadow-md outline-none ring-1 ring-white/50 transition-all placeholder:text-zinc-500 focus:bg-white focus:ring-2 focus:ring-zinc-300"
       />
     </form>
-  );
-};
+  )
+}
 
-export default SearchBar;
+export default SearchBar

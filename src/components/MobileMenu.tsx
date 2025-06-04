@@ -1,19 +1,31 @@
 "use client"
 
-import { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
-import { useSession, signOut } from '@/lib/auth-client'
-import { useRouter } from 'next/navigation'
-import { UtensilsCrossed, Menu, User, LogOut, LogIn, UserPlus, BookOpen, Home, Tag, Award, Shield } from 'lucide-react'
+import { useState, useEffect, useRef } from "react"
+import Link from "next/link"
+import { useSession, signOut } from "@/lib/auth-client"
+import { useRouter } from "next/navigation"
+import {
+  UtensilsCrossed,
+  Menu,
+  User,
+  LogOut,
+  LogIn,
+  UserPlus,
+  BookOpen,
+  Home,
+  Tag,
+  Award,
+  Shield,
+} from "lucide-react"
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetFooter
-} from '@/components/ui/sheet'
-import { Button } from '@/components/ui/button'
+  SheetFooter,
+} from "@/components/ui/sheet"
+import { Button } from "@/components/ui/button"
 
 export function MobileMenu() {
   const { data: session, isPending } = useSession()
@@ -27,12 +39,12 @@ export function MobileMenu() {
       if (session?.user?.id && checkedSessionRef.current !== session.user.id) {
         checkedSessionRef.current = session.user.id
         try {
-          const adminRes = await fetch('/api/admin/check')
+          const adminRes = await fetch("/api/admin/check")
           const adminData = await adminRes.json()
           setIsAdmin(Boolean(adminData.hasAdminAccess))
 
           if (!adminData.hasAdminAccess) {
-            const modRes = await fetch('/api/moderator/check')
+            const modRes = await fetch("/api/moderator/check")
             const modData = await modRes.json()
             setIsModerator(modRes.ok && Boolean(modData.user))
           } else {
@@ -58,8 +70,8 @@ export function MobileMenu() {
       fetchOptions: {
         onSuccess: () => {
           router.push("/")
-        }
-      }
+        },
+      },
     })
   }
 
@@ -139,9 +151,24 @@ export function MobileMenu() {
         <SheetFooter className="flex flex-col space-y-4 border-t pt-4">
           {isPending ? (
             <div className="flex justify-center">
-              <svg className="animate-spin h-5 w-5 text-zinc-600" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="animate-spin h-5 w-5 text-zinc-600"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                  fill="none"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
             </div>
           ) : session ? (

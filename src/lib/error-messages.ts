@@ -1,4 +1,4 @@
-type ErrorTypes = Record<string, string>;
+type ErrorTypes = Record<string, string>
 
 const errorMessages: ErrorTypes = {
   USER_ALREADY_EXISTS: "Korisnik s ovim emailom već postoji",
@@ -36,22 +36,25 @@ const errorMessages: ErrorTypes = {
   ACCOUNT_NOT_FOUND: "Račun nije pronađen",
   EMAIL_ALREADY_EXISTS: "Korisnik s ovim emailom već postoji",
   EMAIL_IN_USE: "Email se već koristi",
-};
+}
 
-export const getCroatianErrorMessage = (errorCode: string, fallbackMessage?: string): string => {
+export const getCroatianErrorMessage = (
+  errorCode: string,
+  fallbackMessage?: string,
+): string => {
   if (errorCode && errorCode in errorMessages) {
-    return errorMessages[errorCode as keyof typeof errorMessages];
+    return errorMessages[errorCode as keyof typeof errorMessages]
   }
 
   if (fallbackMessage) {
-    const translated = translateCommonErrors(fallbackMessage);
+    const translated = translateCommonErrors(fallbackMessage)
     if (translated !== fallbackMessage) {
-      return translated;
+      return translated
     }
   }
 
-  return fallbackMessage || "Dogodila se greška";
-};
+  return fallbackMessage || "Dogodila se greška"
+}
 
 export const translateCommonErrors = (message: string): string => {
   const commonTranslations: Record<string, string> = {
@@ -79,75 +82,83 @@ export const translateCommonErrors = (message: string): string => {
     "Internal server error": "Greška na serveru",
     "Network error": "Greška mreže",
     "Bad request": "Neispravni zahtjev",
-    "Unauthorized": "Nemate dozvolu za pristup",
-    "Forbidden": "Pristup je zabranjen",
+    Unauthorized: "Nemate dozvolu za pristup",
+    Forbidden: "Pristup je zabranjen",
     "Not found": "Nije pronađeno",
     "Connection failed": "Povezivanje nije uspjelo",
-    "Timeout": "Isteklo je vrijeme čekanja",
+    Timeout: "Isteklo je vrijeme čekanja",
     "Email already exists": "Email već postoji",
     "Email is already in use": "Email se već koristi",
     "This email is already registered": "Ovaj email je već registriran",
     "Password validation failed": "Provjera lozinke nije uspjela",
     "Weak password": "Slaba lozinka",
     "Password strength is insufficient": "Jačina lozinke nije dovoljna",
-  };
+  }
 
   if (commonTranslations[message]) {
-    return commonTranslations[message];
+    return commonTranslations[message]
   }
 
   for (const [english, croatian] of Object.entries(commonTranslations)) {
     if (message.toLowerCase().includes(english.toLowerCase())) {
-      return croatian;
+      return croatian
     }
   }
 
-  const passwordLengthPattern = /password.*must.*be.*at.*least.*(\d+).*characters/i;
-  const passwordLengthMatch = message.match(passwordLengthPattern);
+  const passwordLengthPattern =
+    /password.*must.*be.*at.*least.*(\d+).*characters/i
+  const passwordLengthMatch = message.match(passwordLengthPattern)
   if (passwordLengthMatch) {
-    const minLength = passwordLengthMatch[1];
-    return `Lozinka mora imati najmanje ${minLength} znakova`;
+    const minLength = passwordLengthMatch[1]
+    return `Lozinka mora imati najmanje ${minLength} znakova`
   }
 
-  if (message.toLowerCase().includes('password') &&
-    (message.toLowerCase().includes('short') ||
-      message.toLowerCase().includes('length') ||
-      message.toLowerCase().includes('minimum'))) {
-    return "Lozinka je prekratka";
+  if (
+    message.toLowerCase().includes("password") &&
+    (message.toLowerCase().includes("short") ||
+      message.toLowerCase().includes("length") ||
+      message.toLowerCase().includes("minimum"))
+  ) {
+    return "Lozinka je prekratka"
   }
 
-  if (message.toLowerCase().includes('email') &&
-    (message.toLowerCase().includes('exist') ||
-      message.toLowerCase().includes('use') ||
-      message.toLowerCase().includes('taken'))) {
-    return "Korisnik s ovim emailom već postoji";
+  if (
+    message.toLowerCase().includes("email") &&
+    (message.toLowerCase().includes("exist") ||
+      message.toLowerCase().includes("use") ||
+      message.toLowerCase().includes("taken"))
+  ) {
+    return "Korisnik s ovim emailom već postoji"
   }
 
-  if ((message.toLowerCase().includes('email') || message.toLowerCase().includes('password')) &&
-    (message.toLowerCase().includes('invalid') ||
-      message.toLowerCase().includes('incorrect') ||
-      message.toLowerCase().includes('wrong') ||
-      message.toLowerCase().includes('failed'))) {
-    return "Neispravna email adresa ili lozinka";
+  if (
+    (message.toLowerCase().includes("email") ||
+      message.toLowerCase().includes("password")) &&
+    (message.toLowerCase().includes("invalid") ||
+      message.toLowerCase().includes("incorrect") ||
+      message.toLowerCase().includes("wrong") ||
+      message.toLowerCase().includes("failed"))
+  ) {
+    return "Neispravna email adresa ili lozinka"
   }
 
-  return message;
-};
+  return message
+}
 
-
-
-export const getTranslatedError = (errorCode?: string, errorMessage?: string): string => {
-
+export const getTranslatedError = (
+  errorCode?: string,
+  errorMessage?: string,
+): string => {
   if (errorCode) {
-    const translation = getCroatianErrorMessage(errorCode, errorMessage);
+    const translation = getCroatianErrorMessage(errorCode, errorMessage)
     if (translation !== (errorMessage || "Dogodila se greška")) {
-      return translation;
+      return translation
     }
   }
 
   if (errorMessage) {
-    return translateCommonErrors(errorMessage);
+    return translateCommonErrors(errorMessage)
   }
 
-  return "Dogodila se greška";
-};
+  return "Dogodila se greška"
+}

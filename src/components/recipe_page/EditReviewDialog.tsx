@@ -1,8 +1,8 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Loader2, Pencil, Star, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react"
+import { Loader2, Pencil, Star, Trash2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -10,37 +10,40 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-import type { ReviewWithUser } from "@/lib/types";
+} from "@/components/ui/dialog"
+import { Textarea } from "@/components/ui/textarea"
+import { toast } from "sonner"
+import type { ReviewWithUser } from "@/lib/types"
 
 interface EditReviewDialogProps {
-  review: ReviewWithUser;
-  onReviewUpdated: () => void;
+  review: ReviewWithUser
+  onReviewUpdated: () => void
 }
 
-export function EditReviewDialog({ review, onReviewUpdated }: EditReviewDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [rating, setRating] = useState(review.rating);
-  const [content, setContent] = useState(review.content || "");
+export function EditReviewDialog({
+  review,
+  onReviewUpdated,
+}: EditReviewDialogProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [rating, setRating] = useState(review.rating)
+  const [content, setContent] = useState(review.content || "")
 
   const handleSubmit = async () => {
     if (rating === 0) {
-      toast.error("Molimo odaberite ocjenu");
-      return;
+      toast.error("Molimo odaberite ocjenu")
+      return
     }
 
-    const trimmedContent = content.trim();
+    const trimmedContent = content.trim()
     if (trimmedContent.length < 10) {
-      toast.error("Sadržaj recenzije mora imati najmanje 10 znakova");
-      return;
+      toast.error("Sadržaj recenzije mora imati najmanje 10 znakova")
+      return
     }
 
     try {
-      setIsLoading(true);
+      setIsLoading(true)
 
       const response = await fetch(`/api/reviews/${review.id}`, {
         method: "PUT",
@@ -51,51 +54,51 @@ export function EditReviewDialog({ review, onReviewUpdated }: EditReviewDialogPr
           rating,
           content: trimmedContent,
         }),
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to update review");
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to update review")
       }
 
-      toast.success("Recenzija je uspješno ažurirana!");
-      setIsOpen(false);
-      onReviewUpdated();
+      toast.success("Recenzija je uspješno ažurirana!")
+      setIsOpen(false)
+      onReviewUpdated()
     } catch (error) {
-      console.error("Error updating review:", error);
-      toast.error("Došlo je do greške pri ažuriranju recenzije.");
+      console.error("Error updating review:", error)
+      toast.error("Došlo je do greške pri ažuriranju recenzije.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleStarClick = (starRating: number) => {
-    setRating(starRating);
-  };
+    setRating(starRating)
+  }
 
   const handleDelete = async () => {
     try {
-      setIsDeleting(true);
+      setIsDeleting(true)
 
       const response = await fetch(`/api/reviews/${review.id}`, {
         method: "DELETE",
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to delete review");
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to delete review")
       }
 
-      toast.success("Recenzija je uspješno obrisana!");
-      setIsOpen(false);
-      onReviewUpdated();
+      toast.success("Recenzija je uspješno obrisana!")
+      setIsOpen(false)
+      onReviewUpdated()
     } catch (error) {
-      console.error("Error deleting review:", error);
-      toast.error("Došlo je do greške pri brisanju recenzije.");
+      console.error("Error deleting review:", error)
+      toast.error("Došlo je do greške pri brisanju recenzije.")
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false)
     }
-  };
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -119,15 +122,16 @@ export function EditReviewDialog({ review, onReviewUpdated }: EditReviewDialogPr
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
                   key={star}
-                  className={`h-6 w-6 cursor-pointer transition-colors ${star <= rating
+                  className={`h-6 w-6 cursor-pointer transition-colors ${
+                    star <= rating
                       ? "fill-yellow-400 text-yellow-400"
                       : "text-gray-300 hover:text-yellow-300"
-                    }`}
+                  }`}
                   onClick={() => handleStarClick(star)}
                 />
               ))}
             </div>
-          </div>            
+          </div>
           <div>
             <label className="text-sm font-medium">Komentar</label>
             <Textarea
@@ -147,9 +151,13 @@ export function EditReviewDialog({ review, onReviewUpdated }: EditReviewDialogPr
             disabled={isLoading || isDeleting}
             className="flex items-center gap-2"
           >
-            {isDeleting ? <Loader2 className="animate-spin h-4 w-4"/> : <Trash2 className="h-4 w-4" />}
+            {isDeleting ? (
+              <Loader2 className="animate-spin h-4 w-4" />
+            ) : (
+              <Trash2 className="h-4 w-4" />
+            )}
           </Button>
-          
+
           <div className="flex gap-3">
             <Button variant="outline" onClick={() => setIsOpen(false)}>
               Odustani
@@ -161,5 +169,5 @@ export function EditReviewDialog({ review, onReviewUpdated }: EditReviewDialogPr
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

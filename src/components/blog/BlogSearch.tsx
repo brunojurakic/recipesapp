@@ -1,44 +1,44 @@
-'use client';
+"use client"
 
-import { useState, useMemo } from 'react';
-import { Input } from '@/components/ui/input';
-import { Search, Loader2 } from 'lucide-react';
-import BlogCard from '@/components/BlogCard';
-import { useDebounce } from 'use-debounce';
+import { useState, useMemo } from "react"
+import { Input } from "@/components/ui/input"
+import { Search, Loader2 } from "lucide-react"
+import BlogCard from "@/components/BlogCard"
+import { useDebounce } from "use-debounce"
 
 interface Blog {
-  id: string;
-  name: string;
-  description: string;
-  imagePath: string;
-  viewCount: number;
-  likeCount: number;
-  createdAt: Date;
+  id: string
+  name: string
+  description: string
+  imagePath: string
+  viewCount: number
+  likeCount: number
+  createdAt: Date
   user: {
-    id: string;
-    name: string;
-  };
+    id: string
+    name: string
+  }
 }
 
 interface BlogSearchProps {
-  blogs: Blog[];
+  blogs: Blog[]
 }
 
 export default function BlogSearch({ blogs }: BlogSearchProps) {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
-  
-  const isSearching = searchTerm !== debouncedSearchTerm;
+  const [searchTerm, setSearchTerm] = useState("")
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
+
+  const isSearching = searchTerm !== debouncedSearchTerm
 
   const filteredBlogs = useMemo(() => {
     if (!debouncedSearchTerm.trim()) {
-      return blogs;
+      return blogs
     }
 
-    return blogs.filter(blog =>
-      blog.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
-    );
-  }, [blogs, debouncedSearchTerm]);
+    return blogs.filter((blog) =>
+      blog.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase()),
+    )
+  }, [blogs, debouncedSearchTerm])
 
   return (
     <div className="space-y-6">
@@ -60,7 +60,9 @@ export default function BlogSearch({ blogs }: BlogSearchProps) {
       {filteredBlogs.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-lg text-muted-foreground">
-            {debouncedSearchTerm ? 'Nema rezultata za pretragu' : 'Trenutno nema objavljenih članaka'}
+            {debouncedSearchTerm
+              ? "Nema rezultata za pretragu"
+              : "Trenutno nema objavljenih članaka"}
           </p>
         </div>
       ) : (
@@ -71,5 +73,5 @@ export default function BlogSearch({ blogs }: BlogSearchProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

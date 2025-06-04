@@ -1,6 +1,6 @@
-import { db } from "@/db/drizzle";
-import { blog } from "@/db/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { db } from "@/db/drizzle"
+import { blog } from "@/db/schema"
+import { desc, eq, sql } from "drizzle-orm"
 
 export async function getAllBlogs() {
   return await db.query.blog.findMany({
@@ -13,7 +13,7 @@ export async function getAllBlogs() {
         },
       },
     },
-  });
+  })
 }
 
 export async function getBlogById(id: string) {
@@ -34,15 +34,15 @@ export async function getBlogById(id: string) {
         },
       },
     },
-  });
+  })
 }
 
 export async function createBlog(data: {
-  name: string;
-  description: string;
-  content: string;
-  imagePath: string;
-  userId: string;
+  name: string
+  description: string
+  content: string
+  imagePath: string
+  userId: string
 }) {
   const newBlog = await db
     .insert(blog)
@@ -55,18 +55,18 @@ export async function createBlog(data: {
       createdAt: new Date(),
       updatedAt: new Date(),
     })
-    .returning();
+    .returning()
 
-  return newBlog[0];
+  return newBlog[0]
 }
 
 export async function updateBlog(
   id: string,
   data: {
-    name: string;
-    description: string;
-    content: string;
-  }
+    name: string
+    description: string
+    content: string
+  },
 ) {
   const updatedBlog = await db
     .update(blog)
@@ -77,18 +77,15 @@ export async function updateBlog(
       updatedAt: new Date(),
     })
     .where(eq(blog.id, id))
-    .returning();
+    .returning()
 
-  return updatedBlog[0] || null;
+  return updatedBlog[0] || null
 }
 
 export async function deleteBlog(id: string) {
-  const deletedBlog = await db
-    .delete(blog)
-    .where(eq(blog.id, id))
-    .returning();
+  const deletedBlog = await db.delete(blog).where(eq(blog.id, id)).returning()
 
-  return deletedBlog[0] || null;
+  return deletedBlog[0] || null
 }
 
 export async function incrementViewCount(id: string) {
@@ -98,7 +95,7 @@ export async function incrementViewCount(id: string) {
       viewCount: sql`${blog.viewCount} + 1`,
     })
     .where(eq(blog.id, id))
-    .returning();
+    .returning()
 
-  return updatedBlog[0] || null;
+  return updatedBlog[0] || null
 }

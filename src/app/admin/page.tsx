@@ -1,16 +1,16 @@
-"use client";
+"use client"
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+} from "@/components/ui/card"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 import {
   Loader2,
   Users,
@@ -21,65 +21,65 @@ import {
   AlertTriangle,
   Tags,
   FileText,
-} from "lucide-react";
-import { AdminUsersTable } from "@/components/admin/AdminUsersTable";
-import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable";
-import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable";
-import { AdminAllergiesTable } from "@/components/admin/AdminAllergiesTable";
-import { AdminCategoriesTable } from "@/components/admin/AdminCategoriesTable";
-import { AdminBlogsTable } from "@/components/admin/AdminBlogsTable";
+} from "lucide-react"
+import { AdminUsersTable } from "@/components/admin/AdminUsersTable"
+import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable"
+import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable"
+import { AdminAllergiesTable } from "@/components/admin/AdminAllergiesTable"
+import { AdminCategoriesTable } from "@/components/admin/AdminCategoriesTable"
+import { AdminBlogsTable } from "@/components/admin/AdminBlogsTable"
 
 interface DashboardStats {
-  totalUsers: number;
-  totalRecipes: number;
-  totalReviews: number;
-  totalBookmarks: number;
-  newUsers30Days: number;
-  newRecipes30Days: number;
-  averageRating: number;
+  totalUsers: number
+  totalRecipes: number
+  totalReviews: number
+  totalBookmarks: number
+  newUsers30Days: number
+  newRecipes30Days: number
+  averageRating: number
 }
 
 export default function AdminDashboard() {
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [stats, setStats] = useState<DashboardStats | null>(null)
 
   useEffect(() => {
     const checkAdminAccess = async () => {
       try {
-        const response = await fetch("/api/admin/check");
+        const response = await fetch("/api/admin/check")
         if (response.status === 401) {
-          router.push("/login");
-          return;
+          router.push("/login")
+          return
         }
         if (response.status === 403) {
-          setError("Nemate dozvolu za pristup admin panelu.");
-          router.push("/");
-          setLoading(false);
-          return;
+          setError("Nemate dozvolu za pristup admin panelu.")
+          router.push("/")
+          setLoading(false)
+          return
         }
         if (!response.ok) {
-          throw new Error("Failed to check admin access");
+          throw new Error("Failed to check admin access")
         }
 
-        const statsResponse = await fetch("/api/admin/stats");
+        const statsResponse = await fetch("/api/admin/stats")
         if (!statsResponse.ok) {
-          throw new Error("Failed to load dashboard stats");
+          throw new Error("Failed to load dashboard stats")
         }
 
-        const { stats: dashboardStats } = await statsResponse.json();
-        setStats(dashboardStats);
-        setLoading(false);
+        const { stats: dashboardStats } = await statsResponse.json()
+        setStats(dashboardStats)
+        setLoading(false)
       } catch (err) {
-        console.error("Error loading admin dashboard:", err);
-        setError("Greška pri učitavanju admin panela.");
-        setLoading(false);
+        console.error("Error loading admin dashboard:", err)
+        setError("Greška pri učitavanju admin panela.")
+        setLoading(false)
       }
-    };
+    }
 
-    checkAdminAccess();
-  }, [router]);
+    checkAdminAccess()
+  }, [router])
 
   if (loading) {
     return (
@@ -91,7 +91,7 @@ export default function AdminDashboard() {
           </span>
         </div>
       </div>
-    );
+    )
   }
 
   if (error) {
@@ -101,7 +101,7 @@ export default function AdminDashboard() {
           <AlertDescription className="text-center">{error}</AlertDescription>
         </Alert>
       </div>
-    );
+    )
   }
 
   return (
@@ -308,5 +308,5 @@ export default function AdminDashboard() {
         </Tabs>
       </div>
     </div>
-  );
+  )
 }

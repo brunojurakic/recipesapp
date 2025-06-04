@@ -1,29 +1,28 @@
-import { put } from "@vercel/blob";
+import { put } from "@vercel/blob"
 
 export const parseJSON = (val: FormDataEntryValue | null) => {
-  if (!val) return [];
+  if (!val) return []
   try {
-    return JSON.parse(val as string);
+    return JSON.parse(val as string)
   } catch {
-    return [];
+    return []
   }
-};
-
+}
 
 export async function saveImage(image: File): Promise<string | null> {
   if (!image || !(image instanceof File)) {
-    return null;
+    return null
   }
-  
+
   try {
     const blob = await put(image.name, image, {
-      access: 'public',
+      access: "public",
       addRandomSuffix: true,
-    });
-    
-    return blob.url;
+    })
+
+    return blob.url
   } catch (error) {
-    console.error('Error uploading to Vercel Blob:', error);
-    return null;
+    console.error("Error uploading to Vercel Blob:", error)
+    return null
   }
 }

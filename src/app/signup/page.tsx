@@ -1,40 +1,50 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import Image from "next/image";
-import { Loader2, UtensilsCrossed, X } from "lucide-react";
-import { signUp } from "@/lib/auth-client";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { getCroatianErrorMessage, translateCommonErrors } from "@/lib/error-messages";
+import { useState } from "react"
+import Image from "next/image"
+import { Loader2, UtensilsCrossed, X } from "lucide-react"
+import { signUp } from "@/lib/auth-client"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  getCroatianErrorMessage,
+  translateCommonErrors,
+} from "@/lib/error-messages"
 
 export default function SignUp() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [image, setImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [passwordConfirmation, setPasswordConfirmation] = useState("")
+  const [image, setImage] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]
     if (file) {
-      setImage(file);
-      const reader = new FileReader();
+      setImage(file)
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+        setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -42,7 +52,7 @@ export default function SignUp() {
         <Card className="w-full shadow-xl">
           <CardHeader className="space-y-1 text-center">
             <div className="flex flex-col items-center mb-2">
-              <Link href={'/'} className="flex items-center gap-2">
+              <Link href={"/"} className="flex items-center gap-2">
                 <UtensilsCrossed className="h-8 w-8" />
                 <h1 className="text-3xl font-bold">ReceptiNet</h1>
               </Link>
@@ -89,7 +99,7 @@ export default function SignUp() {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password">Lozinka</Label>
               <Input
@@ -101,7 +111,7 @@ export default function SignUp() {
                 required
               />
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="password_confirmation">Potvrda lozinke</Label>
               <Input
@@ -141,8 +151,8 @@ export default function SignUp() {
                       variant="ghost"
                       size="icon"
                       onClick={() => {
-                        setImage(null);
-                        setImagePreview(null);
+                        setImage(null)
+                        setImagePreview(null)
                       }}
                     >
                       <X className="h-4 w-4" />
@@ -158,18 +168,18 @@ export default function SignUp() {
               disabled={loading}
               onClick={async () => {
                 if (!firstName.trim()) {
-                  toast.error("Ime je obavezno");
-                  return;
+                  toast.error("Ime je obavezno")
+                  return
                 }
-                
+
                 if (!lastName.trim()) {
-                  toast.error("Prezime je obavezno");
-                  return;
+                  toast.error("Prezime je obavezno")
+                  return
                 }
-                
+
                 if (password !== passwordConfirmation) {
-                  toast.error("Lozinke se ne podudaraju");
-                  return;
+                  toast.error("Lozinke se ne podudaraju")
+                  return
                 }
                 await signUp.email({
                   email,
@@ -179,16 +189,20 @@ export default function SignUp() {
                   callbackURL: "/",
                   fetchOptions: {
                     onResponse: () => setLoading(false),
-                    onRequest: () => setLoading(true),                    onError: (ctx) => {
-                      const croatianMessage = ctx.error.code 
-                        ? getCroatianErrorMessage(ctx.error.code, ctx.error.message)
-                        : translateCommonErrors(ctx.error.message);
-                      toast.error(croatianMessage);
-                      setLoading(false);
+                    onRequest: () => setLoading(true),
+                    onError: (ctx) => {
+                      const croatianMessage = ctx.error.code
+                        ? getCroatianErrorMessage(
+                            ctx.error.code,
+                            ctx.error.message,
+                          )
+                        : translateCommonErrors(ctx.error.message)
+                      toast.error(croatianMessage)
+                      setLoading(false)
                     },
                     onSuccess: async () => router.push("/"),
                   },
-                });
+                })
               }}
             >
               {loading ? (
@@ -197,8 +211,7 @@ export default function SignUp() {
               Stvori račun
             </Button>
             <div className="text-center text-sm">
-              <span className="text-muted-foreground">Već imate račun?</span>
-              {' '}
+              <span className="text-muted-foreground">Već imate račun?</span>{" "}
               <Link href="/login" className="underline hover:text-primary">
                 Prijava
               </Link>
@@ -207,14 +220,14 @@ export default function SignUp() {
         </Card>
       </div>
     </div>
-  );
+  )
 }
 
 async function convertImageToBase64(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
+    const reader = new FileReader()
+    reader.onloadend = () => resolve(reader.result as string)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
 }

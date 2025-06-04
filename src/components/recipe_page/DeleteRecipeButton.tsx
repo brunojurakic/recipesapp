@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Trash2, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { Trash2, Loader2 } from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -12,42 +12,44 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { toast } from "sonner";
+} from "@/components/ui/dialog"
+import { toast } from "sonner"
 
 interface DeleteRecipeButtonProps {
-  recipeId: string;
+  recipeId: string
 }
 
 export function DeleteRecipeButton({ recipeId }: DeleteRecipeButtonProps) {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
+  const router = useRouter()
 
   const handleDelete = async () => {
     try {
-      setIsDeleting(true);
+      setIsDeleting(true)
 
       const response = await fetch(`/api/recipes/${recipeId}`, {
         method: "DELETE",
-      });
+      })
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to delete recipe");
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to delete recipe")
       }
 
-      toast.success("Recept je uspješno obrisan!");
-      setIsOpen(false);
+      toast.success("Recept je uspješno obrisan!")
+      setIsOpen(false)
 
-      router.push("/recipes");
+      router.push("/recipes")
     } catch (error) {
-      console.error("Error deleting recipe:", error);
-      toast.error(error instanceof Error ? error.message : "Greška pri brisanju recepta");
+      console.error("Error deleting recipe:", error)
+      toast.error(
+        error instanceof Error ? error.message : "Greška pri brisanju recepta",
+      )
     } finally {
-      setIsDeleting(false);
+      setIsDeleting(false)
     }
-  };
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -61,7 +63,8 @@ export function DeleteRecipeButton({ recipeId }: DeleteRecipeButtonProps) {
         <DialogHeader>
           <DialogTitle>Jeste li sigurni?</DialogTitle>
           <DialogDescription>
-            Ova akcija se ne može poništiti. Recept će biti trajno obrisan zajedno sa svim komentarima i ocjenama.
+            Ova akcija se ne može poništiti. Recept će biti trajno obrisan
+            zajedno sa svim komentarima i ocjenama.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="gap-2">
@@ -89,5 +92,5 @@ export function DeleteRecipeButton({ recipeId }: DeleteRecipeButtonProps) {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

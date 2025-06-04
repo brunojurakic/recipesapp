@@ -1,25 +1,25 @@
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { CircleAlert } from "lucide-react";
-import type { Allergy } from "@/lib/types/database";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Badge } from "../ui/badge"
+import { CircleAlert } from "lucide-react"
+import type { Allergy } from "@/lib/types/database"
 
 interface RecipeAllergyInfo {
-  allergy: Allergy;
+  allergy: Allergy
 }
 
 interface RecipeAllergiesProps {
-  allergies: RecipeAllergyInfo[];
+  allergies: RecipeAllergyInfo[]
 }
 
 export function RecipeAllergies({ allergies }: RecipeAllergiesProps) {
-  if (allergies.length === 0) return null;
-  
+  if (allergies.length === 0) return null
+
   return (
-    <Card className='shadow-xl'>
+    <Card className="shadow-xl">
       <CardHeader>
-        <div className='flex items-center gap-1'>
+        <div className="flex items-center gap-1">
           <CardTitle>Informacije o alergenima</CardTitle>
-          <CircleAlert className='h-4 w-4 text-red-600'/>
+          <CircleAlert className="h-4 w-4 text-red-600" />
         </div>
       </CardHeader>
       <CardContent>
@@ -32,5 +32,5 @@ export function RecipeAllergies({ allergies }: RecipeAllergiesProps) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }
