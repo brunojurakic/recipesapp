@@ -106,6 +106,11 @@ export const recipe = pgTable(
     image_path: text("path_do_slike").notNull(),
     servings: integer("porcije").notNull(),
     preparationTime: integer("vrijeme_pripreme").notNull(),
+    difficultyId: uuid("id_tezine").references(() => difficulty.id, {
+      onDelete: "set null",
+    }),
+    isVegan: boolean("prikladno_veganima").notNull().default(false),
+    isVegetarian: boolean("prikladno_vegetarijancima").notNull().default(false),
     createdAt: timestamp("datum_kreiranja").notNull(),
     updatedAt: timestamp("datum_azuriranja").notNull(),
   },
@@ -120,6 +125,10 @@ export const recipe = pgTable(
     check(
       "created_before_updated",
       sql`${table.createdAt} <= ${table.updatedAt}`,
+    ),
+    check(
+      "vegan_implies_vegetarian",
+      sql`${table.isVegan} = false OR ${table.isVegetarian} = true`,
     ),
   ],
 )
@@ -296,6 +305,22 @@ export const unit = pgTable(
   ],
 )
 
+export const difficulty = pgTable(
+  "TezinaPripreme",
+  {
+    id: uuid("id_tezine").defaultRandom().primaryKey(),
+    name: text("naziv").notNull().unique(),
+    level: integer("razina").notNull().unique(),
+  },
+  (table) => [
+    check(
+      "name_length",
+      sql`length(${table.name}) >= 2 AND length(${table.name}) <= 30`,
+    ),
+    check("level_range", sql`${table.level} >= 1 AND ${table.level} <= 5`),
+  ],
+)
+
 export const blog = pgTable(
   "Blog",
   {
@@ -358,6 +383,10 @@ export const recipeRelations = relations(recipe, ({ one, many }) => ({
   user: one(user, {
     fields: [recipe.userId],
     references: [user.id],
+  }),
+  difficulty: one(difficulty, {
+    fields: [recipe.difficultyId],
+    references: [difficulty.id],
   }),
   categories: many(recipeCategory),
   allergies: many(recipeAllergy),
@@ -455,6 +484,10 @@ export const userAllergyRelations = relations(userAllergy, ({ one }) => ({
 
 export const roleRelations = relations(role, ({ many }) => ({
   users: many(user),
+}))
+
+export const difficultyRelations = relations(difficulty, ({ many }) => ({
+  recipes: many(recipe),
 }))
 
 export const blogRelations = relations(blog, ({ one, many }) => ({

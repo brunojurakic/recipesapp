@@ -20,12 +20,14 @@ import {
   Star,
   AlertTriangle,
   Tags,
+  FileText,
 } from "lucide-react"
 import { AdminUsersTable } from "@/components/admin/AdminUsersTable"
 import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable"
 import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable"
 import { AdminAllergiesTable } from "@/components/admin/AdminAllergiesTable"
 import { AdminCategoriesTable } from "@/components/admin/AdminCategoriesTable"
+import { AdminBlogsTable } from "@/components/admin/AdminBlogsTable"
 
 interface DashboardStats {
   totalUsers: number
@@ -114,7 +116,6 @@ export default function AdminDashboard() {
             kategorijama
           </p>
         </div>
-
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card>
@@ -178,9 +179,9 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </div>
-        )}
+        )}{" "}
         <Tabs defaultValue="users" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger
               value="users"
               className="flex items-center gap-2 cursor-pointer"
@@ -194,6 +195,13 @@ export default function AdminDashboard() {
             >
               <ChefHat className="h-4 w-4" />
               <span className="hidden sm:inline">Recepti</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="blogs"
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <FileText className="h-4 w-4" />
+              <span className="hidden sm:inline">Blogovi</span>
             </TabsTrigger>
             <TabsTrigger
               value="reviews"
@@ -217,7 +225,6 @@ export default function AdminDashboard() {
               <span className="hidden sm:inline">Kategorije</span>
             </TabsTrigger>
           </TabsList>
-
           <TabsContent value="users">
             <Card>
               <CardHeader>
@@ -230,8 +237,7 @@ export default function AdminDashboard() {
                 <AdminUsersTable />
               </CardContent>
             </Card>
-          </TabsContent>
-
+          </TabsContent>{" "}
           <TabsContent value="recipes">
             <Card>
               <CardHeader>
@@ -245,7 +251,19 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
-
+          <TabsContent value="blogs">
+            <Card>
+              <CardHeader>
+                <CardTitle>Upravljanje blogovima</CardTitle>
+                <CardDescription>
+                  Pregledajte i upravljajte objavljenim blog člancima
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <AdminBlogsTable />
+              </CardContent>
+            </Card>
+          </TabsContent>
           <TabsContent value="reviews">
             <Card>
               <CardHeader>
@@ -259,7 +277,6 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
-
           <TabsContent value="allergies">
             <Card>
               <CardHeader>
@@ -274,7 +291,6 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
           </TabsContent>
-
           <TabsContent value="categories">
             <Card>
               <CardHeader>

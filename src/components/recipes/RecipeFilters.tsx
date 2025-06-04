@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { MultiSelect, SelectableItem } from "@/components/ui/multi-select"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Search,
   XCircle,
@@ -25,6 +26,14 @@ interface RecipeFiltersProps {
   selectedAllergyIds: string[]
   onSelectedAllergyIdsChange: (ids: string[]) => void
   isLoadingAllergies: boolean
+  allDifficulties: SelectableItem[]
+  selectedDifficultyIds: string[]
+  onSelectedDifficultyIdsChange: (ids: string[]) => void
+  isLoadingDifficulties: boolean
+  isVegan: boolean
+  onIsVeganChange: (isVegan: boolean) => void
+  isVegetarian: boolean
+  onIsVegetarianChange: (isVegetarian: boolean) => void
   ingredientSearch: string
   onIngredientSearchChange: (search: string) => void
   maxPrepTime: string
@@ -48,6 +57,14 @@ export function RecipeFilters({
   selectedAllergyIds,
   onSelectedAllergyIdsChange,
   isLoadingAllergies,
+  allDifficulties,
+  selectedDifficultyIds,
+  onSelectedDifficultyIdsChange,
+  isLoadingDifficulties,
+  isVegan,
+  onIsVeganChange,
+  isVegetarian,
+  onIsVegetarianChange,
   ingredientSearch,
   onIngredientSearchChange,
   maxPrepTime,
@@ -64,6 +81,9 @@ export function RecipeFilters({
   const hasActiveAdvancedFilters = Boolean(
     selectedCategoryIds.length > 0 ||
       selectedAllergyIds.length > 0 ||
+      selectedDifficultyIds.length > 0 ||
+      isVegan ||
+      isVegetarian ||
       ingredientSearch ||
       maxPrepTime ||
       minServings,
@@ -102,7 +122,7 @@ export function RecipeFilters({
             <ChevronDown className="ml-2 h-4 w-4" />
           )}
         </Button>
-      </div>
+      </div>{" "}
       {!showAdvancedFilters && hasActiveAdvancedFilters && (
         <div className="mb-4 p-3 bg-muted/50 rounded-md border">
           <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
@@ -117,6 +137,22 @@ export function RecipeFilters({
               <span className="bg-background px-2 py-1 rounded border">
                 {selectedAllergyIds.length} alergen
                 {selectedAllergyIds.length === 1 ? "" : "a"}
+              </span>
+            )}
+            {selectedDifficultyIds.length > 0 && (
+              <span className="bg-background px-2 py-1 rounded border">
+                {selectedDifficultyIds.length} težin
+                {selectedDifficultyIds.length === 1 ? "a" : "e"}
+              </span>
+            )}
+            {isVegan && (
+              <span className="bg-background px-2 py-1 rounded border">
+                Veganski
+              </span>
+            )}
+            {isVegetarian && (
+              <span className="bg-background px-2 py-1 rounded border">
+                Vegetarijanski
               </span>
             )}
             {ingredientSearch && (
@@ -147,7 +183,6 @@ export function RecipeFilters({
           </div>
         </div>
       )}
-
       {showAdvancedFilters && (
         <div className="p-4 md:p-6 border rounded-lg shadow-sm bg-card mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
@@ -174,7 +209,7 @@ export function RecipeFilters({
                 emptyMessage="Nema kategorija."
                 badgeVariant="outline"
               />
-            </div>
+            </div>{" "}
             <div className="space-y-2">
               <Label htmlFor="allergies">Izbjegavaj alergene</Label>
               <MultiSelect
@@ -188,6 +223,51 @@ export function RecipeFilters({
                 emptyMessage="Nema alergena."
                 badgeVariant="outline"
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="difficulties">Težina pripreme</Label>
+              <MultiSelect
+                items={allDifficulties}
+                selectedIds={selectedDifficultyIds}
+                onChange={onSelectedDifficultyIdsChange}
+                isLoading={isLoadingDifficulties}
+                label="Težina"
+                placeholder="Odaberite težine pripreme"
+                searchPlaceholder="Pretraži težine..."
+                emptyMessage="Nema težina."
+                badgeVariant="outline"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Prehrambene preferencije</Label>
+              <div className="flex flex-col space-y-2">
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isVegetarian"
+                    checked={isVegetarian}
+                    onCheckedChange={onIsVegetarianChange}
+                  />
+                  <Label
+                    htmlFor="isVegetarian"
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    Vegetarijanski
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id="isVegan"
+                    checked={isVegan}
+                    onCheckedChange={onIsVeganChange}
+                  />
+                  <Label
+                    htmlFor="isVegan"
+                    className="text-sm font-normal cursor-pointer"
+                  >
+                    Veganski
+                  </Label>
+                </div>
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="maxPrepTime">Max. vrijeme pripreme (min)</Label>

@@ -16,6 +16,7 @@ import {
   userAllergy,
   role,
   unit,
+  difficulty,
   blog,
   blogLike,
 } from "@/db/schema"
@@ -36,6 +37,7 @@ export type RecipeAllergy = InferSelectModel<typeof recipeAllergy>
 export type UserAllergy = InferSelectModel<typeof userAllergy>
 export type Role = InferSelectModel<typeof role>
 export type Unit = InferSelectModel<typeof unit>
+export type Difficulty = InferSelectModel<typeof difficulty>
 export type Blog = InferSelectModel<typeof blog>
 export type BlogLike = InferSelectModel<typeof blogLike>
 
@@ -55,6 +57,7 @@ export type InsertRecipeAllergy = InferInsertModel<typeof recipeAllergy>
 export type InsertUserAllergy = InferInsertModel<typeof userAllergy>
 export type InsertRole = InferInsertModel<typeof role>
 export type InsertUnit = InferInsertModel<typeof unit>
+export type InsertDifficulty = InferInsertModel<typeof difficulty>
 
 export type RecipeWithUser = Recipe & {
   user: {

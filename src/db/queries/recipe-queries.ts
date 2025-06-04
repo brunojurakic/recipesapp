@@ -1,6 +1,6 @@
 import { db } from "@/db/drizzle"
 import { recipe } from "@/db/schema"
-import { asc, desc, eq, and, like, lte, gte, inArray } from "drizzle-orm"
+import { asc, desc, eq, and, ilike, lte, gte, inArray } from "drizzle-orm"
 import { recipeCategory, recipeAllergy } from "@/db/schema"
 import { ingredient, instruction } from "@/db/schema"
 import { CreateRecipeServerData } from "@/lib/validations/recipe-zod-server"
@@ -16,6 +16,7 @@ export async function getRecipe(id: string) {
             image: true,
           },
         },
+        difficulty: true,
         categories: {
           with: {
             category: true,
@@ -76,6 +77,7 @@ export async function getRecipes() {
             name: true,
           },
         },
+        difficulty: true,
         categories: {
           with: {
             category: true,
@@ -128,20 +130,33 @@ export async function getFilteredRecipes(filters: {
   maxPrepTime?: number
   minServings?: number
   ingredientSearch?: string
+  difficultyIds?: string[]
+  isVegan?: boolean
+  isVegetarian?: boolean
 }) {
   try {
     const basicConditions = []
-
     if (filters.search && filters.search.trim()) {
-      basicConditions.push(like(recipe.title, `%${filters.search.trim()}%`))
+      basicConditions.push(ilike(recipe.title, `%${filters.search.trim()}%`))
     }
 
     if (filters.maxPrepTime && filters.maxPrepTime > 0) {
       basicConditions.push(lte(recipe.preparationTime, filters.maxPrepTime))
     }
-
     if (filters.minServings && filters.minServings > 0) {
       basicConditions.push(gte(recipe.servings, filters.minServings))
+    }
+
+    if (filters.isVegan === true) {
+      basicConditions.push(eq(recipe.isVegan, true))
+    }
+
+    if (filters.isVegetarian === true) {
+      basicConditions.push(eq(recipe.isVegetarian, true))
+    }
+
+    if (filters.difficultyIds && filters.difficultyIds.length > 0) {
+      basicConditions.push(inArray(recipe.difficultyId, filters.difficultyIds))
     }
 
     let candidateRecipeIds: string[] = []
@@ -213,7 +228,7 @@ export async function getFilteredRecipes(filters: {
         .where(
           and(
             inArray(ingredient.recipeId, candidateRecipeIds),
-            like(ingredient.name, `%${filters.ingredientSearch.trim()}%`),
+            ilike(ingredient.name, `%${filters.ingredientSearch.trim()}%`),
           ),
         )
 
@@ -225,7 +240,6 @@ export async function getFilteredRecipes(filters: {
     if (candidateRecipeIds.length === 0) {
       return []
     }
-
     const recipes = await db.query.recipe.findMany({
       where: inArray(recipe.id, candidateRecipeIds),
       with: {
@@ -234,6 +248,7 @@ export async function getFilteredRecipes(filters: {
             name: true,
           },
         },
+        difficulty: true,
         categories: {
           with: {
             category: true,
@@ -307,6 +322,9 @@ export async function updateRecipe(id: string, data: CreateRecipeServerData) {
           image_path: data.imagePath,
           servings: data.servings,
           preparationTime: data.preparationTime,
+          difficultyId: data.difficultyId,
+          isVegan: data.isVegan,
+          isVegetarian: data.isVegetarian,
           updatedAt: new Date(),
         })
         .where(eq(recipe.id, id))

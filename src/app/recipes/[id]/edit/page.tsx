@@ -77,7 +77,6 @@ const EditRecipePage = ({ params }: EditRecipePageProps) => {
 
         const recipeData = await response.json()
         setRecipe(recipeData)
-
         const formData = {
           title: recipeData.title,
           description: recipeData.description,
@@ -89,6 +88,9 @@ const EditRecipePage = ({ params }: EditRecipePageProps) => {
           allergies: recipeData.allergies.map(
             (allergy: { allergy: { id: string } }) => allergy.allergy.id,
           ),
+          difficultyId: recipeData.difficultyId || undefined,
+          isVegan: recipeData.isVegan || false,
+          isVegetarian: recipeData.isVegetarian || false,
           instructions: recipeData.instructions.map(
             (inst: { stepNumber: number; content: string }) => ({
               stepNumber: inst.stepNumber,

@@ -97,7 +97,6 @@ export async function PUT(
       )
       imagePath = url
     }
-
     const data = {
       title: formData.get("title"),
       description: formData.get("description"),
@@ -107,6 +106,9 @@ export async function PUT(
       instructions: parseJSON(formData.get("instructions")),
       ingredients: parseJSON(formData.get("ingredients")),
       allergies: parseJSON(formData.get("allergies")),
+      difficultyId: (formData.get("difficultyId") as string) || undefined,
+      isVegan: formData.get("isVegan") === "true",
+      isVegetarian: formData.get("isVegetarian") === "true",
       imagePath,
     }
 

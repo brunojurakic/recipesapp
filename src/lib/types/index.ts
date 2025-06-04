@@ -41,6 +41,9 @@ export interface RecipeEditData {
   servings: number
   preparationTime: number
   image_path: string
+  difficultyId?: string
+  isVegan: boolean
+  isVegetarian: boolean
   categories: { category: { id: string; name: string } }[]
   allergies: { allergy: { id: string; name: string } }[]
   instructions: { stepNumber: number; content: string }[]

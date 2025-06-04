@@ -39,6 +39,9 @@ export const recipeServerSchema = z.object({
   allergies: z
     .array(z.string().uuid("ID alergena mora biti validan UUID"))
     .optional(),
+  difficultyId: z.string().uuid("ID težine mora biti validan UUID").optional(),
+  isVegan: z.boolean().default(false),
+  isVegetarian: z.boolean().default(false),
 })
 
 export type CreateRecipeServerData = z.infer<typeof recipeServerSchema>

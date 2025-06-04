@@ -41,17 +41,19 @@ export default function BlogCard({ blog }: BlogCardProps) {
         </CardHeader>
 
         <CardContent className="pt-0">
+          {" "}
           <div className="flex items-center justify-between text-sm text-muted-foreground mb-3">
-            <div className="flex items-center gap-1">
-              <User className="h-4 w-4" />
-              <span>{blog.user.name}</span>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1">
+                <User className="h-4 w-4" />
+                <span>{blog.user.name}</span>
+              </div>
             </div>
             <div className="flex items-center gap-1">
               <Calendar className="h-4 w-4" />
               <span>{blog.createdAt.toLocaleDateString("hr-HR")}</span>
             </div>
           </div>
-
           <div className="flex items-center justify-between text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <Eye className="h-4 w-4" />

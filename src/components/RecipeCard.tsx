@@ -2,10 +2,15 @@
 
 import Link from "next/link"
 import Image from "next/image"
-import type { Recipe, Category } from "@/lib/types/database"
+import type {
+  Recipe,
+  Category,
+  Difficulty,
+  Allergy,
+} from "@/lib/types/database"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
-import { User, Trash2, Loader2 } from "lucide-react"
+import { User, Trash2, Loader2, Leaf, ShieldAlert, Target } from "lucide-react"
 import { useState } from "react"
 import { toast } from "sonner"
 import {
@@ -24,6 +29,10 @@ interface RecipeWithRelations extends Recipe {
   }
   categories: {
     category: Category
+  }[]
+  difficulty?: Difficulty | null
+  allergies?: {
+    allergy: Allergy
   }[]
 }
 
@@ -94,15 +103,56 @@ export function RecipeCard({
                 <span className="text-muted-foreground">Nema slike</span>
               </div>
             )}
-          </div>
+          </div>{" "}
           <div className="p-4 flex flex-col flex-grow">
             <div className="flex flex-wrap gap-2 mb-2">
               {recipe.categories.map(({ category }) => (
                 <Badge variant={"outline"} key={category.id}>
                   {category.name}
                 </Badge>
-              ))}
+              ))}{" "}
+              {recipe.difficulty && (
+                <Badge
+                  variant="secondary"
+                  className="bg-purple-100 text-purple-800 border-purple-200"
+                >
+                  <Target className="w-3 h-3 mr-1" />
+                  {recipe.difficulty.name}
+                </Badge>
+              )}
             </div>
+
+            <div className="flex flex-wrap gap-2 mb-2">
+              {recipe.isVegan && (
+                <Badge
+                  variant="outline"
+                  className="bg-green-50 text-green-700 border-green-200"
+                >
+                  <Leaf className="w-3 h-3 mr-1" />
+                  Veganski
+                </Badge>
+              )}
+              {recipe.isVegetarian && !recipe.isVegan && (
+                <Badge
+                  variant="outline"
+                  className="bg-green-50 text-green-700 border-green-200"
+                >
+                  <Leaf className="w-3 h-3 mr-1" />
+                  Vegetarijanski
+                </Badge>
+              )}
+              {recipe.allergies && recipe.allergies.length > 0 && (
+                <Badge
+                  variant="outline"
+                  className="bg-orange-50 text-orange-700 border-orange-200"
+                >
+                  <ShieldAlert className="w-3 h-3 mr-1" />
+                  {recipe.allergies.length} alergen
+                  {recipe.allergies.length === 1 ? "" : "a"}
+                </Badge>
+              )}
+            </div>
+
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>{recipe.preparationTime} min</span>
               <span className="text-border">•</span>

@@ -3,7 +3,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { headers } from "next/headers"
-import { Clock, Users, ChevronLeft, UserPen } from "lucide-react"
+import { Clock, Users, ChevronLeft, UserPen, Target, Leaf } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
 import { getRecipe } from "@/db/queries"
 import { auth } from "@/lib/auth"
@@ -64,17 +64,41 @@ export default async function RecipePage({
                 priority
               />
             </div>
-
-            <h1 className="text-3xl font-bold">{recipe.title}</h1>
-
+            <h1 className="text-3xl font-bold">{recipe.title}</h1>{" "}
             <div className="flex flex-wrap gap-2 mt-3">
               {recipe.categories.map(({ category }) => (
                 <Badge key={category.id} variant="outline">
                   {category.name}
                 </Badge>
               ))}
+              {recipe.difficulty && (
+                <Badge
+                  variant="outline"
+                  className="bg-purple-100 text-purple-800 border-purple-200"
+                >
+                  <Target className="w-3 h-3 mr-1" />
+                  {recipe.difficulty.name}
+                </Badge>
+              )}
+              {recipe.isVegan && (
+                <Badge
+                  variant="outline"
+                  className="bg-green-50 text-green-700 border-green-200"
+                >
+                  <Leaf className="w-3 h-3 mr-1" />
+                  Veganski
+                </Badge>
+              )}
+              {recipe.isVegetarian && !recipe.isVegan && (
+                <Badge
+                  variant="outline"
+                  className="bg-green-50 text-green-700 border-green-200"
+                >
+                  <Leaf className="w-3 h-3 mr-1" />
+                  Vegetarijanski
+                </Badge>
+              )}
             </div>
-
             <div className="flex flex-wrap gap-6 mt-4 text-sm text-muted-foreground">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />

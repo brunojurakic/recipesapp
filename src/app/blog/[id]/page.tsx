@@ -6,6 +6,9 @@ import { ArrowLeft, Eye, Heart, Calendar, User } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
 import { BlogLikeButton } from "@/components/blog_page/BlogLikeButton"
+import { DeleteBlogButton } from "@/components/blog_page/DeleteBlogButton"
+import { auth } from "@/lib/auth"
+import { headers } from "next/headers"
 
 interface BlogPageProps {
   params: Promise<{ id: string }>
@@ -38,6 +41,11 @@ export default async function BlogPage({ params }: BlogPageProps) {
   if (!blog) {
     notFound()
   }
+
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+  const isAuthor = session?.user?.id === blog.userId
 
   await incrementViewCount(id)
 
@@ -100,20 +108,30 @@ export default async function BlogPage({ params }: BlogPageProps) {
               <div className="bg-muted/30 rounded-2xl p-6 space-y-6 sticky top-24">
                 <h3 className="text-lg font-semibold text-foreground mb-4">
                   Informacije o članku
-                </h3>
-
+                </h3>{" "}
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                     <User className="h-5 w-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">Autor</p>
-                    <p className="font-medium text-foreground">
-                      {blog.user.name}
-                    </p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-foreground">
+                        {blog.user.name}
+                      </p>
+                      {blog.user.role?.name === "Admin" && (
+                        <span className="text-xs font-semibold text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400 px-2 py-0.5 rounded-full">
+                          Admin
+                        </span>
+                      )}
+                      {blog.user.role?.name === "Moderator" && (
+                        <span className="text-xs font-semibold text-orange-600 bg-orange-100 dark:bg-orange-900/30 dark:text-orange-400 px-2 py-0.5 rounded-full">
+                          Moderator
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                     <Calendar className="h-5 w-5 text-primary" />
@@ -125,7 +143,6 @@ export default async function BlogPage({ params }: BlogPageProps) {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                     <Eye className="h-5 w-5 text-primary" />
@@ -137,7 +154,6 @@ export default async function BlogPage({ params }: BlogPageProps) {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
                     <Heart className="h-5 w-5 text-primary" />
@@ -149,10 +165,14 @@ export default async function BlogPage({ params }: BlogPageProps) {
                     </p>
                   </div>
                 </div>
-
                 <div className="pt-4 border-t border-muted">
                   <BlogLikeButton blogId={blog.id} />
                 </div>
+                {isAuthor && (
+                  <div>
+                    <DeleteBlogButton blogId={blog.id} />
+                  </div>
+                )}
               </div>
             </div>
           </div>

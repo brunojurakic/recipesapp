@@ -25,6 +25,13 @@ export async function getBlogById(id: string) {
           id: true,
           name: true,
         },
+        with: {
+          role: {
+            columns: {
+              name: true,
+            },
+          },
+        },
       },
     },
   })

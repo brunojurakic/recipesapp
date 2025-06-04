@@ -11,9 +11,10 @@ import {
 } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, ChefHat, MessageSquare, Shield } from "lucide-react"
+import { Loader2, ChefHat, MessageSquare, Shield, FileText } from "lucide-react"
 import { AdminRecipesTable } from "@/components/admin/AdminRecipesTable"
 import { AdminReviewsTable } from "@/components/admin/AdminReviewsTable"
+import { AdminBlogsTable } from "@/components/admin/AdminBlogsTable"
 
 interface User {
   id: string
@@ -94,15 +95,14 @@ export default function ModeratorPage() {
               <Badge variant="default">{user?.role?.name}</Badge>
             </CardTitle>
             <CardDescription>
-              Upravljajte receptima i recenzijama kako biste održali kvalitetu
-              sadržaja na platformi.
+              Upravljajte receptima, blogovima i recenzijama kako biste održali
+              kvalitetu sadržaja na platformi.
             </CardDescription>
           </CardHeader>
         </Card>
       </div>
-
       <Tabs defaultValue="recipes" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger
             value="recipes"
             className="flex items-center gap-2 hover:cursor-pointer"
@@ -111,14 +111,20 @@ export default function ModeratorPage() {
             Recepti
           </TabsTrigger>
           <TabsTrigger
+            value="blogs"
+            className="flex items-center gap-2 hover:cursor-pointer"
+          >
+            <FileText className="h-4 w-4" />
+            Blogovi
+          </TabsTrigger>
+          <TabsTrigger
             value="reviews"
             className="flex items-center gap-2 hover:cursor-pointer"
           >
             <MessageSquare className="h-4 w-4" />
             Recenzije
           </TabsTrigger>
-        </TabsList>
-
+        </TabsList>{" "}
         <TabsContent value="recipes">
           <Card>
             <CardHeader>
@@ -133,7 +139,20 @@ export default function ModeratorPage() {
             </CardContent>
           </Card>
         </TabsContent>
-
+        <TabsContent value="blogs">
+          <Card>
+            <CardHeader>
+              <CardTitle>Upravljanje Blogovima</CardTitle>
+              <CardDescription>
+                Pregledajte i moderirajte blog članke kako biste osigurali
+                kvalitetan sadržaj.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AdminBlogsTable />
+            </CardContent>
+          </Card>
+        </TabsContent>
         <TabsContent value="reviews">
           <Card>
             <CardHeader>

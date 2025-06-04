@@ -84,6 +84,9 @@ export const recipeZodSchema = z.object({
     )
     .min(1, "Potreban je barem jedan sastojak"),
   allergies: z.array(z.string().uuid()).optional(),
+  difficultyId: z.string().uuid("Težina pripreme je obavezna").optional(),
+  isVegan: z.boolean().optional(),
+  isVegetarian: z.boolean().optional(),
 })
 
 export const editRecipeZodSchema = z.object({
@@ -179,6 +182,9 @@ export const editRecipeZodSchema = z.object({
     )
     .min(1, "Potreban je barem jedan sastojak"),
   allergies: z.array(z.string().uuid()).optional(),
+  difficultyId: z.string().uuid().optional(),
+  isVegan: z.boolean().optional(),
+  isVegetarian: z.boolean().optional(),
 })
 
 export type CreateRecipeFormData = z.infer<typeof recipeZodSchema>

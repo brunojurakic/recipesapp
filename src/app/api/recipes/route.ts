@@ -35,7 +35,6 @@ export async function POST(request: NextRequest) {
     console.error("Error saving image:", error)
     return NextResponse.json({ error: "Failed to save image" }, { status: 500 })
   }
-
   const data = {
     title: formData.get("title") as string,
     description: formData.get("description") as string,
@@ -45,6 +44,9 @@ export async function POST(request: NextRequest) {
     categories: parseJSON(formData.get("categories")),
     ingredients: parseJSON(formData.get("ingredients")),
     allergies: parseJSON(formData.get("allergies")),
+    difficultyId: (formData.get("difficultyId") as string) || undefined,
+    isVegan: formData.get("isVegan") === "true",
+    isVegetarian: formData.get("isVegetarian") === "true",
     imagePath,
   }
   const result = recipeServerSchema.safeParse(data)
@@ -69,6 +71,9 @@ export async function POST(request: NextRequest) {
           image_path: validatedData.imagePath,
           servings: validatedData.servings,
           preparationTime: validatedData.preparationTime,
+          difficultyId: validatedData.difficultyId,
+          isVegan: validatedData.isVegan,
+          isVegetarian: validatedData.isVegetarian,
           createdAt: new Date(),
           updatedAt: new Date(),
         })
@@ -97,8 +102,7 @@ export async function POST(request: NextRequest) {
           categoryId,
         })),
       )
-
-      if (validatedData.allergies) {
+      if (validatedData.allergies && validatedData.allergies.length > 0) {
         await tx.insert(recipeAllergy).values(
           validatedData.allergies.map((allergyId) => ({
             recipeId: recipeResult.id,
@@ -128,6 +132,11 @@ export async function GET(request: NextRequest) {
       searchParams.get("categoryIds")?.split(",").filter(Boolean) || undefined
     const allergyIds =
       searchParams.get("allergyIds")?.split(",").filter(Boolean) || undefined
+    const difficultyIds =
+      searchParams.get("difficultyIds")?.split(",").filter(Boolean) || undefined
+    const isVegan = searchParams.get("isVegan") === "true" ? true : undefined
+    const isVegetarian =
+      searchParams.get("isVegetarian") === "true" ? true : undefined
     const maxPrepTime = searchParams.get("maxPrepTime")
       ? parseInt(searchParams.get("maxPrepTime")!, 10)
       : undefined
@@ -140,6 +149,9 @@ export async function GET(request: NextRequest) {
       search ||
       categoryIds ||
       allergyIds ||
+      difficultyIds ||
+      isVegan ||
+      isVegetarian ||
       maxPrepTime ||
       minServings ||
       ingredientSearch
@@ -150,6 +162,9 @@ export async function GET(request: NextRequest) {
         search,
         categoryIds,
         allergyIds,
+        difficultyIds,
+        isVegan,
+        isVegetarian,
         maxPrepTime: maxPrepTime && maxPrepTime > 0 ? maxPrepTime : undefined,
         minServings: minServings && minServings > 0 ? minServings : undefined,
         ingredientSearch,

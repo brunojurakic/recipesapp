@@ -10,7 +10,12 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { RecipeFilters } from "@/components/recipes/RecipeFilters"
 import { RecipeListDisplay } from "@/components/recipes/RecipeListDisplay"
 import type { SelectableItem } from "@/components/ui/multi-select"
-import type { Category, Allergy, RecipeClient } from "@/lib/types/database"
+import type {
+  Category,
+  Allergy,
+  Difficulty,
+  RecipeClient,
+} from "@/lib/types/database"
 import { useDebouncedCallback } from "use-debounce"
 import { useSearchParams, useRouter } from "next/navigation"
 
@@ -26,6 +31,11 @@ export default function RecipesPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([])
   const [selectedAllergyIds, setSelectedAllergyIds] = useState<string[]>([])
+  const [selectedDifficultyIds, setSelectedDifficultyIds] = useState<string[]>(
+    [],
+  )
+  const [isVegan, setIsVegan] = useState(false)
+  const [isVegetarian, setIsVegetarian] = useState(false)
   const [ingredientSearch, setIngredientSearch] = useState("")
   const [maxPrepTime, setMaxPrepTime] = useState<string>("")
   const [minServings, setMinServings] = useState<string>("")
@@ -34,12 +44,19 @@ export default function RecipesPage() {
   const [isLoadingCategories, setIsLoadingCategories] = useState(true)
   const [allAllergies, setAllAllergies] = useState<SelectableItem[]>([])
   const [isLoadingAllergies, setIsLoadingAllergies] = useState(true)
+  const [allDifficulties, setAllDifficulties] = useState<SelectableItem[]>([])
+  const [isLoadingDifficulties, setIsLoadingDifficulties] = useState(true)
+
   useEffect(() => {
     const urlSearch = searchParams.get("search") || ""
     const urlCategoryIds =
       searchParams.get("categoryIds")?.split(",").filter(Boolean) || []
     const urlAllergyIds =
       searchParams.get("allergyIds")?.split(",").filter(Boolean) || []
+    const urlDifficultyIds =
+      searchParams.get("difficultyIds")?.split(",").filter(Boolean) || []
+    const urlIsVegan = searchParams.get("isVegan") === "true"
+    const urlIsVegetarian = searchParams.get("isVegetarian") === "true"
     const urlIngredientSearch = searchParams.get("ingredientSearch") || ""
     const urlMaxPrepTime = searchParams.get("maxPrepTime") || ""
     const urlMinServings = searchParams.get("minServings") || ""
@@ -48,6 +65,9 @@ export default function RecipesPage() {
       urlSearch ||
       urlCategoryIds.length > 0 ||
       urlAllergyIds.length > 0 ||
+      urlDifficultyIds.length > 0 ||
+      urlIsVegan ||
+      urlIsVegetarian ||
       urlIngredientSearch ||
       urlMaxPrepTime ||
       urlMinServings
@@ -56,6 +76,9 @@ export default function RecipesPage() {
       setSearchTerm(urlSearch)
       setSelectedCategoryIds(urlCategoryIds)
       setSelectedAllergyIds(urlAllergyIds)
+      setSelectedDifficultyIds(urlDifficultyIds)
+      setIsVegan(urlIsVegan)
+      setIsVegetarian(urlIsVegetarian)
       setIngredientSearch(urlIngredientSearch)
       setMaxPrepTime(urlMaxPrepTime)
       setMinServings(urlMinServings)
@@ -69,6 +92,9 @@ export default function RecipesPage() {
       search: string,
       categoryIds: string[],
       allergyIds: string[],
+      difficultyIds: string[],
+      isVegan: boolean,
+      isVegetarian: boolean,
       ingredientSearch: string,
       maxPrepTime: string,
       minServings: string,
@@ -91,6 +117,15 @@ export default function RecipesPage() {
         if (allergyIds.length > 0) {
           params.append("allergyIds", allergyIds.join(","))
         }
+        if (difficultyIds.length > 0) {
+          params.append("difficultyIds", difficultyIds.join(","))
+        }
+        if (isVegan) {
+          params.append("isVegan", "true")
+        }
+        if (isVegetarian) {
+          params.append("isVegetarian", "true")
+        }
         if (ingredientSearch.trim()) {
           params.append("ingredientSearch", ingredientSearch.trim())
         }
@@ -101,7 +136,9 @@ export default function RecipesPage() {
           params.append("minServings", minServings)
         }
 
-        const url = `/api/recipes${params.toString() ? `?${params.toString()}` : ""}`
+        const url = `/api/recipes${
+          params.toString() ? `?${params.toString()}` : ""
+        }`
         const res = await fetch(url)
         if (!res.ok) {
           throw new Error("Failed to fetch recipes")
@@ -128,6 +165,9 @@ export default function RecipesPage() {
       searchTerm,
       selectedCategoryIds,
       selectedAllergyIds,
+      selectedDifficultyIds,
+      isVegan,
+      isVegetarian,
       ingredientSearch,
       maxPrepTime,
       minServings,
@@ -136,11 +176,15 @@ export default function RecipesPage() {
     searchTerm,
     selectedCategoryIds,
     selectedAllergyIds,
+    selectedDifficultyIds,
+    isVegan,
+    isVegetarian,
     ingredientSearch,
     maxPrepTime,
     minServings,
     debouncedFetchRecipes,
   ])
+
   useEffect(() => {
     const fetchFilterOptions = async () => {
       try {
@@ -177,6 +221,26 @@ export default function RecipesPage() {
         setIsLoadingAllergies(false)
       }
 
+      try {
+        setIsLoadingDifficulties(true)
+        const diffRes = await fetch("/api/difficulties")
+        if (!diffRes.ok) {
+          throw new Error("Failed to fetch difficulties")
+        }
+        const difficultiesData = await diffRes.json()
+        setAllDifficulties(
+          difficultiesData.map((d: Difficulty) => ({
+            id: d.id,
+            name: `${d.name} (razina ${d.level})`,
+          })),
+        )
+      } catch (error) {
+        console.error(error)
+        toast.error("Greška pri dohvaćanju težina pripreme.")
+      } finally {
+        setIsLoadingDifficulties(false)
+      }
+
       if (session && !searchParams.get("allergyIds")) {
         try {
           const userAllergiesRes = await fetch("/api/user-allergies")
@@ -195,19 +259,27 @@ export default function RecipesPage() {
 
     fetchFilterOptions()
   }, [session, searchParams])
+
   const clearFilters = () => {
     setSearchTerm("")
     setSelectedCategoryIds([])
     setSelectedAllergyIds([])
+    setSelectedDifficultyIds([])
+    setIsVegan(false)
+    setIsVegetarian(false)
     setIngredientSearch("")
     setMaxPrepTime("")
     setMinServings("")
   }
+
   const hasActiveFilters = useMemo(() => {
     return Boolean(
       searchTerm ||
         selectedCategoryIds.length > 0 ||
         selectedAllergyIds.length > 0 ||
+        selectedDifficultyIds.length > 0 ||
+        isVegan ||
+        isVegetarian ||
         ingredientSearch ||
         maxPrepTime ||
         minServings,
@@ -216,6 +288,9 @@ export default function RecipesPage() {
     searchTerm,
     selectedCategoryIds,
     selectedAllergyIds,
+    selectedDifficultyIds,
+    isVegan,
+    isVegetarian,
     ingredientSearch,
     maxPrepTime,
     minServings,
@@ -255,6 +330,14 @@ export default function RecipesPage() {
         selectedAllergyIds={selectedAllergyIds}
         onSelectedAllergyIdsChange={setSelectedAllergyIds}
         isLoadingAllergies={isLoadingAllergies}
+        allDifficulties={allDifficulties}
+        selectedDifficultyIds={selectedDifficultyIds}
+        onSelectedDifficultyIdsChange={setSelectedDifficultyIds}
+        isLoadingDifficulties={isLoadingDifficulties}
+        isVegan={isVegan}
+        onIsVeganChange={setIsVegan}
+        isVegetarian={isVegetarian}
+        onIsVegetarianChange={setIsVegetarian}
         ingredientSearch={ingredientSearch}
         onIngredientSearchChange={setIngredientSearch}
         maxPrepTime={maxPrepTime}
