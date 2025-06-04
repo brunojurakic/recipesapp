@@ -7,8 +7,16 @@ import { Button } from "@/components/ui/button"
 import { useTheme } from "@/components/theme-provider"
 
 export function ModeToggle() {
+  const [mounted, setMounted] = React.useState(false)
   const { theme, setTheme } = useTheme()
 
+  React.useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) {
+    return null
+  }
   const toggleTheme = () => {
     if (theme === "dark") {
       setTheme("light")
