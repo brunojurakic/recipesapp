@@ -8,17 +8,25 @@ import { useTheme } from "@/components/theme-provider"
 
 export function ModeToggle() {
   const [mounted, setMounted] = React.useState(false)
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme, resolvedTheme } = useTheme()
 
   React.useEffect(() => {
     setMounted(true)
   }, [])
 
   if (!mounted) {
-    return null
+    return (
+      <Button variant="ghost" size="icon" disabled>
+        <Sun className="h-[1.2rem] w-[1.2rem]" />
+        <span className="sr-only">Toggle theme</span>
+      </Button>
+    )
   }
+
   const toggleTheme = () => {
-    if (theme === "dark") {
+    const currentTheme = resolvedTheme || theme
+    
+    if (currentTheme === "dark") {
       setTheme("light")
     } else {
       setTheme("dark")
