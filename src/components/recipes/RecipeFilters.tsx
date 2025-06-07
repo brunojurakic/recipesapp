@@ -86,7 +86,7 @@ export function RecipeFilters({
       isVegetarian ||
       ingredientSearch ||
       maxPrepTime ||
-      minServings,
+      minServings
   )
 
   return (
@@ -290,10 +290,11 @@ export function RecipeFilters({
                 onChange={(e) => onMinServingsChange(e.target.value)}
                 min="1"
               />
-            </div>{" "}
-            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-3 flex items-end justify-center">
+            </div>
+            <div className="hidden xl:block"></div>{" "}
+            <div className="sm:col-span-2 lg:col-span-2 xl:col-span-1 flex items-end justify-center xl:justify-end">
               {hasActiveFilters && (
-                <Button onClick={onClearFilters} className="w-full max-w-md">
+                <Button onClick={onClearFilters} className="w-full">
                   <XCircle className="mr-2 h-4 w-4" />
                   Očisti filtere
                 </Button>

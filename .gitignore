@@ -45,3 +45,4 @@ next-env.d.ts
 *.webp
 *.jpg
 *.jpeg
+/src/db/generation
