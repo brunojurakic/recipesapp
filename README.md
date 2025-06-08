@@ -39,13 +39,3 @@ BLOB_READ_WRITE_TOKEN="..."
 # pokretanje
 npm run dev
 ```
-
-## 📁 Struktura
-
-```
-src/
-├── app/           # Next.js App Router
-├── components/    # UI komponente
-├── lib/          # Utils i validacije
-└── db/           # Drizzle schema i queries
-```
