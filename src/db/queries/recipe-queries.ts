@@ -68,8 +68,11 @@ export async function getRecipeAuthorId(
   }
 }
 
-export async function getRecipes() {
+export async function getRecipes(limit?: number, offset?: number) {
   try {
+    const totalCountResult = await db.select({ count: recipe.id }).from(recipe)
+    const totalCount = totalCountResult.length
+
     const recipes = await db.query.recipe.findMany({
       with: {
         user: {
@@ -104,7 +107,21 @@ export async function getRecipes() {
         },
       },
       orderBy: (table) => [desc(table.createdAt)],
+      limit: limit || undefined,
+      offset: offset || undefined,
     })
+
+    if (limit !== undefined) {
+      return {
+        recipes,
+        pagination: {
+          currentPage: Math.floor((offset || 0) / limit) + 1,
+          totalPages: Math.ceil(totalCount / limit),
+          totalCount,
+          hasMore: (offset || 0) + limit < totalCount,
+        },
+      }
+    }
 
     return recipes
   } catch (error) {
@@ -133,6 +150,8 @@ export async function getFilteredRecipes(filters: {
   difficultyIds?: string[]
   isVegan?: boolean
   isVegetarian?: boolean
+  page?: number
+  limit?: number
 }) {
   try {
     const basicConditions = []
@@ -236,10 +255,26 @@ export async function getFilteredRecipes(filters: {
         ...new Set(recipesWithIngredients.map((r) => r.recipeId)),
       ]
     }
-
     if (candidateRecipeIds.length === 0) {
+      if (filters.page && filters.limit) {
+        return {
+          recipes: [],
+          pagination: {
+            currentPage: filters.page,
+            totalPages: 0,
+            totalCount: 0,
+            hasMore: false,
+          },
+        }
+      }
       return []
     }
+
+    const totalCount = candidateRecipeIds.length
+    const page = filters.page || 1
+    const limit = filters.limit || 20
+    const offset = (page - 1) * limit
+
     const recipes = await db.query.recipe.findMany({
       where: inArray(recipe.id, candidateRecipeIds),
       with: {
@@ -275,7 +310,21 @@ export async function getFilteredRecipes(filters: {
         },
       },
       orderBy: (table) => [desc(table.createdAt)],
+      limit,
+      offset,
     })
+
+    if (filters.page && filters.limit) {
+      return {
+        recipes,
+        pagination: {
+          currentPage: page,
+          totalPages: Math.ceil(totalCount / limit),
+          totalCount,
+          hasMore: offset + limit < totalCount,
+        },
+      }
+    }
 
     return recipes
   } catch (error) {

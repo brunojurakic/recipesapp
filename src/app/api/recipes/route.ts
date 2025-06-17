@@ -144,6 +144,9 @@ export async function GET(request: NextRequest) {
       ? parseInt(searchParams.get("minServings")!, 10)
       : undefined
     const ingredientSearch = searchParams.get("ingredientSearch") || undefined
+    const page = parseInt(searchParams.get("page") || "1", 10)
+    const limit = parseInt(searchParams.get("limit") || "20", 10)
+    const offset = (page - 1) * limit
 
     const hasFilters =
       search ||
@@ -156,9 +159,9 @@ export async function GET(request: NextRequest) {
       minServings ||
       ingredientSearch
 
-    let recipes
+    let result
     if (hasFilters) {
-      recipes = await getFilteredRecipes({
+      result = await getFilteredRecipes({
         search,
         categoryIds,
         allergyIds,
@@ -168,12 +171,14 @@ export async function GET(request: NextRequest) {
         maxPrepTime: maxPrepTime && maxPrepTime > 0 ? maxPrepTime : undefined,
         minServings: minServings && minServings > 0 ? minServings : undefined,
         ingredientSearch,
+        page,
+        limit,
       })
     } else {
-      recipes = await getRecipes()
+      result = await getRecipes(limit, offset)
     }
 
-    return NextResponse.json(recipes)
+    return NextResponse.json(result)
   } catch (error) {
     console.error("Error fetching recipes:", error)
     return NextResponse.json(

@@ -28,6 +28,18 @@ export default function RecipesPage() {
   const [isLoadingRecipes, setIsLoadingRecipes] = useState(true)
   const [isInitialLoad, setIsInitialLoad] = useState(true)
   const [isFiltering, setIsFiltering] = useState(false)
+  const [isLoadingMore, setIsLoadingMore] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [pagination, setPagination] = useState<
+    | {
+        currentPage: number
+        totalPages: number
+        totalCount: number
+        hasMore: boolean
+      }
+    | undefined
+  >(undefined)
+
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([])
   const [selectedAllergyIds, setSelectedAllergyIds] = useState<string[]>([])
@@ -86,7 +98,6 @@ export default function RecipesPage() {
       router.replace("/recipes", { scroll: false })
     }
   }, [searchParams, router])
-
   const debouncedFetchRecipes = useDebouncedCallback(
     async (
       search: string,
@@ -98,12 +109,19 @@ export default function RecipesPage() {
       ingredientSearch: string,
       maxPrepTime: string,
       minServings: string,
+      page: number = 1,
+      resetResults: boolean = true,
     ) => {
       try {
-        if (isInitialLoad) {
+        if (isInitialLoad || resetResults) {
           setIsLoadingRecipes(true)
+          setCurrentPage(1)
         } else {
           setIsFiltering(true)
+        }
+
+        if (page > 1) {
+          setIsLoadingMore(true)
         }
 
         const params = new URLSearchParams()
@@ -135,6 +153,8 @@ export default function RecipesPage() {
         if (minServings && parseInt(minServings, 10) > 0) {
           params.append("minServings", minServings)
         }
+        params.append("page", page.toString())
+        params.append("limit", "20")
 
         const url = `/api/recipes${
           params.toString() ? `?${params.toString()}` : ""
@@ -143,8 +163,18 @@ export default function RecipesPage() {
         if (!res.ok) {
           throw new Error("Failed to fetch recipes")
         }
-        const data: RecipeClient[] = await res.json()
-        setFilteredRecipes(data)
+        const data = await res.json()
+
+        if (resetResults || page === 1) {
+          setFilteredRecipes(data.recipes || data)
+        } else {
+          setFilteredRecipes((prev) => [...prev, ...(data.recipes || data)])
+        }
+
+        if (data.pagination) {
+          setPagination(data.pagination)
+          setCurrentPage(data.pagination.currentPage)
+        }
 
         if (isInitialLoad) {
           setIsInitialLoad(false)
@@ -155,6 +185,7 @@ export default function RecipesPage() {
       } finally {
         setIsLoadingRecipes(false)
         setIsFiltering(false)
+        setIsLoadingMore(false)
       }
     },
     500,
@@ -259,7 +290,6 @@ export default function RecipesPage() {
 
     fetchFilterOptions()
   }, [session, searchParams])
-
   const clearFilters = () => {
     setSearchTerm("")
     setSelectedCategoryIds([])
@@ -270,6 +300,27 @@ export default function RecipesPage() {
     setIngredientSearch("")
     setMaxPrepTime("")
     setMinServings("")
+    setCurrentPage(1)
+    setPagination(undefined)
+  }
+
+  const handleLoadMore = () => {
+    if (pagination?.hasMore) {
+      const nextPage = currentPage + 1
+      debouncedFetchRecipes(
+        searchTerm,
+        selectedCategoryIds,
+        selectedAllergyIds,
+        selectedDifficultyIds,
+        isVegan,
+        isVegetarian,
+        ingredientSearch,
+        maxPrepTime,
+        minServings,
+        nextPage,
+        false,
+      )
+    }
   }
 
   const hasActiveFilters = useMemo(() => {
@@ -318,7 +369,6 @@ export default function RecipesPage() {
           )
         )}
       </div>
-
       <RecipeFilters
         searchTerm={searchTerm}
         onSearchTermChange={setSearchTerm}
@@ -353,6 +403,9 @@ export default function RecipesPage() {
         filteredRecipes={filteredRecipes}
         hasActiveFilters={hasActiveFilters}
         onClearFilters={clearFilters}
+        pagination={pagination}
+        onLoadMore={handleLoadMore}
+        isLoadingMore={isLoadingMore}
       />
     </div>
   )
