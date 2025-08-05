@@ -1,41 +1,63 @@
-# 🥗 ReceptiNet
+# ReceptiNet
 
-**ReceptiNet** je moderna web aplikacija za dijeljenje recepata izgrađena s Next.js 15. Korisnici mogu pretraživati, dodavati i ocjenjivati recepte, dok admini mogu moderirati sadržaj.
+**ReceptiNet** is a modern web application for recipe sharing built with Next.js 15. Users can discover, post, and rate recipes, while administrators and moderators can moderate content.
 
-🌐 **Live Demo**: [receptinet.vercel.app](https://receptinet.vercel.app/)
+**Live Demo**: [receptinet.vercel.app](https://receptinet.vercel.app/)
 
-## 🔧 Tech Stack
+## Technology Stack
 
-| Kategorija | Tehnologije                                                   |
+| Category   | Technologies                                                   |
 | ---------- | ------------------------------------------------------------- |
-| Frontend   | Next.js 15.3.2, React 19, TypeScript, Tailwind CSS, Shadcn/ui |
-| Backend    | Next.js API Routes, Drizzle ORM, Zod, Better Auth             |
-| Baza       | PostgreSQL (Neon Serverless)                                  |
-| Storage    | Vercel Blob                                                   |
-| Deploy     | Vercel                                                        |
+| Web-app | Next.js 15.3.2, React 19, TypeScript, Tailwind CSS, Shadcn/ui, Drizzle ORM, Zod, Better Auth |
+| Database   | PostgreSQL (Neon Serverless)                                  |
+| File Storage    | Vercel Blob                                                   |
+| Deployment | Vercel                                                        |
 
-## ✨ Funkcionalnosti
+## Features
 
-- 🔐 **Autentikacija** - Better Auth s profilima
-- 🍽️ **Recepti** - CRUD, kategorije, alergeni, slike
-- 🔍 **Pretraga** - Filtriranje po kategorijama i alergenima
-- ⭐ **Recenzije** - Ocjenjivanje i komentari
-- 🔒 **Admin** - Dashboard za moderaciju sadržaja
-- 📱 **Responzivnost** - Radi na svim uređajima
+- **Authentication** - Better Auth with user profiles
+- **Recipe Management** - Full CRUD operations, categories, allergens, and image uploads
+- **Search & Filtering** - Filter recipes by categories, allergens, portions and more
+- **Reviews & Ratings** - User rating system and comments
+- **Admin Dashboard** - Content moderation and management
+- **Responsive Design** - Optimized for all devices
+- **Dark Mode** - Choose light or dark theme
 
-## 🚀 Pokretanje
+## Local development
+
+### Prerequisites
+
+- Node.js 18+ 
+- npm
+- PostgreSQL database
+
+### Installation
 
 ```bash
-# kloniranje i instalacija projekta
-git clone https://github.com/brunojurakicFER/recipesapp.git
+# Clone the repository
+git clone https://github.com/brunojurakic/recipesapp.git
 cd recipesapp
+
+# Install dependencies
 npm install
 
-# postavljanje .env varijabli
+# Create a .env.local file with the following variables:
 DATABASE_URL="postgresql://..."
 BETTER_AUTH_SECRET="..."
 BLOB_READ_WRITE_TOKEN="..."
 
-# pokretanje
+# Run the development server
 npm run dev
 ```
+
+The application will be available at `http://localhost:3000`.
+
+### Environment Variables
+
+| Variable | Description |
+| -------- | ----------- |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `BETTER_AUTH_SECRET` | Secret key for authentication |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob storage token |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
